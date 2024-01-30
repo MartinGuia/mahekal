@@ -42,7 +42,7 @@ function SideBarComponent() {
       <button
         className="fixed lg:hidden z-90 bottom-10 right-10 bg-water-blue 
         w-10 h-10 rounded-full drop-shadow-md flex justify-center items-center text-white
-        text-4xl hover:bg-cyan-600 duration-300" onClick={toggleSidebar}
+        text-4xl hover:bg-water-blue-hover duration-300" onClick={toggleSidebar}
       >
         <img className="size-8" src="menu.png" alt="menu" />
       </button>
@@ -60,7 +60,7 @@ function SideBarComponent() {
         <ul className="pt-4">
           {Menus.map((menu, i)=>(
             <>
-              <li key={i} className={`flex rounded-md p-3 mt-2  cursor-pointer hover:bg-water-blue items-center gap-x-3 `}>
+              <li key={i} className={`flex rounded-md p-3 mt-2 cursor-pointer hover:bg-water-blue items-center gap-x-3 `}>
                 <img src={menu.image} className="size-8" />
                 <span className={`flex-1 duration-0 text-mahekal-brown text-lg font-normal ${!open && 'invisible'}`}>
                   {menu.title}
@@ -76,9 +76,9 @@ function SideBarComponent() {
         </div>
 
         <div className="flex mt-10 justify-end mr-6 items-center">
-            <button className={`hover:bg-water-blue rounded-md py-2 text-mahekal-brown px-4 flex gap-x-3 text-lg ${!open && 'invisible'}`}>
+            <button className={`hover:bg-water-blue rounded-md py-2 text-mahekal-brown px-4 flex gap-x-2 text-lg ${!open && 'invisible'}`}>
             <img src="logout.png" alt="logout" className="size-6 flex mt-1"/>
-              Logout
+              Salir
             </button>
         </div>
       </div>
