@@ -2,13 +2,15 @@ import React from 'react'
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import TicketsPage from './pages/TicketsPage';
 import Login from "./pages/Login";
+import Navigate from "./components/Navigate";
 
 function App() {
   return (
     <BrowserRouter>
+    <Navigate/>
       <Routes>
 
-      <Route path='/' element={<h1>DASHBOARD</h1>}/>
+      {/* <Route path='/' element={<Si/>}/> */}
       <Route path='/login' element={<Login/>}/>
         <Route path='/tickets' element={<TicketsPage/>}/>
         <Route path='/register' element={<h1>REGISTER</h1>}/>

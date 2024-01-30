@@ -60,7 +60,7 @@ function SideBarComponent() {
         <ul className="pt-4">
           {Menus.map((menu, i)=>(
             <>
-              <li key={i} className={`flex rounded-md p-3 mt-2  cursor-pointer hover:bg-water-blue items-center gap-x-3 `}>
+                <li key={i} className={`flex rounded-md p-3 mt-2  cursor-pointer hover:bg-water-blue items-center gap-x-3 `}>
                 <img src={menu.image} className="size-8" />
                 <span className={`flex-1 duration-0 text-mahekal-brown text-lg font-normal ${!open && 'invisible'}`}>
                   {menu.title}
