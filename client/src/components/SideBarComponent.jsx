@@ -3,6 +3,7 @@ import tickets from '../img/boleto.png'
 import dptos from '../img/departamento.png'
 import cuentas from '../img/agregar-usuario.png'
 import mensaje from '../img/mensaje.png'
+import cuenta from '../img/usuario.png'
 
 function SideBarComponent() {
     const [open, setOpen] = useState(true);
@@ -26,6 +27,10 @@ function SideBarComponent() {
           title: 'Foro',
           image: mensaje,
       },
+      {
+          title: 'Cuenta',
+          image: cuenta,
+      },
   ]
 
   return (
@@ -37,7 +42,7 @@ function SideBarComponent() {
       <button
         className="fixed lg:hidden z-90 bottom-10 right-10 bg-water-blue 
         w-10 h-10 rounded-full drop-shadow-md flex justify-center items-center text-white
-        text-4xl hover:bg-teal-800 duration-300" onClick={toggleSidebar}
+        text-4xl hover:bg-cyan-600 duration-300" onClick={toggleSidebar}
       >
         <img className="size-8" src="menu.png" alt="menu" />
       </button>
@@ -48,14 +53,14 @@ function SideBarComponent() {
         {/* caja que engloba los elementos del titulo y hr:linea inferior del titulo */}
         <div className="justify-center mt-3">
           <h1 className={`text-mahekal-brown font-medium text-4xl text-center duration-0 ${!open && 'invisible'}`}>Mahekal</h1>
-          <hr className={`w-auto mx-5 mt-2 border-mahekal-brown duration-0 ${!open && 'invisible'}`}/>
+          <hr className={`w-auto mx-5 mt-1.5 border-mahekal-brown duration-0 ${!open && 'invisible'}`}/>
         </div>
 
         {/* Lista de elementos para el menu */}
-        <ul className="pt-6">
+        <ul className="pt-4">
           {Menus.map((menu, i)=>(
             <>
-              <li key={i} className={`flex rounded-md p-3 mt-5  cursor-pointer hover:bg-water-blue items-center gap-x-3 `}>
+              <li key={i} className={`flex rounded-md p-3 mt-2  cursor-pointer hover:bg-water-blue items-center gap-x-3 `}>
                 <img src={menu.image} className="size-8" />
                 <span className={`flex-1 duration-0 text-mahekal-brown text-lg font-normal ${!open && 'invisible'}`}>
                   {menu.title}
@@ -66,8 +71,8 @@ function SideBarComponent() {
         </ul>
 
         {/* Este div es para el Logo mahekal */}
-        <div className="flex items-center flex-col mt-8">
-          <img src="LogoMahekal.png" alt="LogoMahekal" className="size-36"/>
+        <div className="flex items-center flex-col mt-6">
+          <img src="LogoMahekal.png" alt="LogoMahekal" className="max-[431px]:size-28 size-36"/>
         </div>
 
         <div className="flex mt-10 justify-end mr-6 items-center">
