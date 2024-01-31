@@ -3,7 +3,8 @@ export default function NavBar() {
 
   return (
     <>
-      <header className="w-full h-14 flex justify-between items-center bg-white shadow-xl ">
+      <div className="flex">
+      <header className="w-screen h-14 flex justify-between items-center bg-white shadow-xl ">
         
         <div className="h-full flex mx-4">
           <button>
@@ -24,6 +25,7 @@ export default function NavBar() {
           </form>
         </div>
       </header>
+      </div>
     </>
   );
 }
