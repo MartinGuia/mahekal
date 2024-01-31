@@ -3,9 +3,14 @@ import SideBarComponent from "./SideBarComponent";
 
 export default function Navegate() {
   return (
-    <div className="flex">
-      <SideBarComponent/>
-      <Navbar/>
-    </div>
-    )
+    // <div className="flex">
+    // {/* <SideBarComponent/> */}
+    // {/* <Navbar/> */}
+    // {/* </div> */}
+
+    <>
+      
+
+    </>
+  );
 }
