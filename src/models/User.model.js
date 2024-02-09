@@ -1,5 +1,4 @@
 import { model, Schema } from "mongoose";
-import bcryptjs from "bcryptjs";
 
 const userSchema = new Schema({
     name:{
@@ -19,19 +18,16 @@ const userSchema = new Schema({
         min: 8,
         required: true,    
     },
-    role:[{
-        // type: String,
+    role:{
         ref: "Role",
         type: Schema.Types.ObjectId,
         required: true
-    }],
-    departament: [{
-        type: String,
+    },
+    department: {
+        ref: "Departament",
+        type: Schema.Types.ObjectId,
         required: true
-        // ref: "Departament",
-        // type: Schema.Types.ObjectId,
-        // required: true
-    }],
+    },
     tickets: [{
         ref: "Ticket",
         type: Schema.Types.ObjectId
@@ -39,14 +35,5 @@ const userSchema = new Schema({
 },{
     versionKey: false,
 });
-
-// userSchema.statics.encryptPassword = async (password) => {
-//     const salt = await bcryptjs.genSalt(10);
-//     return await bcryptjs.hash(password, salt)
-// };
-
-// userSchema.statics.comparePassword = async (password, receivedPassword) => {
-//     return await bcryptjs.compare(password, receivedPassword)
-// };
 
 export default model('User', userSchema)

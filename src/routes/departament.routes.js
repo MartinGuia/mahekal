@@ -1,7 +1,8 @@
 import { Router } from "express";
-import * as departamentController from "../controllers/controller.departament.js";
+import * as departamentController from "../controllers/controller.department.js";
+
 const router = Router();
 
-router.get('/departaments', departamentController.departaments)
+router.post('/add-department', departamentController.newDepartment);
 
 export default router

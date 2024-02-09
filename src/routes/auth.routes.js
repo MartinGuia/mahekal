@@ -7,7 +7,7 @@ const router = Router();
 
 router.post('/signin', authController.signin)
 router.post('/signup', verifyToken ,verifyRoleAdmin ,authController.signup)
-router.post('/logout',authController.logout)
+router.post('/logout', verifyToken, authController.logout)
 
 
 export default router

@@ -28,7 +28,6 @@ const ticketSchema = new Schema({
     assignedTo:[{
         ref: "User",
         type: Schema.Types.ObjectId,
-        required: true,
     }],
     ejecutionTime:{
         type: Number,
