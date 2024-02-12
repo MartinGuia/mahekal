@@ -7,6 +7,7 @@ const ticketSchema = new Schema({
     },
     date:[{
         type: Date,
+        // type: String,
         required: true,
     }],
     title: {
@@ -22,7 +23,8 @@ const ticketSchema = new Schema({
         required: true,
     },
     assignedDepartment:{
-        type: String,
+        ref: "Department",
+        type: Schema.Types.ObjectId,
         required: true,
     },
     assignedTo:[{
@@ -31,7 +33,7 @@ const ticketSchema = new Schema({
     }],
     ejecutionTime:{
         type: Number,
-        required: true,
+        // required: true,
     },
     roomOrArea:{
         type: String,
@@ -46,7 +48,7 @@ const ticketSchema = new Schema({
         required: false,
     },
 },{
-    timestamps: true,
+    timestamps: false,
     versionKey: false,
 })
 

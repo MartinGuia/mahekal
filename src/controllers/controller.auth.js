@@ -22,7 +22,7 @@ export const signup = async (req, res) => {
       return res.status(404).json({ message: "Role not found" });
 
     // Find department according to the string sent
-      const departmentFound = await Department.findOne({
+    const departmentFound = await Department.findOne({
       name: { $in: department },
     });
 
@@ -69,8 +69,9 @@ export const signin = async (req, res) => {
     const userFound = await User.findOne({ userName });
     if (!userFound) return res.status(400).json({ message: "User not found" });
     
-    // Gets the user's role
-    const roleFound = await Roles.findById(userFound.role);
+    // Gets the user's role adn department
+    const roleFound = userFound.role;
+    const departmentFound = userFound.department;
 
     // Compare the password sent with the database
     const isMatch = await bcryptjs.compare(password, userFound.password);
@@ -80,7 +81,8 @@ export const signin = async (req, res) => {
     // Create token
     const token = await createdAccessToken({
       id: userFound._id,
-      role: userFound.role[0],
+      role: roleFound,
+      department: departmentFound
     });
 
     // Set token as cookie
