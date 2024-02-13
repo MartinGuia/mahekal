@@ -1,12 +1,12 @@
 import React from 'react'
-import SideBarComponent from '../components/SideBarComponent'
+import Nav from '../components/Nav'
+import TicketComponent from '../components/TicketComponent'
 
 function TicketsPage() {
   return (
-    <div className='flex'>
-        <SideBarComponent/>
-        <div>TicketPage</div>
-    </div>
+    <>
+      <Nav  component={<TicketComponent/>}/>
+    </>
   )
 }
 
