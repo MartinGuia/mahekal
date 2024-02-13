@@ -225,7 +225,7 @@ function NewTicketComponent() {
             )}
           </div>
           <button className="w-[10%] h-[7%] mt-6 ml-4 duration-500 rounded-lg shadow-md bg-water-blue hover:bg-water-blue-hover max-[767px]:w-[20%] ">
-              Enviar
+              Enviar 
           </button>
         </form>
       </section>
