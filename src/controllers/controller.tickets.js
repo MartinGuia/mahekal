@@ -88,3 +88,19 @@ export const reassignTicket = async (req, res) => {
   );
   res.status(200).json(assignedToUpdate);
 };
+
+
+export const getAllTicketsByDepartment = async (req, res) => {
+
+  const departmentFound = await Departament.findById(req.user.department)
+  const ticketsDepartment = departmentFound.ticketsDepartment;
+  
+  const tickets = []; 
+
+  for (const ticket of ticketsDepartment) {
+    const ticketFound = await Ticket.findById(ticket);
+    tickets.push(ticketFound);
+  }
+
+  return res.status(200).json(tickets);
+};
