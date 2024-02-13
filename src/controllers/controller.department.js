@@ -1,4 +1,5 @@
 import Department from "../models/Departament.model.js";
+import User from "../models/User.model.js";
 
 // Create a new Departament function
 export const newDepartment = async (req, res) => {
@@ -48,7 +49,24 @@ export const getAllDepartments = async (req, res) => {
   return res.status(200).json(listDepartments);
 };
 
-export const getTicketByDepartment = async (req,res) => {
-  // console.log(req.user);
-  
+export const getDepartmentById = async (req,res) => {
+  try {
+    const departmentFound = await Department.findById(req.params.id);
+    const colaboratorsDepartment = departmentFound.colaborators
+
+    const colaborators = []
+
+    for (const colaborator of colaboratorsDepartment) {
+      let user = await User.findById(colaborator)
+      user = {
+        id: user.id,
+        name: user.name,
+        lastname: user.lastname
+      }
+      colaborators.push(user);
+    }
+    return res.status(200).json(colaborators);
+  } catch (error) {
+    return res.status(400).json({message: "Department not found"});
+  }
 };

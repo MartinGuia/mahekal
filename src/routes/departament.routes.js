@@ -8,6 +8,6 @@ const router = Router();
 router.post('/add-department',verifyToken, verifyRoleAdmin, departamentController.newDepartment);
 router.get('/departments',verifyToken, verifyRoleAdmin, departamentController.getAllDepartments);
 
-router.get('/department/:id',verifyToken, departamentController.getTicketByDepartment);
+router.get('/department/:id',verifyToken, departamentController.getDepartmentById);
 
 export default router

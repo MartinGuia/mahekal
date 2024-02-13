@@ -6,8 +6,8 @@ import verifyRolesAdmins from "../middlewares/verifyRolesAdmins.js";
 
 const router = Router();
 
-router.get('/tickets', verifyRoleAdmin, verifyToken, ticketsController.getAllTickets);
-router.get('/ticket/:id', ticketsController.getTicketById);
+router.get('/tickets', verifyToken, verifyRolesAdmins, ticketsController.getAllTickets);
+router.get('/ticket/:id', verifyToken, ticketsController.getTicketById);
 
 router.post('/add-ticket', verifyToken,  ticketsController.addNewTicketPost);
 router.get('/add-ticket', verifyToken,  ticketsController.addNewTicketGet);
