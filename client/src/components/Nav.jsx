@@ -5,8 +5,9 @@ import cuentas from "../img/agregar-usuario.png";
 import mensaje from "../img/mensaje.png";
 import cuenta from "../img/usuario.png";
 import { Link } from 'react-router-dom';
+import LinkButton from "./ui/LinkButton";
 
-export default function Nav(props) {
+export default function Nav({children}) {
   const [open, setOpen] = useState(false);
   
   const toggleAside = () => {
@@ -50,17 +51,18 @@ export default function Nav(props) {
         <div className="w-[40%] flex items-center">
           <button
             onClick={toggleAside}
-            className="flex justify-center hover:bg-zinc-200 duration-500 items-center ml-5 border-mahekal-brown border-2 w-[14%] h-[65%] bg-gray-100 rounded-md drop-shadow-md max-[767px]:w-[24%]"
+            className="flex justify-center hover:bg-zinc-200 duration-500 items-center ml-5 border-mahekal-brown border-2 w-[14%] h-[70%] bg-gray-100 rounded-md drop-shadow-md max-[767px]:w-[24%]"
             id="buttonAside"
           >
             <img src="menu.png" className="size-7" alt="" />
           </button>
 
-          <Link to="/newticket" className="flex items-center w-[50%] h-[100%]">
-            <button className="w-auto p-1 h-[65%] duration-500 ml-4 rounded-lg shadow-md bg-water-blue hover:bg-water-blue-hover max-[767px]:w-[50%] ">
+          <div className="flex items-center w-[50%] h-auto">
+            <LinkButton to='/newticket' className='ml-4 max-[767px]:w-[50%]'>
               {isSmallScreen ? "+" : "Nuevo Ticket +"}
-            </button>
-          </Link>
+            </LinkButton>
+          </div>
+          
         </div>
 
         {/* Caja que engloba el apartado del buscador y notificaciones */}
@@ -157,7 +159,7 @@ export default function Nav(props) {
 
         {/* Elemento Section */}
         <section className={`bg-light-bone w-screen ${open && "blur-sm"}`}>
-          {props.component}
+          {children}
         </section>
       </div>
     </>
