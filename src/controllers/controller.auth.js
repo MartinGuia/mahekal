@@ -88,12 +88,9 @@ export const signin = async (req, res) => {
     // Set token as cookie
     res.cookie("token", token);
 
-    // Responsed user data
-    res.json({ 
-      id: userFound._id,
-      userName: userFound.userName,
-      tickets: userFound.tickets
-     });
+    return res.status(200).json({
+      id: userFound.id,
+    });
   } catch (error) {
     // Respond error if exists
     res.status(500).json({ message: error.message });
