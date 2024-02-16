@@ -16,26 +16,31 @@ export default function Nav({children}) {
 
   const Menus = [
     {
+      id: 1,
       title: "Tickets",
       image: tickets,
       to: "/"
     },
     {
+      id: 2,
       title: "Dptos.",
       image: dptos,
       to: '/departamentos'
     },
     {
+      id: 3,
       title: "Cuentas",
       image: cuentas,
       to: '/',
     },
     {
+      id: 4,
       title: "Foro",
       image: mensaje,
       to: '/',
     },
     {
+      id: 5,
       title: "Cuenta",
       image: cuenta,
       to: '/',
@@ -116,12 +121,11 @@ export default function Nav({children}) {
 
           {/* Componente que contiene los iconos y nombres del menu */}
           <ul className={`pt-2`}>
-            {Menus.map((menu, i) => (
-              <>
-                <li key={i}>
+            {Menus.map(menu => (
+                <li key={menu.id}>
                   <Link
                     className="flex rounded-md p-3 mt-2 cursor-pointer hover:bg-water-blue items-center gap-x-3"
-                    to={menu.to}
+                    to={menu.to} 
                   >
                     <img src={menu.image} className="size-8" />
                     <span
@@ -133,7 +137,7 @@ export default function Nav({children}) {
                     </span>
                   </Link>
                 </li>
-              </>
+              
             ))}
           </ul>
 
@@ -158,7 +162,7 @@ export default function Nav({children}) {
         </aside>
 
         {/* Elemento Section */}
-        <section className={`bg-light-bone w-screen ${open && "blur-sm"}`}>
+        <section className={`bg-light-bone w-screen ${open && "blur-sm max-[542px]:hidden"}`}>
           {children}
         </section>
       </div>

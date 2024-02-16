@@ -12,10 +12,9 @@ const SuppliersPrioritys=[ 'Bajo', 'Medio', 'Alto', 'Critico']
 
 const status=[
   {label:'Nuevo', value:'Nuevo'},
-  {label:'Pendiente', value:'Pendiente'},
   {label:'En curso', value:'En curso'},
   {label:'Resuelto', value:'Resuelto'},
-  {label:'Necesita revision', value:'Necesita revision'},
+  {label:'En pausa/revision', value:'En pausa/revision'},
 ]
 
 function NewTicketPage() {
@@ -59,54 +58,53 @@ function NewTicketPage() {
     <>
       <Nav>
         {/* Caja que contiene el Titulo principal de la vista */}
-      <Title>Nuevo Ticket</Title>
-      {/* Caja que contiene el boton para regresar una pagina atras */}
-      <div className="w-[9%] bottom-9 left-6 relative">
-        <button className="rounded-full shadow-md">
-          <Link to="/">
-            <img
+        <Title>Nuevo Ticket</Title>
+        {/* Caja que contiene el boton para regresar una pagina atras */}
+        <div className="w-[9%] bottom-9 left-6 relative">
+          <button className="rounded-full shadow-md">
+            <Link to="/">
+              <img
                 src="flechaAtras.png"
                 className="size-8 max-[281px]:size-6"
                 alt=""
               />
-          </Link>
-        </button>
-      </div>
+            </Link>
+          </button>
+        </div>
 
-      {/* Seccion que contiene el formulario del ticket */}
-      <section className="h-[100%] w-[100%] select-none">
-        <form action="" onSubmit={handleSubmit} className="w-[100%] h-[100%]">
-          <div className="flex w-[100%] max-[541px]:flex-col max-[541px]:items-center">
+        {/* Seccion que contiene el formulario del ticket */}
+        <section className="h-[100%] w-[100%] select-none">
+          <form action="" onSubmit={handleSubmit} className="w-[100%] h-[100%]">
+            <div className="flex w-[100%] max-[541px]:flex-col max-[541px]:items-center">
+              {/* Caja del input para colocar el nombre */}
+              <div className="w-[50%] flex justify-center max-[541px]:w-[100%]">
+                <div className="w-[70%] flex flex-col">
+                  <label htmlFor="">Nombre</label>
+                  <input
+                    type="text"
+                    className="p-2 rounded m-2 border-2 w-[70%] max-[541px]:w-[100%]"
+                  />
+                </div>
+              </div>
 
-            {/* Caja del input para colocar el nombre */}
-            <div className="w-[50%] flex justify-center max-[541px]:w-[100%]">
-              <div className="w-[70%] flex flex-col">
-                <label htmlFor="">Nombre</label>
-                <input
-                  type="text"
-                  className="p-2 rounded m-2 border-2 w-[70%] max-[541px]:w-[100%]"
-                />
+              {/* Caja para el input de colocar el titulo del ticket */}
+              <div className="w-[50%] flex justify-center max-[541px]:w-[100%]">
+                <div className="w-[70%] flex flex-col">
+                  <label htmlFor="">Titulo ticket</label>
+                  <input
+                    type="text"
+                    className="p-2 rounded m-2 border-2 w-[70%] max-[541px]:w-[100%]"
+                  />
+                </div>
               </div>
             </div>
-
-            {/* Caja para el input de colocar el titulo del ticket */}
-            <div className="w-[50%] flex justify-center max-[541px]:w-[100%]">
-              <div className="w-[70%] flex flex-col">
-                <label htmlFor="">Titulo ticket</label>
-                <input
-                  type="text"
-                  className="p-2 rounded m-2 border-2 w-[70%] max-[541px]:w-[100%]"
-                />
-              </div>
-            </div>
-          </div>
-          {/* Caja para los inputs de seleccion de opciones */}
-          <div className='w-[100%] flex max-[542px]:flex-col'>
-            {/* Caja de los componentes tipo input del lado izquierdo */}
-            <div className='w-[50%] flex-col flex justify-center items-center max-[541px]:w-[100%]'>
-              <div className='w-[70%] flex-col max-[541px]:w-[100%] max-[541px]:items-center max-[541px]:flex'>
-                <label htmlFor="">Prioridad:</label>
-                <Select
+            {/* Caja para los inputs de seleccion de opciones */}
+            <div className="w-[100%] flex max-[542px]:flex-col">
+              {/* Caja de los componentes tipo input del lado izquierdo */}
+              <div className="w-[50%] flex-col flex justify-center items-center max-[541px]:w-[100%]">
+                <div className="w-[70%] flex-col max-[541px]:w-[100%] max-[541px]:items-center max-[541px]:flex">
+                  <label htmlFor="">Prioridad:</label>
+                  <Select
                     className="w-[50%]"
                     options={SuppliersPrioritys.map((sup) => ({
                       label: sup,
@@ -114,38 +112,37 @@ function NewTicketPage() {
                     }))}
                     onChange={handleSelectPriority}
                     styles={{
-                      control:(styles)=>{
+                      control: (styles) => {
                         console.log(styles);
                         return {
                           ...styles,
-                          
-                        }
+                        };
                       },
-                      option:(styles)=>{
-                        return{
+                      option: (styles) => {
+                        return {
                           ...styles,
-                          backgroundColor: "#EEE0CB"
-                        }
-                      }
+                          backgroundColor: "#EEE0CB",
+                        };
+                      },
                     }}
                   />
-              </div>
-              <div className='w-[70%] flex-col max-[541px]:w-[100%] max-[541px]:items-center max-[541px]:flex'>
-                <label htmlFor="">Estado:</label>
-                <Select
+                </div>
+                <div className="w-[70%] flex-col max-[541px]:w-[100%] max-[541px]:items-center max-[541px]:flex">
+                  <label htmlFor="">Estado:</label>
+                  <Select
                     className="w-[50%]"
                     options={status}
                     onChange={handleSelectStatus}
                   />
+                </div>
               </div>
-            </div>
-            {/* Caja de los componentes tipo input del lado derecho */}
-            <div className='w-[50%] max-[541px]:w-[100%]'>
-              {/* Caja que contiene los inputs de asignar departamento y asignar persona */}
-              <div className='w-auto flex-row flex justify-center items-center max-[281px]:flex-col'>
-                <div className='w-[50%] max-[541px]:flex-col max-[541px]:flex max-[541px]:items-center max-[541px]:justify-center max-[281px]:w-[100%]'>
-                  <label htmlFor="">Departamento:</label>
-                  <Select
+              {/* Caja de los componentes tipo input del lado derecho */}
+              <div className="w-[50%] max-[541px]:w-[100%]">
+                {/* Caja que contiene los inputs de asignar departamento y asignar persona */}
+                <div className="w-auto flex-row flex justify-center items-center max-[281px]:flex-col">
+                  <div className="w-[50%] max-[541px]:flex-col max-[541px]:flex max-[541px]:items-center max-[541px]:justify-center max-[281px]:w-[100%]">
+                    <label htmlFor="">Departamento:</label>
+                    <Select
                       className="w-[70%] "
                       options={SuppliersPrioritys.map((sup) => ({
                         label: sup,
@@ -153,21 +150,21 @@ function NewTicketPage() {
                       }))}
                       onChange={handleSelectPriority}
                     />
-                </div>
-                <div className='w-[50%] max-[541px]:flex-col max-[541px]:flex max-[541px]:items-center max-[541px]:justify-center max-[281px]:w-[100%]'>
-                  <label htmlFor="">Asignar a:</label>
-                  <Select
+                  </div>
+                  <div className="w-[50%] max-[541px]:flex-col max-[541px]:flex max-[541px]:items-center max-[541px]:justify-center max-[281px]:w-[100%]">
+                    <label htmlFor="">Asignar a:</label>
+                    <Select
                       className="w-[70%]"
                       options={status}
                       onChange={handleSelectStatus}
                     />
+                  </div>
                 </div>
-              </div>
-              {/* Caja que contiene los inputs del tiempo de ejecucion y el No. de habitación */}
-              <div className='w-auto flex-row flex justify-center items-center max-[281px]:flex-col'>
-                <div className='w-[50%] max-[541px]:flex-col max-[541px]:flex max-[541px]:items-center max-[541px]:justify-center max-[281px]:w-[100%]'>
-                  <label htmlFor="">Tiempo de ejecución:</label>
-                  <Select
+                {/* Caja que contiene los inputs del tiempo de ejecucion y el No. de habitación */}
+                <div className="w-auto flex-row flex justify-center items-center max-[281px]:flex-col">
+                  <div className="w-[50%] max-[541px]:flex-col max-[541px]:flex max-[541px]:items-center max-[541px]:justify-center max-[281px]:w-[100%]">
+                    <label htmlFor="">Tiempo de ejecución:</label>
+                    <Select
                       className="w-[70%] "
                       options={SuppliersPrioritys.map((sup) => ({
                         label: sup,
@@ -175,62 +172,72 @@ function NewTicketPage() {
                       }))}
                       onChange={handleSelectPriority}
                     />
-                </div>
-                <div className='w-[50%] max-[541px]:flex-col max-[541px]:flex max-[541px]:items-center max-[541px]:justify-center max-[281px]:w-[100%]'>
-                  <label htmlFor="">No. habitacion:</label>
-                  <div className='max-[541px]:flex max-[541px]:justify-center'>
-                    <input
+                  </div>
+                  <div className="w-[50%] max-[541px]:flex-col max-[541px]:flex max-[541px]:items-center max-[541px]:justify-center max-[281px]:w-[100%]">
+                    <label htmlFor="">No. habitacion:</label>
+                    <div className="max-[541px]:flex max-[541px]:justify-center">
+                      <input
                         type="text"
                         className="p-1 rounded border-2 w-[70%] max-[281px]:w-[100%]"
                       />
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* Caja que contiene el textarea*/}
-          <div className=" w-[100%] mt-4">
-            <div className="w-[50%] flex justify-center">
-              <label htmlFor="" className="flex">
-                Descripcción del ticket
-              </label>
+            {/* Caja que contiene el textarea*/}
+            <div className=" w-[100%] mt-4">
+              <div className="w-[50%] flex justify-center">
+                <label htmlFor="" className="flex">
+                  Descripcción del ticket
+                </label>
+              </div>
+              <div className="flex w-[100%] justify-center">
+                <textarea
+                  name=""
+                  id=""
+                  className="w-[60%] pb-3 border-2 rounded-md"
+                ></textarea>
+              </div>
             </div>
-            <div className="flex w-[100%] justify-center">
-              <textarea name="" id="" className="w-[60%] pb-3 border-2 rounded-md"></textarea>
-            </div>
-          </div>
 
-          {/* Caja que contiene la insercion de imagenes */}
-          <div className="flex justify-center mt-3">
-            <div
-              {...getRootProps()}
-              className="text-gray-400 border-2 py-[4%] px-[4%] border-dashed border-mahekal-brown cursor-pointer shadow-lg"
-            >
-              <input {...getInputProps()} />
-              {isDragActive ? (
-                <p>Drop the files here ...</p>
-              ) : (
-                <p>Arrastra o selecciona los archivos</p>
-              )}
-            </div>
-            {/* <input type="file"
+            {/* Caja que contiene la insercion de imagenes */}
+            <div className="flex justify-center mt-3">
+              <div
+                {...getRootProps()}
+                className="text-gray-400 border-2 py-[4%] px-[4%] border-dashed border-mahekal-brown cursor-pointer shadow-lg"
+              >
+                <input {...getInputProps()} />
+                {isDragActive ? (
+                  <p>Drop the files here ...</p>
+                ) : (
+                  <p>Arrastra o selecciona los archivos</p>
+                )}
+              </div>
+              {/* <input type="file"
               onChange={e => setFile(e.target.files[0])}
             /> */}
-            {/*Toma el objeto file y lo convierte a una url para mostrarlo como previsualizacion de la img escogida */}
-            {acceptedFiles[0] && (
-              <img src={URL.createObjectURL(acceptedFiles[0])} className='size-40' alt="" />
-            )}
-          </div>
-          <br />
-          <LinkButton>
-              <p className='px-3 text-lg'>Enviar</p>
-          </LinkButton>
-        </form>
-      </section>
+              {/*Toma el objeto file y lo convierte a una url para mostrarlo como previsualizacion de la img escogida */}
+              {acceptedFiles[0] && (
+                <img
+                  src={URL.createObjectURL(acceptedFiles[0])}
+                  className="size-40"
+                  alt=""
+                />
+              )}
+            </div>
+            <br />
+            <div className='w-[100%] flex justify-center'>
+              <LinkButton className="w-60 max-[361px]:w-[50%]">
+                <p className="px-3 text-lg">Enviar</p>
+              </LinkButton>
+            </div>
+          </form>
+        </section>
       </Nav>
     </>
-  )
+  );
 }
 
 export default NewTicketPage
