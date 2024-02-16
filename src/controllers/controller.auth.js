@@ -5,7 +5,28 @@ import Department from "../models/Departament.model.js";
 import { createdAccessToken } from "../libs/jwt.js";
 import bcryptjs from "bcryptjs";
 
-// Signup controller function
+// Signup get controller function
+export const getSignup = async (req, res) => {
+  try {
+    const departmentList = [];
+    const departmetsFound = await Department.find();
+
+    if (departmetsFound.length === 0)
+      return res.status(204).json("Departmets not found");
+
+    for (let department of departmetsFound) {
+      department = {
+        name: department.name,
+      };
+      departmentList.push(department);
+    }
+    return res.status(200).json(departmentList);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+// Signup post controller function
 export const signup = async (req, res) => {
   // Body desctructuring
   const { name, lastname, userName, password, role, department } = req.body;
