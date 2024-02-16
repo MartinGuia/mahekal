@@ -1,14 +1,12 @@
-import React, { useState } from 'react';
-import Nav from "../components/Nav";
-import LoginForm from "../components/LoginForm";
+import { Title } from "../components/Headers/Title";
+
 export default function Login() {
 
   return (
     <>
-    <Nav component={<LoginForm/>}/>
-     {/* <div className=" flex h-[calc(100vh-100px)] items-center p-5 justify-center">
+    <div className=" flex h-[calc(100vh-100px)] items-center p-5 justify-center">
        <div className="bg-white max-w-lg w-full p-8 rounded text-center shadow-xl">
-         <h1 className="font-bold">MAHEKAL</h1>
+         <Title>MAHEKAL</Title>
          <form className="flex flex-col items-center">
            <img className="w-20 p-1" src="LogoMahekal.png" alt="Mahekal Logo" />
            <input
@@ -26,7 +24,7 @@ export default function Login() {
            </button>
          </form>
        </div>
-     </div> */}
+     </div>     
      </>
   );
 }
