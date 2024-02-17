@@ -108,7 +108,7 @@ function NewTicketPage() {
                     options={SuppliersPrioritys.map((sup) => ({
                       label: sup,
                       value: sup,
-                    }))}
+                    }))} 
                     onChange={handleSelectPriority}
                     // styles={{
                     //   control: (styles) => {
