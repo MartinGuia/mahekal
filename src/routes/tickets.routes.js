@@ -10,7 +10,8 @@ router.get('/add-ticket', verifyToken,  ticketsController.addNewTicketGet);
 router.post('/add-ticket', verifyToken,  ticketsController.addNewTicketPost);
 
 router.get('/tickets', verifyToken, ticketsController.getAllTickets);
-router.get('/active-tickets', verifyToken, ticketsController.getAllActiveTickets);
+router.get('/new-tickets', verifyToken, ticketsController.getAllNewTickets);
+router.get('/progress-tickets', verifyToken, ticketsController.getAllTicketsInProgress);
 
 
 router.get('/ticket/:id', verifyToken, ticketsController.getTicketById);

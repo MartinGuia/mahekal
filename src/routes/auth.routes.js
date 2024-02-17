@@ -5,12 +5,11 @@ import verifyRoleAdmin from "../middlewares/verifyRoleAdmin.js";
 
 const router = Router();
 
-router.post('/signin', authController.signin)
+router.post("/signin", authController.signin);
 
-router.post('/signup', verifyToken ,verifyRoleAdmin ,authController.signup)
-router.get('/signup', verifyToken ,verifyRoleAdmin ,authController.getSignup)
+router.post("/signup",  authController.signup);
+router.get("/signup", verifyToken, verifyRoleAdmin, authController.getSignup);
 
-router.post('/logout', verifyToken, authController.logout)
+router.post("/logout", verifyToken, authController.logout);
 
-
-export default router
+export default router;

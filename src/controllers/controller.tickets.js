@@ -6,15 +6,14 @@ import Roles from "../models/Roles.model.js";
 
 export const addNewTicketGet = async (req, res) => {
   try {
-    const departmentFound = await Departament.find();
-
+    const departmentFound = await Department.find();
+    if (departmentFound.length == 0) res.status(204).json({message: "Departments not found" });
     const departments = departmentFound.map((department) => {
       return {
         id: department.id,
         name: department.name,
       };
     });
-    console.log(departments);
     return res.status(200).json(departments);
   } catch (error) {
     return res.status(400).json({ message: error.message });
@@ -45,7 +44,7 @@ export const addNewTicketPost = async (req, res) => {
       date: localDate,
       title: title,
       priority: priority,
-      status: "Activo",
+      status: "Nuevo",
       assignedDepartment: departmentFound._id,
       roomOrArea: roomOrArea,
       description: description,
@@ -58,7 +57,7 @@ export const addNewTicketPost = async (req, res) => {
     );
 
     const ticketSaved = await newTicket.save();
-    res.status(201).json({ message: "Ticket saved successfully" });
+    return res.status(201).json({ message: "Ticket saved successfully" });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
@@ -171,16 +170,16 @@ export const getAllTickets = async (req, res) => {
   };
 };
 
-export const getAllActiveTickets = async (req, res) => {
+export const getAllNewTickets = async (req, res) => {
   try {
     const roleFound = await Roles.findById(req.user.role);
 
     if (roleFound.name === "Administrador") {
       try {
-        const activeTickets = await Ticket.find({ status: "Activo" });
+        const newTickets = await Ticket.find({ status: "Nuevo" });
         const ticketsArray = [];
 
-        for (let ticket of activeTickets) {
+        for (let ticket of newTickets) {
           const departmentFound = await Department.findById(
             ticket.assignedDepartment
           );
@@ -205,10 +204,10 @@ export const getAllActiveTickets = async (req, res) => {
 
     if (roleFound.name === "Gerente Administrador") {
       try {
-        const activeTickets = await Ticket.find({ status: "Activo" });
+        const newTickets = await Ticket.find({ status: "Nuevo" });
         const ticketsArray = [];
 
-        for (let ticket of activeTickets) {
+        for (let ticket of newTickets) {
           const departmentFound = await Department.findById(
             ticket.assignedDepartment
           );
@@ -233,12 +232,12 @@ export const getAllActiveTickets = async (req, res) => {
 
     if (roleFound.name === "Gerente Área") {
       const ticketsArray = [];
-      const ticketsFound = await Ticket.find({
+      const newTickets = await Ticket.find({
         assignedDepartment: req.user.department,
-        status: "Activo",
+        status: "Nuevo",
       });
 
-      for (let ticket of ticketsFound) {
+      for (let ticket of newTickets) {
         const departmentFound = await Department.findById(
           ticket.assignedDepartment
         );
@@ -260,10 +259,16 @@ export const getAllActiveTickets = async (req, res) => {
 
     if (roleFound.name === "Operador") {
     };
-  } catch (error) {
+  }
+   catch (error) {
     return res.status(500).json({ message: error.message });
   }
 };
+
+export const getAllTicketsInProgress = async (req, res) => {
+  
+  res.status(200).json('SI');
+}
 
 export const getTicketById = async (req, res) => {
   try {
