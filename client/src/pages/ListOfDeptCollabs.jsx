@@ -8,9 +8,24 @@ import { useState } from 'react';
 function ListOfDeptCollabs() {
 
   const initialData = [
-    { id: 1, name: 'Martin Garcia', status: 'connected', lastSeen: '2024-02-15' },
-    { id: 2, name: 'Jimena Chavez', status: 'disconnected', lastSeen: '2024-02-14' },
-    { id: 3, name: 'Emanuel Armenta', status: 'disconnected', lastSeen: '2024-02-14' },
+    {
+      id: 1,
+      name: "Martin Garcia",
+      status: "connected",
+      lastSeen: "2024-02-15",
+    },
+    {
+      id: 2,
+      name: "Jimena Chavez",
+      status: "disconnected",
+      lastSeen: "2024-02-14",
+    },
+    {
+      id: 3,
+      name: "Emanuel Armenta",
+      status: "disconnected",
+      lastSeen: "2024-02-14",
+    },
   ];
 
   const [data, setData] = useState(initialData);
@@ -19,29 +34,6 @@ function ListOfDeptCollabs() {
     setData(data.filter(item => item.id !== id));
   };
 
-  // const data = [
-  //   {
-  //     Nombre: "Luis Suarez",
-  //     Estado: 'En linea',
-  //     Conexion: 'Hace 1 hora'
-  //   },
-  //   {
-  //     Nombre: "Martin Garcia",
-  //     Estado: 'En linea',
-  //     Conexion: 'Hace 2 minutos'
-  //   },
-  //   {
-  //     Nombre: "Jimena Chavez",
-  //     Estado: 'En linea',
-  //     Conexion: 'Hace 4 horas'
-  //   },
-  //   {
-  //     Nombre: "Melissa Garcia",
-  //     Estado: 'En linea',
-  //     Conexion: 'Hace 3 horas'
-  //   },
-    
-  // ];
 
   return (
     <>
@@ -66,7 +58,7 @@ function ListOfDeptCollabs() {
         </section>
 
         <section className="w-[100%] flex justify-center">
-          <table className="min-w-[70%] divide-y divide-gray-200 shadow-lg max-w-[50%]">
+          <table className="min-w-[70%] mt-4 divide-y divide-gray-200 shadow-lg max-w-[50%]">
             <thead className="bg-gray-50">
               <tr className='text-center'>
                 <th
@@ -129,28 +121,6 @@ function ListOfDeptCollabs() {
             </tbody>
           </table>
         </section>
-
-        {/* <section className="w-[100%] h-[100%]">
-          <TableContainer>
-            <Table>
-              <TableHead className="">
-                <TableCell>Nombre</TableCell>
-                <TableCell>Estado</TableCell>
-                <TableCell>Ultima conexion</TableCell>
-              </TableHead>
-
-              <TableBody>
-                {data.map((celda) => (
-                  <TableRow>
-                    <TableCell>{celda.Nombre}</TableCell>
-                    <TableCell>{celda.Estado}</TableCell>
-                    <TableCell>{celda.Nombre}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </section> */}
       </Nav>
     </>
   );

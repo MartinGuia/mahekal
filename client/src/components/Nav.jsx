@@ -31,7 +31,7 @@ export default function Nav({children}) {
       id: 3,
       title: "Cuentas",
       image: cuentas,
-      to: '/',
+      to: '/allaccounts',
     },
     {
       id: 4,

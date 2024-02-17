@@ -11,10 +11,9 @@ import { Title } from '../components/Headers/Title'
 const SuppliersPrioritys=[ 'Bajo', 'Medio', 'Alto', 'Critico']
 
 const status=[
-  {label:'Nuevo', value:'Nuevo'},
   {label:'En curso', value:'En curso'},
-  {label:'Resuelto', value:'Resuelto'},
   {label:'En pausa/revision', value:'En pausa/revision'},
+  {label:'Resuelto', value:'Resuelto'},
 ]
 
 function NewTicketPage() {
@@ -111,20 +110,20 @@ function NewTicketPage() {
                       value: sup,
                     }))}
                     onChange={handleSelectPriority}
-                    styles={{
-                      control: (styles) => {
-                        console.log(styles);
-                        return {
-                          ...styles,
-                        };
-                      },
-                      option: (styles) => {
-                        return {
-                          ...styles,
-                          backgroundColor: "#EEE0CB",
-                        };
-                      },
-                    }}
+                    // styles={{
+                    //   control: (styles) => {
+                    //     console.log(styles);
+                    //     return {
+                    //       ...styles,
+                    //     };
+                    //   },
+                    //   option: (styles) => {
+                    //     return {
+                    //       ...styles,
+                    //       backgroundColor: "",
+                    //     };
+                    //   },
+                    // }}
                   />
                 </div>
                 <div className="w-[70%] flex-col max-[541px]:w-[100%] max-[541px]:items-center max-[541px]:flex">
