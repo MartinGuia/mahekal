@@ -12,6 +12,7 @@ router.post('/add-ticket', verifyToken,  ticketsController.addNewTicketPost);
 router.get('/tickets', verifyToken, ticketsController.getAllTickets);
 router.get('/new-tickets', verifyToken, ticketsController.getAllNewTickets);
 router.get('/progress-tickets', verifyToken, ticketsController.getAllTicketsInProgress);
+router.get('/resolved', verifyToken, ticketsController.getAllTicketsResolve);
 
 
 router.get('/ticket/:id', verifyToken, ticketsController.getTicketById);

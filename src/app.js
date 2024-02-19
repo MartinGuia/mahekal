@@ -13,10 +13,10 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(cookieParser())
 
-app.use('/api', authRouthes);
+app.use('/api/auth', authRouthes);
 app.use('/api', userRouthes);
-app.use('/api', ticketsRouthes);
-app.use('/api', departamentsRouthes);
+app.use('/api/ticket', ticketsRouthes);
+app.use('/api/department', departamentsRouthes);
 
 export default app
  
