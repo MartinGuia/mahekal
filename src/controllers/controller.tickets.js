@@ -73,7 +73,7 @@ export const getAllTickets = async (req, res) => {
         const ticketsFound = await Ticket.find();
 
         if (ticketsFound.length === 0)
-          return res.status(204).json({ message: "Tickets not found" });
+           return res.status(204).json({ message: "Tickets not found" });
 
         for (let ticket of ticketsFound) {
           const departmentFound = await Department.findById(
@@ -267,6 +267,83 @@ export const getAllNewTickets = async (req, res) => {
 
 export const getAllTicketsInProgress = async (req, res) => {
   
+  const roleFound = await Roles.findById(req.user.role);
+
+  if (roleFound.name === "Administrador") {
+    const ticketsArray = [];
+    const ticketsFound = await Ticket.find({ status: "En curso" })
+    if (ticketsFound.length === 0) return res.status(204).json({ message: "No tickets found"});
+
+    for (let ticket of ticketsFound) {
+      const departmentFound = await Department.findById(ticket.assignedDepartment);
+      ticket = {
+        id: ticket.id,
+        name: ticket.name,
+        date: ticket.date,
+        title: ticket.title,
+        priority: ticket.priority,
+        status: ticket.status,
+        assignedDepartment: departmentFound.name,
+        assignedTo: ticket.assignedTo
+      }
+      ticketsArray.push(ticket);
+    }
+
+    return res.status(200).json(ticketsArray);
+  };
+
+  if (roleFound.name === "Gerente Administrador") {
+    const ticketsArray = [];
+    const ticketsFound = await Ticket.find({ status: "En curso" })
+    if (ticketsFound.length === 0) return res.status(204).json({ message: "No tickets found"});
+
+    for (let ticket of ticketsFound) {
+      const departmentFound = await Department.findById(ticket.assignedDepartment);
+      ticket = {
+        id: ticket.id,
+        name: ticket.name,
+        date: ticket.date,
+        title: ticket.title,
+        priority: ticket.priority,
+        status: ticket.status,
+        assignedDepartment: departmentFound.name,
+        assignedTo: ticket.assignedTo
+      }
+      ticketsArray.push(ticket);
+    }
+
+    return res.status(200).json(ticketsArray);
+  };
+
+  if (roleFound.name === "Gerente Área") {
+    const ticketsArray = [];
+      const newTickets = await Ticket.find({
+        assignedDepartment: req.user.department,
+        status: "En curso",
+      });
+
+      for (let ticket of newTickets) {
+        const departmentFound = await Department.findById(
+          ticket.assignedDepartment
+        );
+        ticket = {
+          id: ticket.id,
+          name: ticket.name,
+          date: ticket.date,
+          title: ticket.title,
+          priority: ticket.priority,
+          status: ticket.status,
+          assignedDepartment: departmentFound.name,
+          assignedTo: ticket.assignedTo,
+        };
+        ticketsArray.push(ticket);
+      }
+
+      return res.status(200).json(ticketsArray);
+  };
+
+  if (roleFound.name === "Operador") {};
+
   res.status(200).json('SI');
 }
 
