@@ -431,6 +431,89 @@ export const getAllTicketsResolve = async (req,res) => {
   };
 };
 
+export const getAllTicketsOnPauseOrReview = async (req,res) => {
+  try {
+    const roleFound = await Roles.findById(req.user.role);
+
+  if (roleFound.name === "Administrador") {
+    const ticketsArray = [];
+    const ticketsFound = await Ticket.find({ status: "En pausa/revisión" })
+    if (ticketsFound.length === 0) return res.status(204).json({ message: "No tickets found"});
+
+    for (let ticket of ticketsFound) {
+      const departmentFound = await Department.findById(ticket.assignedDepartment);
+      ticket = {
+        id: ticket.id,
+        name: ticket.name,
+        date: ticket.date,
+        title: ticket.title,
+        priority: ticket.priority,
+        status: ticket.status,
+        assignedDepartment: departmentFound.name,
+        assignedTo: ticket.assignedTo
+      }
+      ticketsArray.push(ticket);
+    }
+
+    return res.status(200).json(ticketsArray);
+  };
+
+  if (roleFound.name === "Gerente Administrador") {
+    const ticketsArray = [];
+    const ticketsFound = await Ticket.find({ status: "En pausa/revisión" })
+    if (ticketsFound.length === 0) return res.status(204).json({ message: "No tickets found"});
+
+    for (let ticket of ticketsFound) {
+      const departmentFound = await Department.findById(ticket.assignedDepartment);
+      ticket = {
+        id: ticket.id,
+        name: ticket.name,
+        date: ticket.date,
+        title: ticket.title,
+        priority: ticket.priority,
+        status: ticket.status,
+        assignedDepartment: departmentFound.name,
+        assignedTo: ticket.assignedTo
+      }
+      ticketsArray.push(ticket);
+    }
+
+    return res.status(200).json(ticketsArray);
+  };
+
+  if (roleFound.name === "Gerente Área") {
+    const ticketsArray = [];
+      const newTickets = await Ticket.find({
+        assignedDepartment: req.user.department,
+        status: "En pausa/revisión",
+      });
+
+      for (let ticket of newTickets) {
+        const departmentFound = await Department.findById(
+          ticket.assignedDepartment
+        );
+        ticket = {
+          id: ticket.id,
+          name: ticket.name,
+          date: ticket.date,
+          title: ticket.title,
+          priority: ticket.priority,
+          status: ticket.status,
+          assignedDepartment: departmentFound.name,
+          assignedTo: ticket.assignedTo,
+        };
+        ticketsArray.push(ticket);
+      }
+
+      return res.status(200).json(ticketsArray);
+  };
+
+  if (roleFound.name === "Operador") {};
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  };
+}
+
 export const getTicketById = async (req, res) => {
   try {
     const ticketById = await Ticket.findById(req.params.id);
