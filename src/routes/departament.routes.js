@@ -15,6 +15,8 @@ router.post("/add-department", verifyToken, verifyRoleAdmin, departamentControll
 
 // Get department by Id
 router.get("/tickets-department/:id", verifyToken, verifyRolesAdmins, departamentController.getDepartmentTickestById);
+// Get Colaborator by id of department
+router.get("/colaborators-department/:id", verifyToken, verifyRolesAdmins, departamentController.getColaboratorsByDepartment);
 
 
 router.get("/department-area", verifyToken, departamentController.getDepartmentAreaManager);

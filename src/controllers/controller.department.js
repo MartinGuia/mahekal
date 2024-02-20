@@ -86,6 +86,32 @@ export const getDepartmentTickestById = async (req, res) => {
   }
 };
 
+export const getColaboratorsByDepartment = async (req,res) => {
+  try {
+    const departmentFound = await Department.findById(req.params.id);
+    const colaborators = departmentFound.colaborators;
+    const colaboratorsArray = [];
+
+    if (colaborators.length === 0) 
+      res.status(204).josn({message: "Department without collaboratos" });
+
+    for (const colaborator of colaborators) {
+      let colaboratorFound = await User.findById(colaborator)
+      colaboratorFound = {
+        id: colaboratorFound.id,
+        name: colaboratorFound.name,
+        lastname: colaboratorFound.lastname
+      };
+      colaboratorsArray.push(colaboratorFound);
+    };
+    
+    res.status(200).send(colaboratorsArray);
+
+  } catch (error) {
+    return res.status(404).json({message: "Department not found"});
+  }
+};
+
 export const getDepartmentAreaManager = async (req, res) => {
   const departmentFound = await Department.findById(req.user.department);
   const colaborators = departmentFound.colaborators;
