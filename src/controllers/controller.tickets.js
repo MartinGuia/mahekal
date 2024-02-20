@@ -512,10 +512,11 @@ export const getAllTicketsOnPauseOrReview = async (req,res) => {
   } catch (error) {
     return res.status(500).json({ message: error.message });
   };
-}
+};
 
 export const getTicketById = async (req, res) => {
-  try {
+    try {
+      console.log(req.user)
     const ticketById = await Ticket.findById(req.params.id);
     return res.status(200).json(ticketById);
   } catch (error) {

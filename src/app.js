@@ -15,8 +15,8 @@ app.use(cookieParser())
 
 app.use('/api/auth', authRouthes);
 app.use('/api', userRouthes);
-app.use('/api/ticket', ticketsRouthes);
-app.use('/api/department', departamentsRouthes);
+app.use('/api/tickets', ticketsRouthes);
+app.use('/api/departments', departamentsRouthes);
 
 export default app
  
