@@ -2,6 +2,32 @@ import Department from "../models/Departament.model.js";
 import User from "../models/User.model.js";
 import Ticket from "../models/Ticket.model.js";
 
+// Get all departments function
+export const getAllDepartments = async (req, res) => {
+  try {
+    // Find all department, if not found return status and message
+    const departmentsFound = await Department.find();
+    if (departmentsFound.length === 0)
+      return res
+        .status(204)
+        .json({ message: "There are no departments available." });
+
+    // Make new object with department information
+    const listDepartments = departmentsFound.map((departments) => {
+      return {
+        id: departments.id,
+        name: departments.name,
+        colaborators: departments.colaborators.length,
+        tickets: departments.ticketsDepartment.length,
+      };
+    });
+    // Returns status and list with news obbjects
+    return res.status(200).json(listDepartments);
+  } catch (error) {
+    return res.status(500).json({message: error.message});
+  }
+};
+
 // Create a new Departament function
 export const newDepartment = async (req, res) => {
   // Body desctructuring
@@ -31,46 +57,32 @@ export const newDepartment = async (req, res) => {
   }
 };
 
-export const getAllDepartments = async (req, res) => {
-  // Find all department, if not found return status and message
-  const departmentsFound = await Department.find();
-  if (departmentsFound.length === 0)
-    return res
-      .status(204)
-      .json({ message: "There are no departments available." });
-
-  // Make new object with department information
-  const listDepartments = departmentsFound.map((departments) => {
-    return {
-      id: departments.id,
-      name: departments.name,
-      colaborators: departments.colaborators.length,
-      tickets: departments.ticketsDepartment.length,
-    };
-  });
-  // Returns status and list with news obbjects
-  return res.status(200).json(listDepartments);
-};
-
-export const getDepartmentById = async (req, res) => {
+export const getDepartmentTickestById = async (req, res) => {
   try {
     const departmentFound = await Department.findById(req.params.id);
-    const colaboratorsDepartment = departmentFound.colaborators;
+    const departmentTickets = departmentFound.ticketsDepartment;
+    const ticketsArray = [];
 
-    const colaborators = [];
-
-    for (const colaborator of colaboratorsDepartment) {
-      let user = await User.findById(colaborator);
-      user = {
-        id: user.id,
-        name: user.name,
-        lastname: user.lastname,
+    for (const ticket of departmentTickets) {
+      let ticketFound = await Ticket.findById(ticket);
+      const departmentFound = await Department.findById(ticketFound.assignedDepartment);
+      ticketFound = {
+        id: ticketFound.id,
+        name: ticketFound.name,
+        date: ticketFound.date,
+        title: ticketFound.title,
+        priority: ticketFound.priority,
+        status: ticketFound.status,
+        assignedDepartment: departmentFound.name,
+        assignedTo: ticketFound.assignedTo,
+        roomOrArea: ticketFound.roomOrArea
       };
-      colaborators.push(user);
-    }
-    return res.status(200).json(colaborators);
+      ticketsArray.push(ticketFound);
+    };
+
+    return res.status(200).json(ticketsArray);
   } catch (error) {
-    return res.status(400).json({ message: "Department not found" });
+    return res.status(404).json({message: "Department not found"});
   }
 };
 

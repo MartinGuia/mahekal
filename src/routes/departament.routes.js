@@ -7,10 +7,15 @@ import verifyRoleWithoutOperator from "../middlewares/verifyRoleWithoutOperator.
 
 const router = Router();
 
-router.post("/add-department", verifyToken, verifyRoleAdmin, departamentController.newDepartment);
+// Get all tickets
 router.get("/departments", verifyToken, verifyRoleAdmin, departamentController.getAllDepartments);
 
-router.get("/department/:id", verifyToken, verifyRolesAdmins, departamentController.getDepartmentById);
+// Add new departament
+router.post("/add-department", verifyToken, verifyRoleAdmin, departamentController.newDepartment);
+
+// Get department by Id
+router.get("/tickets-department/:id", verifyToken, verifyRolesAdmins, departamentController.getDepartmentTickestById);
+
 
 router.get("/department-area", verifyToken, departamentController.getDepartmentAreaManager);
 
