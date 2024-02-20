@@ -57,6 +57,7 @@ export const newDepartment = async (req, res) => {
   }
 };
 
+// Get all tickets department
 export const getDepartmentTickestById = async (req, res) => {
   try {
     const departmentFound = await Department.findById(req.params.id);
@@ -86,6 +87,7 @@ export const getDepartmentTickestById = async (req, res) => {
   }
 };
 
+// Get all colaborators of a department
 export const getColaboratorsByDepartment = async (req,res) => {
   try {
     const departmentFound = await Department.findById(req.params.id);
@@ -109,6 +111,18 @@ export const getColaboratorsByDepartment = async (req,res) => {
 
   } catch (error) {
     return res.status(404).json({message: "Department not found"});
+  }
+};
+
+export const deleteColaboratorByDepartment = async (req,res) => {
+  try {
+    const departament = await Department.find({colaborators: req.params.id})
+    console.log(departament)
+    // const userFound = await User.findById(req.params.id);
+    // const match = await userFound.populate({}, )
+    return res.status(200);
+  } catch (error) {
+    return res.status(404).json({ message: "User not found" });
   }
 };
 

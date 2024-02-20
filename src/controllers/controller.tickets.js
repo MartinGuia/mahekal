@@ -7,6 +7,15 @@ import Roles from "../models/Roles.model.js";
 export const addNewTicketGet = async (req, res) => {
   try {
     const departmentFound = await Department.find();
+    
+    let userFound = await User.findById(req.user.id);
+    
+    userFound = {
+      id: userFound.id,
+      name: userFound.name,
+      lastname: userFound.lastname
+    };
+
     if (departmentFound.length == 0) res.status(204).json({message: "Departments not found" });
     const departments = departmentFound.map((department) => {
       return {
@@ -14,7 +23,7 @@ export const addNewTicketGet = async (req, res) => {
         name: department.name,
       };
     });
-    return res.status(200).json(departments);
+    return res.status(200).json({departments, userFound});
   } catch (error) {
     return res.status(400).json({ message: error.message });
   }
