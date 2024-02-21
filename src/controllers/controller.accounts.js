@@ -28,10 +28,37 @@ export const getAllUsers = async (req, res) => {
 
 export const getUserById = async (req,res) => {
     try {
-        const userFound = await User.findById(req.params.id);
-        
-        return res.status(200).json(userFound);
+        let userFound = await User.findById(req.params.id);
+        const userDepartment = await Departament.findById(userFound.department);
+        const userRole = await Role.findById(userFound.role);
+
+        const departments = await Departament.find();
+        const departmentList = [];
+
+        const rolesList = await Role.find();
+
+        for (let department of departments) {
+            const departmentFound = await Departament.findById(department.id)
+            department = {
+                id: department.id,
+                name: department.name
+            };
+            departmentList.push(department);
+        };
+
+        userFound = {
+            id: userFound.id,
+            name: userFound.name,
+            lastname: userFound.lastname,
+            username: userFound.userName,
+            password: "",
+            role: userRole.name,
+            department: userDepartment.name
+        };
+
+        return res.status(200).json({userFound, departmentList, rolesList});
     } catch (error) {
         return res.status(500).json({ message: "User not found" });        
-    }
+    };
 };
+
