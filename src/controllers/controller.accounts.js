@@ -26,3 +26,12 @@ export const getAllUsers = async (req, res) => {
     };
 };
 
+export const getUserById = async (req,res) => {
+    try {
+        const userFound = await User.findById(req.params.id);
+        
+        return res.status(200).json(userFound);
+    } catch (error) {
+        return res.status(500).json({ message: "User not found" });        
+    }
+};
