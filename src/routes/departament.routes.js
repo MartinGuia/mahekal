@@ -19,7 +19,7 @@ router.get("/tickets-department/:id", verifyToken, verifyRolesAdmins, departamen
 router.get("/colaborators-department/:id", verifyToken, verifyRolesAdmins, departamentController.getColaboratorsByDepartment);
 
 
-router.get("/delete-colaborator/:id", verifyToken, verifyRoleAdmin, departamentController.deleteColaboratorByDepartment)
+router.delete("/delete-colaborator/:id", verifyToken, verifyRoleAdmin, departamentController.deleteColaboratorByDepartment)
 
 router.get("/department-area", verifyToken, departamentController.getDepartmentAreaManager);
 

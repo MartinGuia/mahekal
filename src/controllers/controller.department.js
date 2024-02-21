@@ -114,13 +114,19 @@ export const getColaboratorsByDepartment = async (req,res) => {
   }
 };
 
-export const deleteColaboratorByDepartment = async (req,res) => {
+export const deleteColaboratorByDepartment = async (req, res) => {
   try {
-    const departament = await Department.find({colaborators: req.params.id})
-    console.log(departament)
-    // const userFound = await User.findById(req.params.id);
-    // const match = await userFound.populate({}, )
-    return res.status(200);
+    const userFound = await User.findById(req.params.id);
+    const departmentFound = await Department.findById(userFound.department);
+
+    const userDeletedFromDepartment = await Department.updateOne(
+      { _id: departmentFound._id },
+      { $pull: { colaborators: userFound._id } }
+    );
+    // Another query should go here that removes the user from the ticket
+    const userDeleted = await User.findByIdAndDelete(req.params.id);
+
+    return res.status(200).json({ message: "User deleted successfullys" });
   } catch (error) {
     return res.status(404).json({ message: "User not found" });
   }
