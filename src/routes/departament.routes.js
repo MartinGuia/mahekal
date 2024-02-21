@@ -15,14 +15,12 @@ router.post("/add-department", verifyToken, verifyRoleAdmin, departamentControll
 
 // Get department by Id
 router.get("/tickets-department/:id", verifyToken, verifyRolesAdmins, departamentController.getDepartmentTickestById);
+
 // Get Colaborator by id of department
 router.get("/colaborators-department/:id", verifyToken, verifyRolesAdmins, departamentController.getColaboratorsByDepartment);
 
-
+// Delete a user and their reference
 router.delete("/delete-colaborator/:id", verifyToken, verifyRoleAdmin, departamentController.deleteColaboratorByDepartment)
 
-router.get("/department-area", verifyToken, departamentController.getDepartmentAreaManager);
-
-// router.get("/department/user/:id",verifyToken, departamentController.getDepartmentAreaManager);
 
 export default router;
