@@ -13,7 +13,4 @@ router.get("/signup", verifyToken, verifyRoleAdmin, authController.getSignup);
 router.get("/verify", verifyToken)
 router.post("/logout", verifyToken, authController.logout);
 
-router.post('/logout', verifyToken, authController.logout)
-
-
-export default router
+export default router;
