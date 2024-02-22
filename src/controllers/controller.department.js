@@ -2,6 +2,32 @@ import Department from "../models/Departament.model.js";
 import User from "../models/User.model.js";
 import Ticket from "../models/Ticket.model.js";
 
+// Get all departments function
+export const getAllDepartments = async (req, res) => {
+  try {
+    // Find all department, if not found return status and message
+    const departmentsFound = await Department.find();
+    if (departmentsFound.length === 0)
+      return res
+        .status(204)
+        .json({ message: "There are no departments available." });
+
+    // Make new object with department information
+    const listDepartments = departmentsFound.map((departments) => {
+      return {
+        id: departments.id,
+        name: departments.name,
+        colaborators: departments.colaborators.length,
+        tickets: departments.ticketsDepartment.length,
+      };
+    });
+    // Returns status and list with news obbjects
+    return res.status(200).json(listDepartments);
+  } catch (error) {
+    return res.status(500).json({message: error.message});
+  }
+};
+
 // Create a new Departament function
 export const newDepartment = async (req, res) => {
   // Body desctructuring
@@ -31,133 +57,77 @@ export const newDepartment = async (req, res) => {
   }
 };
 
-export const getAllDepartments = async (req, res) => {
-  // Find all department, if not found return status and message
-  const departmentsFound = await Department.find();
-  if (departmentsFound.length === 0)
-    return res
-      .status(204)
-      .json({ message: "There are no departments available." });
-
-  // Make new object with department information
-  const listDepartments = departmentsFound.map((departments) => {
-    return {
-      id: departments.id,
-      name: departments.name,
-      colaborators: departments.colaborators.length,
-      tickets: departments.ticketsDepartment.length,
-    };
-  });
-  // Returns status and list with news obbjects
-  return res.status(200).json(listDepartments);
-};
-
-export const getDepartmentById = async (req, res) => {
+// Get all tickets department
+export const getDepartmentTickestById = async (req, res) => {
   try {
     const departmentFound = await Department.findById(req.params.id);
-    const colaboratorsDepartment = departmentFound.colaborators;
+    const departmentTickets = departmentFound.ticketsDepartment;
+    const ticketsArray = [];
 
-    const colaborators = [];
-
-    for (const colaborator of colaboratorsDepartment) {
-      let user = await User.findById(colaborator);
-      user = {
-        id: user.id,
-        name: user.name,
-        lastname: user.lastname,
+    for (const ticket of departmentTickets) {
+      let ticketFound = await Ticket.findById(ticket);
+      const departmentFound = await Department.findById(ticketFound.assignedDepartment);
+      ticketFound = {
+        id: ticketFound.id,
+        name: ticketFound.name,
+        date: ticketFound.date,
+        title: ticketFound.title,
+        priority: ticketFound.priority,
+        status: ticketFound.status,
+        assignedDepartment: departmentFound.name,
+        assignedTo: ticketFound.assignedTo,
+        roomOrArea: ticketFound.roomOrArea
       };
-      colaborators.push(user);
-    }
-    return res.status(200).json(colaborators);
+      ticketsArray.push(ticketFound);
+    };
+
+    return res.status(200).json(ticketsArray);
   } catch (error) {
-    return res.status(400).json({ message: "Department not found" });
+    return res.status(404).json({message: "Department not found"});
   }
 };
 
-export const getDepartmentAreaManager = async (req, res) => {
-  const departmentFound = await Department.findById(req.user.department);
-  const colaborators = departmentFound.colaborators;
-  const tickets = departmentFound.ticketsDepartment;
+// Get all colaborators of a department
+export const getColaboratorsByDepartment = async (req,res) => {
+  try {
+    const departmentFound = await Department.findById(req.params.id);
+    const colaborators = departmentFound.colaborators;
+    const colaboratorsArray = [];
 
-  const colaboratorsArray = [];
-  const ticketsArray = [];
-  const pendientes = [];
-  const activos = [];
-  const caducados = [];
+    if (colaborators.length === 0) 
+      res.status(204).josn({message: "Department without collaboratos" });
 
-  for (const colaborator of colaborators) {
-    let userFound = await User.findById(colaborator);
-    userFound = {
-      id: userFound.id,
-      name: userFound.name,
-      lastname: userFound.lastname,
+    for (const colaborator of colaborators) {
+      let colaboratorFound = await User.findById(colaborator)
+      colaboratorFound = {
+        id: colaboratorFound.id,
+        name: colaboratorFound.name,
+        lastname: colaboratorFound.lastname
+      };
+      colaboratorsArray.push(colaboratorFound);
     };
-    colaboratorsArray.push(userFound);
+    
+    res.status(200).send(colaboratorsArray);
+
+  } catch (error) {
+    return res.status(404).json({message: "Department not found"});
   }
+};
 
-  for (const ticket of tickets) {
-    let ticketFound = await Ticket.findById(ticket);
+export const deleteColaboratorByDepartment = async (req, res) => {
+  try {
+    const userFound = await User.findById(req.params.id);
+    const departmentFound = await Department.findById(userFound.department);
 
-    if (ticketFound.status === "Pendiente") {
-      ticketFound = {
-        id: ticketFound.id,
-        name: ticketFound.name,
-        date: ticketFound.date,
-        title: ticketFound.title,
-        priority: ticketFound.priority,
-        status: ticketFound.status,
-        assignedDepartment: ticketFound.assignedDepartment,
-        assignedTo: ticketFound.assignedTo,
-      };
-      pendientes.push(ticketFound);
-    }
+    const userDeletedFromDepartment = await Department.updateOne(
+      { _id: departmentFound._id },
+      { $pull: { colaborators: userFound._id } }
+    );
+    // Another query should go here that removes the user from the ticket
+    const userDeleted = await User.findByIdAndDelete(req.params.id);
 
-    if (ticketFound.status === "Activo") {
-      ticketFound = {
-        id: ticketFound.id,
-        name: ticketFound.name,
-        date: ticketFound.date,
-        title: ticketFound.title,
-        priority: ticketFound.priority,
-        status: ticketFound.status,
-        assignedDepartment: ticketFound.assignedDepartment,
-        assignedTo: ticketFound.assignedTo,
-      };
-      activos.push(ticketFound);
-    }
-
-    if (ticketFound.status === "Caducado") {
-      ticketFound = {
-        id: ticketFound.id,
-        name: ticketFound.name,
-        date: ticketFound.date,
-        title: ticketFound.title,
-        priority: ticketFound.priority,
-        status: ticketFound.status,
-        assignedDepartment: ticketFound.assignedDepartment,
-        assignedTo: ticketFound.assignedTo,
-      };
-      caducados.push(ticketFound);
-    }
-
-    ticketFound = {
-      id: ticketFound.id,
-      name: ticketFound.name,
-      date: ticketFound.date,
-      title: ticketFound.title,
-      priority: ticketFound.priority,
-      status: ticketFound.status,
-      assignedDepartment: ticketFound.assignedDepartment,
-      assignedTo: ticketFound.assignedTo,
-    };
-    ticketsArray.push(ticketFound);
+    return res.status(200).json({ message: "User deleted successfullys" });
+  } catch (error) {
+    return res.status(404).json({ message: "User not found" });
   }
-
-  res.status(200).json({ 
-    colaborators: colaboratorsArray,
-    tickets: ticketsArray,
-    pendientes: pendientes,
-    activos: activos,
-    caducados: caducados
-  });
 };

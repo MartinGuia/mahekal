@@ -8,13 +8,19 @@ import verifyRoleWithoutOperator from "../middlewares/verifyRoleWithoutOperator.
 
 const router = Router();
 
-router.post('/add-department', verifyToken,verifyRoleAdmin,departamentController.newDepartment);
-router.get('/departments', verifyToken,verifyRoleAdmin,departamentController.getAllDepartments);
+// Get all tickets
+router.get("/departments", verifyToken, verifyRoleAdmin, departamentController.getAllDepartments);
 
-router.get('/department/:id', verifyToken,verifyRoleAdmin,departamentController.getDepartmentById);
+// Add new departament
+router.post("/add-department", verifyToken, verifyRoleAdmin, departamentController.newDepartment);
 
-router.get('/department-area', verifyToken, departamentController.getDepartmentAreaManager);
+// Get department by Id
+router.get("/tickets-department/:id", verifyToken, verifyRolesAdmins, departamentController.getDepartmentTickestById);
 
-// router.get('/department/user/:id',verifyToken, departamentController.getDepartmentAreaManager);
+// Get Colaborator by id of department
+router.get("/colaborators-department/:id", verifyToken, verifyRolesAdmins, departamentController.getColaboratorsByDepartment);
+
+// Delete a user and their reference
+router.delete("/delete-colaborator/:id", verifyToken, verifyRoleAdmin, departamentController.deleteColaboratorByDepartment)
 
 export default router
