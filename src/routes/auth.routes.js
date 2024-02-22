@@ -5,8 +5,7 @@ import verifyRoleAdmin from "../middlewares/verifyRoleAdmin.js";
 
 const router = Router();
 
-router.post("/signin", authController.signin);
-router.post("/signin", authController.signin);
+router.post('/signin', authController.signin)
 
 router.post("/signup",  authController.signup);
 router.get("/signup", verifyToken, verifyRoleAdmin, authController.getSignup);

@@ -2,6 +2,32 @@ import Department from "../models/Departament.model.js";
 import User from "../models/User.model.js";
 import Ticket from "../models/Ticket.model.js";
 
+// Get all departments function
+export const getAllDepartments = async (req, res) => {
+  try {
+    // Find all department, if not found return status and message
+    const departmentsFound = await Department.find();
+    if (departmentsFound.length === 0)
+      return res
+        .status(204)
+        .json({ message: "There are no departments available." });
+
+    // Make new object with department information
+    const listDepartments = departmentsFound.map((departments) => {
+      return {
+        id: departments.id,
+        name: departments.name,
+        colaborators: departments.colaborators.length,
+        tickets: departments.ticketsDepartment.length,
+      };
+    });
+    // Returns status and list with news obbjects
+    return res.status(200).json(listDepartments);
+  } catch (error) {
+    return res.status(500).json({message: error.message});
+  }
+};
+
 // Create a new Departament function
 export const newDepartment = async (req, res) => {
   // Body desctructuring
