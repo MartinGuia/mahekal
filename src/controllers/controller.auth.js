@@ -32,15 +32,15 @@ export const signup = async (req, res) => {
   const { name, lastname, userName, password, role, department } = req.body;
 
   try {
-    // Looks of the see if the user was previusly registered
+    // Looks of the see if the user was previously registered
     const registeredUser = await User.findOne({ userName });
     if (registeredUser)
-      return res.status(400).json({ message: "Previously registered user" });
+      return res.status(400).json(["Este usuario ya esta en uso"]);
 
     // Search for the role as received in the params
     const roleFound = await Roles.find({ name: { $in: role } });
     if (roleFound.length == 0)
-      return res.status(404).json({ message: "Role not found" });
+      return res.status(404).json(["Role not found"]);
 
     // Find department according to the string sent
     const departmentFound = await Department.findOne({
@@ -50,6 +50,7 @@ export const signup = async (req, res) => {
     // Returns status and json response if department is not found
     if (departmentFound.length == 0)
       return res.status(404).json({ message: "Department not found" });
+      // return res.status(404).json({ message: "Department not found" });
 
     // Encrypt password
     const passwordHash = await bcryptjs.hash(password, 10);
@@ -88,7 +89,7 @@ export const signin = async (req, res) => {
   try {
     // Search if the user exists
     const userFound = await User.findOne({ userName });
-    if (!userFound) return res.status(400).json({ message: "User not found" });
+    if (!userFound) return res.status(400).json(["Usuario no encontrado"]);
     
     // Gets the user's role adn department
     const roleFound = userFound.role;
@@ -97,7 +98,7 @@ export const signin = async (req, res) => {
     // Compare the password sent with the database
     const isMatch = await bcryptjs.compare(password, userFound.password);
     if (!isMatch)
-      return res.status(400).json({ message: "Incorrect password" });
+      return res.status(400).json({message: "Contraseña incorrecta" });
 
     // Create token
     const token = await createdAccessToken({

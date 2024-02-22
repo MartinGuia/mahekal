@@ -7,8 +7,10 @@ const router = Router();
 
 router.post('/signin', authController.signin)
 
-router.post('/signup', verifyToken ,verifyRoleAdmin ,authController.signup)
-router.get('/signup', verifyToken ,verifyRoleAdmin ,authController.getSignup)
+router.post('/signup' ,verifyToken, authController.signup)
+router.get('/signup',verifyToken,authController.getSignup)
+
+router.get("/verify", verifyToken)
 
 router.post('/logout', verifyToken, authController.logout)
 

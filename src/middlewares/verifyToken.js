@@ -1,19 +1,21 @@
 import jwt from "jsonwebtoken";
 import config from "../config.js";
+import User from "../models/User.model.js";
 
-const verifyToken = (req, res, next) => {
-    // Body desctructuring 
-    const {token} = req.cookies;
+export const verifyToken = async (req, res)=>{
+  const { token } = req.cookies;
+  if (!token) return res.status(401).json({ message: "Unauthorized" });
 
-    // Check if token exists
-    if (!token) return res.status(401).json({ message: "No token, autorization denied." });
+  jwt.verify(token, config.SECRET_KEY, async (err, user) => {
+    if (err) return res.status(401).json({ message: "Unauthorized" });
 
-    // Check if the token is valid
-    jwt.verify(token, config.SECRET_KEY, (err, user) => {
-        if (err) return res.status(403).json({ message: "Invalid token"});
-        req.user = user;
-    });
-    next();
-};
+    const userFound = await User.findById(user.id);
+    if (!userFound) return res.status(401).json({ message: "Unauthorized" });
+
+    return res.json(
+      req.user=user
+    );
+  });
+}
 
 export default verifyToken
