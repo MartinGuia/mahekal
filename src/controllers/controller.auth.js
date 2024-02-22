@@ -127,3 +127,4 @@ export const logout = (req, res) => {
   });
   return res.sendStatus(200);
 };
+ 
