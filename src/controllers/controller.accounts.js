@@ -98,3 +98,17 @@ export const updateUser = async (req, res) => {
     res.status(500).json({ message: "Error updating user" });
   }
 };
+
+export const updatePassword = async (req, res) => {
+  const { id, password } = req.body;
+
+  try {
+    const passwordHash = await bcrypt.hash(password, 10);
+  
+    await User.findByIdAndUpdate(id, { password: passwordHash });
+    return res.status(200).json({ message: "Password updated successfully" });
+  } catch (error) {
+    // return res.status(500).json({ message: "Error updating password" });
+    return res.status(500).json({ message: error.message });
+  }
+};
