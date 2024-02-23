@@ -9,7 +9,7 @@ import verifyRoleWithoutOperator from "../middlewares/verifyRoleWithoutOperator.
 const router = Router();
 
 // Get all tickets
-router.get("/departments", verifyToken, verifyRoleAdmin, departamentController.getAllDepartments);
+router.get("/alldepartments", verifyToken, verifyRoleAdmin, departamentController.getAllDepartments);
 
 // Add new departament
 router.post("/add-department", verifyToken, verifyRoleAdmin, departamentController.newDepartment);

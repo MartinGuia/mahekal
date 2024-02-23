@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import axios from 'axios';
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContex";
-import { useNavigate } from "react-router-dom";
+
 import Nav from "../components/Nav";
 
   
@@ -13,18 +13,14 @@ function RegisterPage() {
     const {register, handleSubmit, formState:{
       errors,
     }} = useForm()
-    const {signupUser, isAuthenticated, errors: registerErrors} = useAuth()
+    const {signupUser, errors: registerErrors} = useAuth()
     const [options, setOptions] = useState([]);
-    const navigate = useNavigate()
-
-  useEffect(()=>{
-    if(isAuthenticated) navigate('/allaccounts')
-  },[isAuthenticated])
+  
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:4000/api/departments');
+        const response = await axios.get('http://localhost:4000/api/auth/signup');
          //Mapear los datos recibidos para crear un nuevo array con el formato adecuado
           response.data.map(option => ({
             value: option.value,
