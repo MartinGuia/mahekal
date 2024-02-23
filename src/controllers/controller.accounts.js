@@ -27,7 +27,7 @@ export const getAllUsers = async (req, res) => {
   }
 };
 
-export const getUserById = async (req, res) => {
+export const getUserByIdToModify = async (req, res) => {
   try {
     let userFound = await User.findById(req.params.id);
     let userDepartment = await Departament.findById(userFound.department);
@@ -111,4 +111,13 @@ export const updatePassword = async (req, res) => {
     // return res.status(500).json({ message: "Error updating password" });
     return res.status(500).json({ message: error.message });
   }
+};
+
+export const getUserById = async (req,res) => {
+    try {
+      const userFound = await User.findById(req.params.id);
+      res.status(200).json(userFound);
+    } catch (error) {
+      return res.status(500).json({ message: "User not found" });
+    }; 
 };
