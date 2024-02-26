@@ -106,8 +106,14 @@ export const signin = async (req, res) => {
       department: departmentFound
     });
 
+    const now = new Date();
+    const localDate = new Date(now.getTime() - now.getTimezoneOffset() * 60000);  
+    const expirationDate = new Date(localDate.getTime() + 300000);
+    console.log(expirationDate)
+
     // Set token as cookie
-    res.cookie("token", token);
+    res.cookie("token", token, {maxAge: expirationDate.getTime()});  
+    await User.updateOne(userFound, {logged: true, lastLogged: localDate});
 
     return res.status(200).json({
       id: userFound.id,
@@ -119,8 +125,13 @@ export const signin = async (req, res) => {
 };
 
 // Logout controller function
-export const logout = (req, res) => {
+export const logout = async (req, res) => {
   // Sets empty cookie and send status
+  const now = new Date();
+  const localDate = new Date(now.getTime() - now.getTimezoneOffset() * 60000);
+
+  const userFound = await User.findByIdAndUpdate(req.user.id, {logged: false, lastLogged: localDate})
+
   res.cookie("token", "", {
     expires: new Date(0),
   });
