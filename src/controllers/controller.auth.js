@@ -111,7 +111,7 @@ export const signin = async (req, res) => {
     res.cookie("token", token);
 
     return res.status(200).json({
-      id: userFound._id,
+      id: userFound.id,
     });
   } catch (error) {
     // Respond error if exists

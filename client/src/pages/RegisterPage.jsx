@@ -1,6 +1,6 @@
 import { Title } from "../components/Headers/Title";
 import { useForm } from "react-hook-form";
-import axios from 'axios';
+import axios from '../api/axios';
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContex";
 
@@ -13,14 +13,16 @@ function RegisterPage() {
     const {register, handleSubmit, formState:{
       errors,
     }} = useForm()
-    const {signupUser, errors: registerErrors} = useAuth()
-    const [options, setOptions] = useState([]);
-  
-
+    const {signupUser, getDepartaments,errors: registerErrors} = useAuth()
+    
+  // useEffect(()=>{
+  //   getDepartaments()
+  // },[])
+const [options, setOptions] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:4000/api/auth/signup');
+        const response = await axios.get('/auth/signup');
          //Mapear los datos recibidos para crear un nuevo array con el formato adecuado
           response.data.map(option => ({
             value: option.value,
@@ -38,6 +40,14 @@ function RegisterPage() {
   const onSubmit = handleSubmit(async (values) => {
     signupUser(values)
   })
+
+  // const onChange = handleSubmit(async(response)=>{
+  //   //Mapear los datos recibidos para crear un nuevo array con el formato adecuado
+  //   response.data.map(option => ({
+  //     value: option.value,
+  //     label: option.name // Utilizar el valor 'name' como label en las opciones
+  //   }));
+  // })
 
   return (
     <Nav>
@@ -68,6 +78,7 @@ function RegisterPage() {
               type="text"
               {...register("name", { required: true })}
               placeholder="Nombre"
+              autoFocus
             />
             {errors.name && (
               <p className="text-red-500">El nombre es requerido*</p>
@@ -117,6 +128,7 @@ function RegisterPage() {
             <select
               className="w-[100%] text-base rounded-lg block p-2 bg-white border-gray-400 border-2 placeholder-gray-400 text-black focus:ring-blue-500 focus:border-blue-500"
               {...register("department", { required: true })}
+              
             >
               <option>Selecciona una opccion . . .</option>
               {options.map((option) => (

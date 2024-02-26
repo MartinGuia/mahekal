@@ -1,5 +1,6 @@
 import { createContext, useState, useContext, useEffect} from "react";
-import { registerRequest, loginRequest, verifyTokenRequest } from "../api/auth";
+import { registerRequest, loginRequest, verifyTokenRequest,getDepartamentsRequest } from "../api/auth";
+// import { getDepartaments } from "../api/departments";
 import Cookies from 'js-cookie'
 
 // se crea una constante en la cual se guarda la ejecucion de createContext
@@ -22,6 +23,7 @@ export const AuthProvider = ({children})=>{
   const [isAuthenticated, setIsAuthenticated ] = useState(false)
   const [errors, setErrors] = useState([])
   const [loading, setLoading] = useState(true)
+  // const [options, setOptions] = useState([]);
 
   // Funcion para registrar usuario y todo lo que este dentro de las etiquetas
   // AuthContext.Provider prodra usarlo
@@ -37,6 +39,11 @@ export const AuthProvider = ({children})=>{
         console.log(error.response);
     }
   };
+
+  const getDepartaments = async ()=>{
+    const res = await getDepartamentsRequest()
+    console.log(res);
+  }
 
   const signinUser = async (user)=>{
     try {
@@ -94,11 +101,25 @@ useEffect(() => {
       checkLogin();
 }, []);
 
+// useEffect(() => {
+//   const fetchData = async (options) => {
+//     try {
+//       const response = await getDepartaments(options)
+//       setOptions(response.data); // Establecer las opciones obtenidas del backend
+//     } catch (error) {
+//       console.error('Error al obtener opciones:', error);
+//     }
+//   };
+
+//   fetchData(); // Llamar a la función para obtener las opciones al montar el componente
+// }, []);
+
   return (
     <AuthContext.Provider
       value={{
         signinUser,
         signupUser,
+        getDepartaments,
         loading,
         user,
         isAuthenticated,
