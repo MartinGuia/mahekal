@@ -7,25 +7,32 @@ import DepartamentosPage from './pages/DepartamentosPage';
 import ListOfDeptCollabs from './pages/ListOfDeptCollabs';
 import AllAccountPage from './pages/AllAccountPage';
 import AccountCollabPage from './pages/AccountCollabPage';
+import RegisterPage from './pages/RegisterPage';
+import { AuthProvider } from './context/AuthContex';
+import ProtectedRoute from './ProtectedRoute';
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-      <Route path='/' element={<TicketsPage/>}/>
-        <Route path='/login' element={<Login/>}/>
-        {/* <Route path='/tickets' element={<TicketsPage/>}/> */}
-        <Route path='/newticket' element={<NewTicketPage/>}/>
-        <Route path='/departamentos' element={<DepartamentosPage/>}/>
-        <Route path='/listadptocollabs' element={<ListOfDeptCollabs/>}/>
-        <Route path='/allaccounts' element={<AllAccountPage/>}/>
-        <Route path='/account' element={<AccountCollabPage/>}/>
-        <Route path='/register' element={<h1>REGISTER</h1>}/>
-        <Route path='/ticket/:id' element={<h1>TICKET</h1>}/>
-        <Route path='/profile' element={<h1>PROFILE</h1>}/>
-      </Routes>
-    </BrowserRouter>
-  )
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          {/* <Route path='/' element={<TicketsPage/>}/> */}
+          <Route path="/" element={<Login />} />
+
+          <Route element={<ProtectedRoute/>}>
+            <Route path="/tickets" element={<TicketsPage />} />
+            <Route path="/newticket" element={<NewTicketPage />} />
+            <Route path="/departamentos" element={<DepartamentosPage />} />
+            <Route path="/listadptocollabs" element={<ListOfDeptCollabs />} />
+            <Route path="/accounts" element={<AllAccountPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/profile" element={<AccountCollabPage />} />
+            <Route path="/ticket/:id" element={<h1>TICKET</h1>} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
+  );
 }
 
 export default App

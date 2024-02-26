@@ -5,10 +5,11 @@ import verifyRoleAdmin from "../middlewares/verifyRoleAdmin.js";
 import verifyRolesAdmins from "../middlewares/verifyRolesAdmins.js";
 import verifyRoleWithoutOperator from "../middlewares/verifyRoleWithoutOperator.js";
 
+
 const router = Router();
 
 // Get all tickets
-router.get("/departments", verifyToken, verifyRoleAdmin, departamentController.getAllDepartments);
+router.get("/alldepartments", verifyToken, verifyRoleAdmin, departamentController.getAllDepartments);
 
 // Add new departament
 router.post("/add-department", verifyToken, verifyRoleAdmin, departamentController.newDepartment);
@@ -22,5 +23,4 @@ router.get("/colaborators-department/:id", verifyToken, verifyRolesAdmins, depar
 // Delete a user and their reference
 router.delete("/delete-colaborator/:id", verifyToken, verifyRoleAdmin, departamentController.deleteColaboratorByDepartment)
 
-
-export default router;
+export default router

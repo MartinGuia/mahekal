@@ -19,7 +19,7 @@ export default function Nav({children}) {
       id: 1,
       title: "Tickets",
       image: tickets,
-      to: "/"
+      to: "/tickets"
     },
     {
       id: 2,
@@ -31,7 +31,7 @@ export default function Nav({children}) {
       id: 3,
       title: "Cuentas",
       image: cuentas,
-      to: '/allaccounts',
+      to: '/accounts',
     },
     {
       id: 4,
@@ -43,7 +43,7 @@ export default function Nav({children}) {
       id: 5,
       title: "Cuenta",
       image: cuenta,
-      to: '/',
+      to: '/profile',
     },
   ];
   const isSmallScreen = window.innerWidth < 541;

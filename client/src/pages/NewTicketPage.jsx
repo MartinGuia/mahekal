@@ -61,7 +61,7 @@ function NewTicketPage() {
         {/* Caja que contiene el boton para regresar una pagina atras */}
         <div className="w-[9%] bottom-9 left-6 relative">
           <button className="rounded-full shadow-md">
-            <Link to="/">
+            <Link to="/tickets">
               <img
                 src="flechaAtras.png"
                 className="size-8 max-[281px]:size-6"
@@ -108,7 +108,7 @@ function NewTicketPage() {
                     options={SuppliersPrioritys.map((sup) => ({
                       label: sup,
                       value: sup,
-                    }))}
+                    }))} 
                     onChange={handleSelectPriority}
                     // styles={{
                     //   control: (styles) => {
