@@ -1,6 +1,5 @@
 import { Title } from "../components/Headers/Title";
 import { useForm } from "react-hook-form";
-import axios from '../api/axios';
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContex";
 
@@ -13,41 +12,19 @@ function RegisterPage() {
     const {register, handleSubmit, formState:{
       errors,
     }} = useForm()
-    const {signupUser, getDepartaments,errors: registerErrors} = useAuth()
+    const {signupUser,options,errors: registerErrors} = useAuth()
     
-  // useEffect(()=>{
-  //   getDepartaments()
-  // },[])
-const [options, setOptions] = useState([]);
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get('/auth/signup');
-         //Mapear los datos recibidos para crear un nuevo array con el formato adecuado
-          response.data.map(option => ({
-            value: option.value,
-            label: option.name // Utilizar el valor 'name' como label en las opciones
-          }));
-        setOptions(response.data); // Establecer las opciones obtenidas del backend
-      } catch (error) {
-        console.error('Error al obtener opciones:', error);
-      }
-    };
-
-    fetchData(); // Llamar a la función para obtener las opciones al montar el componente
-  }, []);
+  useEffect(()=>{
+    //Mapear los datos recibidos para crear un nuevo array con el formato adecuados
+    options.map(option => ({
+      value: option.value,
+      label: option.name // Utilizar el valor 'name' como label en las opciones
+    }));
+  },[options])
 
   const onSubmit = handleSubmit(async (values) => {
     signupUser(values)
   })
-
-  // const onChange = handleSubmit(async(response)=>{
-  //   //Mapear los datos recibidos para crear un nuevo array con el formato adecuado
-  //   response.data.map(option => ({
-  //     value: option.value,
-  //     label: option.name // Utilizar el valor 'name' como label en las opciones
-  //   }));
-  // })
 
   return (
     <Nav>
@@ -131,8 +108,8 @@ const [options, setOptions] = useState([]);
               
             >
               <option>Selecciona una opccion . . .</option>
-              {options.map((option) => (
-                <option key={option.id} value={option.value}>
+              {options.map((option, i) => (
+                <option key={i} value={option.value}>
                   {option.name}
                 </option>
               ))}

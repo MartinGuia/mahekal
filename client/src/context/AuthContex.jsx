@@ -1,5 +1,5 @@
 import { createContext, useState, useContext, useEffect} from "react";
-import { registerRequest, loginRequest, verifyTokenRequest,getDepartamentsRequest } from "../api/auth";
+import { registerRequest, loginRequest, verifyTokenRequest,getSignup, getUsers } from "../api/auth";
 // import { getDepartaments } from "../api/departments";
 import Cookies from 'js-cookie'
 
@@ -23,7 +23,8 @@ export const AuthProvider = ({children})=>{
   const [isAuthenticated, setIsAuthenticated ] = useState(false)
   const [errors, setErrors] = useState([])
   const [loading, setLoading] = useState(true)
-  // const [options, setOptions] = useState([]);
+  const [options, setOptions] = useState([]);
+  const [collabs, setCollabs] = useState([]);
 
   // Funcion para registrar usuario y todo lo que este dentro de las etiquetas
   // AuthContext.Provider prodra usarlo
@@ -40,11 +41,6 @@ export const AuthProvider = ({children})=>{
     }
   };
 
-  const getDepartaments = async ()=>{
-    const res = await getDepartamentsRequest()
-    console.log(res);
-  }
-
   const signinUser = async (user)=>{
     try {
         const res = await loginRequest(user);
@@ -59,6 +55,12 @@ export const AuthProvider = ({children})=>{
           setErrors([error.response.data.message])
     }
 }
+
+const logout = () => {
+  Cookies.remove("token");
+  setUser(null);
+  setIsAuthenticated(false);
+};
 
 useEffect(()=>{
     if (errors.length > 0){
@@ -101,29 +103,46 @@ useEffect(() => {
       checkLogin();
 }, []);
 
-// useEffect(() => {
-//   const fetchData = async (options) => {
-//     try {
-//       const response = await getDepartaments(options)
-//       setOptions(response.data); // Establecer las opciones obtenidas del backend
-//     } catch (error) {
-//       console.error('Error al obtener opciones:', error);
-//     }
-//   };
+// fetch para traer los datos en formularios
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const response = await getSignup();
+      setOptions(response.data); // Establecer las opciones obtenidas del backend
+    } catch (error) {
+      console.error('Error al obtener opciones:', error);
+    }
+  };
 
-//   fetchData(); // Llamar a la función para obtener las opciones al montar el componente
-// }, []);
+  fetchData(); // Llamar a la función para obtener las opciones al montar el componente
+}, []);
+
+// fetch para traer todos los usuarios
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const response = await getUsers();
+      setCollabs(response.data); // Establecer las opciones obtenidas del backend
+    } catch (error) {
+      console.error('Error al obtener opciones:', error);
+    }
+  };
+
+  fetchData(); // Llamar a la función para obtener las opciones al montar el componente
+}, []);
 
   return (
     <AuthContext.Provider
       value={{
         signinUser,
         signupUser,
-        getDepartaments,
         loading,
         user,
         isAuthenticated,
-        errors
+        errors,
+        options,
+        collabs,
+        logout,
       }}
     >
       {children}

@@ -3,36 +3,26 @@ import Nav from '../components/Nav'
 import Filter from '../components/ui/Filter'
 import { Title } from '../components/Headers/Title'
 import { Link } from 'react-router-dom'
-import { useState } from 'react';
+import { useEffect } from 'react';
+import { useAuth } from "../context/AuthContex";
 
 function ListOfDeptCollabs() {
 
-  const initialData = [
-    {
-      id: 1,
-      name: "Martin Garcia",
-      status: "connected",
-      lastSeen: "2024-02-15",
-    },
-    {
-      id: 2,
-      name: "Jimena Chavez",
-      status: "disconnected",
-      lastSeen: "2024-02-14",
-    },
-    {
-      id: 3,
-      name: "Emanuel Armenta",
-      status: "disconnected",
-      lastSeen: "2024-02-14",
-    },
-  ];
+  const {collabs} = useAuth()
 
-  const [data, setData] = useState(initialData);
+  useEffect(()=>{
+    //Mapear los datos recibidos para crear un nuevo array con el formato adecuados
+    collabs.map(collab => ({
+      value: collab.value,
+      label: collab.name // Utilizar el valor 'name' como label en las opciones
+    }));
+  },[collabs])
 
-  const handleDelete = (id) => {
-    setData(data.filter(item => item.id !== id));
-  };
+  // const [data, setData] = useState(collabs);
+
+  // const handleDelete = (i) => {
+  //   setData(collabs.filter(item => i !== id));
+  // };
 
 
   return (
@@ -85,7 +75,7 @@ function ListOfDeptCollabs() {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200 text-center">
-              {data.map((person) => (
+              {collabs.map((person) => (
                 <tr key={person.id}>
                   <td className=" whitespace-nowrap py-3">
                     <div className="text-sm font-medium text-gray-900 max-[391px]:text-xs">
@@ -110,7 +100,7 @@ function ListOfDeptCollabs() {
                   </td>
                   <td className="whitespace-nowrap text-sm font-medium">
                     <button
-                      onClick={() => handleDelete(person.id)}
+                      // onClick={() => handleDelete(person.id)}
                       className="text-red-600 hover:text-red-900"
                     >
                       Eliminar

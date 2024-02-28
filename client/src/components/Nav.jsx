@@ -6,9 +6,12 @@ import mensaje from "../img/mensaje.png";
 import cuenta from "../img/usuario.png";
 import { Link } from 'react-router-dom';
 import LinkButton from "./ui/LinkButton";
+import { useAuth } from "../context/AuthContex";
 
 export default function Nav({children}) {
   const [open, setOpen] = useState(false);
+
+  const{logout}=useAuth()
   
   const toggleAside = () => {
     setOpen(!open);
@@ -150,14 +153,20 @@ export default function Nav({children}) {
             />
           </div>
           <div className="flex mt-10 justify-end mr-6 items-center">
-            <button
+            {/* <button
               className={`hover:bg-water-blue rounded-md py-2 text-mahekal-brown px-4 flex gap-x-3 text-lg ${
                 !open && "invisible"
               }`}
             >
               <img src="logout.png" alt="logout" className="size-6 flex mt-1" />
               Logout
-            </button>
+            </button> */}
+            <LinkButton className={`hover:bg-water-blue rounded-md py-2 text-mahekal-brown px-4 flex gap-x-3 text-lg ${
+                !open && "invisible"
+              }`} to='/' onClick={() => logout()}>
+                <img src="logout.png" alt="logout" className="size-6 flex mt-1" />
+                Logout
+            </LinkButton>
           </div>
         </aside>
 
