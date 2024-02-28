@@ -57,6 +57,7 @@ export const getUserById = async (req, res) => {
       name: userFound.name,
       lastname: userFound.lastname,
       userName: userFound.userName,
+      password: "",
       role: userRole,
       department: userDepartment,
     };
@@ -67,48 +68,17 @@ export const getUserById = async (req, res) => {
 };
 
 export const updateUser = async (req, res) => {
-  const { id, userName, role, department } = req.body;
+  const { id, userName, password, role, department } = req.body;
 
-  try {
-    const userFound = await User.findById(id);
+  const passwordHash = await bcrypt.hash(password, 10);
+  console.log(passwordHash);
 
-    if (userName !== userFound.userName)
-      await User.findByIdAndUpdate(id, { userName: userName });
+  const updateUser = await User.findByIdAndUpdate(id, {
+    userName: userName,
+    password: password,
+    role: role,
+    department: department,
+  });
 
-    if (role !== userFound.role)
-      await User.findByIdAndUpdate(id, { role: role });
-
-    if (department !== userFound.department) {
-      
-      await Departament.updateOne(
-        { _id: userFound.department },
-        { $pull: { colaborators: userFound._id } }
-      );
-
-      await Departament.updateOne(
-        { _id: department },
-        { $push: { colaborators: userFound._id } }
-      );
-
-      await User.findByIdAndUpdate(id, { department: department });
-    }
-
-    res.status(200).json({ message: "User updated successfully" });
-  } catch (error) {
-    res.status(500).json({ message: "Error updating user" });
-  }
-};
-
-export const updatePassword = async (req, res) => {
-  const { id, password } = req.body;
-
-  try {
-    const passwordHash = await bcrypt.hash(password, 10);
-  
-    await User.findByIdAndUpdate(id, { password: passwordHash });
-    return res.status(200).json({ message: "Password updated successfully" });
-  } catch (error) {
-    // return res.status(500).json({ message: "Error updating password" });
-    return res.status(500).json({ message: error.message });
-  }
+  res.status(200).json(updateUser);
 };

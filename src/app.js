@@ -6,9 +6,15 @@ import ticketsRouthes from './routes/tickets.routes.js'
 import departamentsRouthes from './routes/departament.routes.js'
 import { createRoles } from "./libs/initialRoles.js";
 import cookieParser from "cookie-parser";
+import cors from 'cors'
 
 const app = express();
 createRoles();
+app.use(cors({
+    origin: 'http://localhost:3000',
+    //*Es para establecer las credenciales
+    credentials:true
+}))
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(cookieParser())

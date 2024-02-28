@@ -1,19 +1,26 @@
 import jwt from "jsonwebtoken";
 import config from "../config.js";
 
-const verifyToken = (req, res, next) => {
-    // Body desctructuring 
-    const {token} = req.cookies;
 
-    // Check if token exists
-    if (!token) return res.status(401).json({ message: "No token, autorization denied." });
+export const authRequired = (req, res, next) => {
+  try {
+    const { token } = req.cookies;
 
-    // Check if the token is valid
-    jwt.verify(token, config.SECRET_KEY, (err, user) => {
-        if (err) return res.status(403).json({ message: "Invalid token"});
-        req.user = user;
+    if (!token)
+      return res
+        .status(401)
+        .json({ message: "No token, authorization denied" });
+
+    jwt.verify(token, config.SECRET_KEY, (error, user) => {
+      if (error) {
+        return res.status(401).json({ message: "Token is not valid" });
+      }
+      req.user = user;
+      next();
     });
-    next();
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
 };
 
-export default verifyToken
+export default authRequired
