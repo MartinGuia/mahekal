@@ -32,10 +32,10 @@ const userSchema = new Schema({
         ref: "Ticket",
         type: Schema.Types.ObjectId
     }],
-    logged: {
+    islogged: {
         type: String
     },
-    lastLogged: {
+    lastLogout: {
         type: Date
     }
 },{
