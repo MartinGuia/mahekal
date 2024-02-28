@@ -1,20 +1,26 @@
 import jwt from "jsonwebtoken";
 import config from "../config.js";
 
-export const verifyToken = async (req, res)=>{
-  const { token } = req.cookies;
-  if (!token) return res.status(401).json({ message: "Unauthorized" });
 
-  jwt.verify(token, config.SECRET_KEY, async (err, user) => {
-    if (err) return res.status(401).json({ message: "Unauthorized" });
+export const authRequired = (req, res, next) => {
+  try {
+    const { token } = req.cookies;
 
-    // const userFound = await User.findById(user.id);
-    // if (!userFound) return res.status(401).json({ message: "Unauthorized" });
+    if (!token)
+      return res
+        .status(401)
+        .json({ message: "No token, authorization denied" });
 
-    return res.json(
-      req.user=user
-    );
-  });
-}
+    jwt.verify(token, config.SECRET_KEY, (error, user) => {
+      if (error) {
+        return res.status(401).json({ message: "Token is not valid" });
+      }
+      req.user = user;
+      next();
+    });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
 
-export default verifyToken 
+export default authRequired
