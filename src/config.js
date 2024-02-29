@@ -1,3 +1,3 @@
 export default {
-  SECRET_KEY: "MAHEKAL",
+  SECRET_KEY: "lHn5MWJZZ6jWvR5",
 };

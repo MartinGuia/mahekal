@@ -73,7 +73,6 @@ export const signup = async (req, res) => {
     // Save a new user and respond status
     const userSaved = await newUser.save();
     return res.status(200).json({ message: "Successfully registered user" });
-
   } catch (error) {
     // Respond error and status
     res.status(500).json({ message: error.message });
@@ -89,7 +88,7 @@ export const signin = async (req, res) => {
     // Search if the user exists
     const userFound = await User.findOne({ userName });
     if (!userFound) return res.status(400).json({ message: "User not found" });
-    
+
     // Gets the user's role adn department
     const roleFound = userFound.role;
     const departmentFound = userFound.department;
@@ -103,18 +102,16 @@ export const signin = async (req, res) => {
     const token = await createdAccessToken({
       id: userFound._id,
       role: roleFound,
-      department: departmentFound
+      department: departmentFound,
     });
 
-    const now = new Date();
-    const localDate = new Date(now.getTime() - now.getTimezoneOffset() * 60000);  
-    const expirationDate = new Date(localDate.getTime() + 300000);
-    console.log(expirationDate)
+    userFound.islogged = true;
+    userFound.lastLogout = null;
+    await userFound.save();
 
     // Set token as cookie
-    res.cookie("token", token, {maxAge: expirationDate.getTime()});  
-    await User.updateOne(userFound, {logged: true, lastLogged: localDate});
-
+    res.cookie("token", token);
+    
     return res.status(200).json({
       id: userFound.id,
     });
@@ -130,7 +127,10 @@ export const logout = async (req, res) => {
   const now = new Date();
   const localDate = new Date(now.getTime() - now.getTimezoneOffset() * 60000);
 
-  const userFound = await User.findByIdAndUpdate(req.user.id, {logged: false, lastLogged: localDate})
+  const userFound = await User.findByIdAndUpdate(req.user.id, {
+    islogged: false,
+    lastLogout: localDate,
+  });
 
   res.cookie("token", "", {
     expires: new Date(0),

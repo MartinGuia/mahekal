@@ -9,6 +9,7 @@ export const addNewTicketGet = async (req, res) => {
     const departmentFound = await Department.find();
     
     let userFound = await User.findById(req.user.id);
+    if (!userFound) return res.status(404).json({ message: "User not found" });
     
     userFound = {
       id: userFound.id,
