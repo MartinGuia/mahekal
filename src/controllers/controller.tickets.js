@@ -545,7 +545,7 @@ export const reassignTicket = async (req, res) => {
 };
 
 export const getAllTicketsByDepartment = async (req, res) => {
-  const departmentFound = await Departament.findById(req.user.department);
+  const departmentFound = await Department.findById(req.user.department);
   const ticketsDepartment = departmentFound.ticketsDepartment;
 
   const tickets = [];

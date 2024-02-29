@@ -79,7 +79,6 @@ export const updateUser = async (req, res) => {
       await User.findByIdAndUpdate(id, { role: role });
 
     if (department !== userFound.department) {
-      
       await Departament.updateOne(
         { _id: userFound.department },
         { $pull: { colaborators: userFound._id } }
@@ -104,7 +103,7 @@ export const updatePassword = async (req, res) => {
 
   try {
     const passwordHash = await bcrypt.hash(password, 10);
-  
+
     await User.findByIdAndUpdate(id, { password: passwordHash });
     return res.status(200).json({ message: "Password updated successfully" });
   } catch (error) {
@@ -113,11 +112,12 @@ export const updatePassword = async (req, res) => {
   }
 };
 
-export const getUserById = async (req,res) => {
-    try {
-      const userFound = await User.findById(req.params.id);
-      res.status(200).json(userFound);
-    } catch (error) {
-      return res.status(500).json({ message: "User not found" });
-    }; 
+// FALTAN ALGUNAS OPCIONES AQUI
+export const getUserById = async (req, res) => {
+  try {
+    const userFound = await User.findById(req.params.id);
+    res.status(200).json(userFound);
+  } catch (error) {
+    return res.status(500).json({ message: "User not found" });
+  }
 };
