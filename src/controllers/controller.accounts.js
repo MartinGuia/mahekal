@@ -27,7 +27,7 @@ export const getAllUsers = async (req, res) => {
   }
 };
 
-export const getUserById = async (req, res) => {
+export const getUserByIdToModify = async (req, res) => {
   try {
     let userFound = await User.findById(req.params.id);
     let userDepartment = await Departament.findById(userFound.department);
@@ -68,17 +68,57 @@ export const getUserById = async (req, res) => {
 };
 
 export const updateUser = async (req, res) => {
-  const { id, userName, password, role, department } = req.body;
+  const { id, userName, role, department } = req.body;
 
-  const passwordHash = await bcrypt.hash(password, 10);
-  console.log(passwordHash);
+  try {
+    const userFound = await User.findById(id);
 
-  const updateUser = await User.findByIdAndUpdate(id, {
-    userName: userName,
-    password: password,
-    role: role,
-    department: department,
-  });
+    if (userName !== userFound.userName)
+      await User.findByIdAndUpdate(id, { userName: userName });
 
-  res.status(200).json(updateUser);
+    if (role !== userFound.role)
+      await User.findByIdAndUpdate(id, { role: role });
+
+    if (department !== userFound.department) {
+      await Departament.updateOne(
+        { _id: userFound.department },
+        { $pull: { colaborators: userFound._id } }
+      );
+
+      await Departament.updateOne(
+        { _id: department },
+        { $push: { colaborators: userFound._id } }
+      );
+
+      await User.findByIdAndUpdate(id, { department: department });
+    }
+
+    res.status(200).json({ message: "User updated successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Error updating user" });
+  }
+};
+
+export const updatePassword = async (req, res) => {
+  const { id, password } = req.body;
+
+  try {
+    const passwordHash = await bcrypt.hash(password, 10);
+
+    await User.findByIdAndUpdate(id, { password: passwordHash });
+    return res.status(200).json({ message: "Password updated successfully" });
+  } catch (error) {
+    // return res.status(500).json({ message: "Error updating password" });
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+// FALTAN ALGUNAS OPCIONES AQUI
+export const getUserById = async (req, res) => {
+  try {
+    const userFound = await User.findById(req.params.id);
+    res.status(200).json(userFound);
+  } catch (error) {
+    return res.status(500).json({ message: "User not found" });
+  }
 };

@@ -9,6 +9,7 @@ export const addNewTicketGet = async (req, res) => {
     const departmentFound = await Department.find();
     
     let userFound = await User.findById(req.user.id);
+    if (!userFound) return res.status(404).json({ message: "User not found" });
     
     userFound = {
       id: userFound.id,
@@ -50,7 +51,7 @@ export const addNewTicketPost = async (req, res) => {
 
     const newTicket = new Ticket({
       name: userFound.name + " " + userFound.lastname,
-      date: localDate,
+      // date: localDate,
       title: title,
       priority: priority,
       status: "Nuevo",
@@ -524,27 +525,68 @@ export const getAllTicketsOnPauseOrReview = async (req,res) => {
 };
 
 export const getTicketById = async (req, res) => {
-    try {
-      console.log(req.user)
+  try {
     const ticketById = await Ticket.findById(req.params.id);
-    return res.status(200).json(ticketById);
+
+    const departmentFound = await Department.findById(
+      ticketById.assignedDepartment
+    );
+    const colaborators = departmentFound.colaborators;
+    const onlineColaborators = [];
+
+    for (const colaborator of colaborators) {
+      let colaboratorFound = await User.findById(colaborator);
+      if (colaboratorFound.islogged === true) {
+        colaboratorFound = {
+          id: colaboratorFound._id,
+          name: colaboratorFound.name + " " + colaboratorFound.lastname,
+        };
+        onlineColaborators.push(colaboratorFound);
+      }
+    }
+
+    return res.status(200).json({ ticketById, onlineColaborators });
   } catch (error) {
     console.log(error);
     return res.status(404).json({ message: "Ticket not found" });
   }
 };
 
-export const reassignTicket = async (req, res) => {
-  const assignedToUpdate = await Ticket.findByIdAndUpdate(
-    req.params.id,
-    { $push: req.body },
-    { new: true }
-  );
-  res.status(200).json(assignedToUpdate);
+export const reassignTicketPut = async (req, res) => {
+  // const { assignedTo, ejecutionTime } = req.body;
+
+  const now = Date.now();
+  const date = Date(now);
+  console.log(date)
+
+  let si = [5]
+  // si.
+
+  try {    
+    const ticket = await Ticket.findById(req.params.id);
+    // console.log(ticket);
+    const endData = ticket.date[0]
+    // console.log(endData);
+
+    // const ticketFound = await Ticket.findByIdAndUpdate(req.params.id, {
+    //   assignedTo: assignedTo,
+    //   ejecutionTime: ejecutionTime,
+    // });
+    return res.status(200).json(ticket);
+  } catch (error) {
+    return res.status(404).json({ message: "Ticket not found" });
+  }
+
+  // const assignedToUpdate = await Ticket.findByIdAndUpdate(
+  //   req.params.id,
+  //   { $push: req.body },
+  //   { new: true }
+  // );
+  // res.status(200).json(assignedToUpdate);
 };
 
 export const getAllTicketsByDepartment = async (req, res) => {
-  const departmentFound = await Departament.findById(req.user.department);
+  const departmentFound = await Department.findById(req.user.department);
   const ticketsDepartment = departmentFound.ticketsDepartment;
 
   const tickets = [];

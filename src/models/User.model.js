@@ -31,7 +31,13 @@ const userSchema = new Schema({
     tickets: [{
         ref: "Ticket",
         type: Schema.Types.ObjectId
-    }]
+    }],
+    islogged: {
+        type: Boolean
+    },
+    lastLogout: {
+        type: Date
+    }
 },{
     versionKey: false,
 });

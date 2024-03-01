@@ -76,7 +76,6 @@ export const signup = async (req, res) => {
     // Save a new user and respond status
     const userSaved = await newUser.save();
     return res.status(200).json({ message: "Successfully registered user" });
-
   } catch (error) {
     // Respond error and status
     res.status(500).json({ message: error.message });
@@ -106,12 +105,16 @@ export const signin = async (req, res) => {
     const token = await createdAccessToken({
       id: userFound._id,
       role: roleFound,
-      department: departmentFound
+      department: departmentFound,
     });
+
+    userFound.islogged = true;
+    userFound.lastLogout = null;
+    await userFound.save();
 
     // Set token as cookie
     res.cookie("token", token);
-
+    
     return res.status(200).json({
       id: userFound.id,
     });
@@ -137,8 +140,16 @@ export const verifyToken = async (req, res) => {
   });
 };
 // Logout controller function
-export const logout = (req, res) => {
+export const logout = async (req, res) => {
   // Sets empty cookie and send status
+  const now = new Date();
+  const localDate = new Date(now.getTime() - now.getTimezoneOffset() * 60000);
+
+  const userFound = await User.findByIdAndUpdate(req.user.id, {
+    islogged: false,
+    lastLogout: localDate,
+  });
+
   res.cookie("token", "", {
     expires: new Date(0),
   });
