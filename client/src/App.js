@@ -12,6 +12,7 @@ import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './ProtectedRoute';
 import { CollabsProvider } from './context/UsersContext';
 import { TicketProvider } from './context/TicketsContext';
+import ViewTicket from './pages/ViewTicket';
 
 function App() {
   return (
@@ -34,7 +35,7 @@ function App() {
                 <Route path="/accounts" element={<AllAccountPage />} />
                 <Route path="/register" element={<RegisterPage />} />
                 <Route path="/profile" element={<AccountCollabPage />} />
-                <Route path="/ticket/:id" element={<h1>TICKET</h1>} />
+                <Route path="/ticket/:id" element={<ViewTicket/>} />
               </Route>
             </Routes>
           </BrowserRouter>
