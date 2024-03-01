@@ -8,29 +8,38 @@ import ListOfDeptCollabs from './pages/ListOfDeptCollabs';
 import AllAccountPage from './pages/AllAccountPage';
 import AccountCollabPage from './pages/AccountCollabPage';
 import RegisterPage from './pages/RegisterPage';
-import { AuthProvider } from './context/AuthContex';
+import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './ProtectedRoute';
+import { CollabsProvider } from './context/UsersContext';
+import { TicketProvider } from './context/TicketsContext';
 
 function App() {
   return (
     <AuthProvider>
-      <BrowserRouter>
-        <Routes>
-          {/* <Route path='/' element={<TicketsPage/>}/> */}
-          <Route path="/" element={<Login />} />
+      <CollabsProvider>
+        <TicketProvider>
+          <BrowserRouter>
+            <Routes>
+              {/* <Route path='/' element={<TicketsPage/>}/> */}
+              <Route path="/" element={<Login />} />
 
-          <Route element={<ProtectedRoute/>}>
-            <Route path="/tickets" element={<TicketsPage />} />
-            <Route path="/newticket" element={<NewTicketPage />} />
-            <Route path="/departamentos" element={<DepartamentosPage />} />
-            <Route path="/listadptocollabs" element={<ListOfDeptCollabs />} />
-            <Route path="/accounts" element={<AllAccountPage />} />
-            <Route path="/register" element={<RegisterPage />} />
-            <Route path="/profile" element={<AccountCollabPage />} />
-            <Route path="/ticket/:id" element={<h1>TICKET</h1>} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
+              <Route element={<ProtectedRoute />}>
+                <Route path="/tickets" element={<TicketsPage />} />
+                <Route path="/newticket" element={<NewTicketPage />} />
+                <Route path="/departamentos" element={<DepartamentosPage />} />
+                <Route
+                  path="/listadptocollabs"
+                  element={<ListOfDeptCollabs />}
+                />
+                <Route path="/accounts" element={<AllAccountPage />} />
+                <Route path="/register" element={<RegisterPage />} />
+                <Route path="/profile" element={<AccountCollabPage />} />
+                <Route path="/ticket/:id" element={<h1>TICKET</h1>} />
+              </Route>
+            </Routes>
+          </BrowserRouter>
+        </TicketProvider>
+      </CollabsProvider>
     </AuthProvider>
   );
 }

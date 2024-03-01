@@ -1,5 +1,5 @@
 import { createContext, useState, useContext, useEffect} from "react";
-import { registerRequest, loginRequest, verifyTokenRequest,getSignup, getUsers } from "../api/auth";
+import { registerRequest, loginRequest, verifyTokenRequest } from "../api/auth";
 // import { getDepartaments } from "../api/departments";
 import Cookies from 'js-cookie'
 
@@ -23,8 +23,6 @@ export const AuthProvider = ({children})=>{
   const [isAuthenticated, setIsAuthenticated ] = useState(false)
   const [errors, setErrors] = useState([])
   const [loading, setLoading] = useState(true)
-  const [options, setOptions] = useState([]);
-  const [collabs, setCollabs] = useState([]);
 
   // Funcion para registrar usuario y todo lo que este dentro de las etiquetas
   // AuthContext.Provider prodra usarlo
@@ -34,7 +32,6 @@ export const AuthProvider = ({children})=>{
     console.log(res.data);
     console.log(user);
     setUser(res.data);
-    setIsAuthenticated(true);
     } catch (error) {
         setErrors(error.response.data)
         console.log(error.response);
@@ -103,33 +100,6 @@ useEffect(() => {
       checkLogin();
 }, []);
 
-// fetch para traer los datos en formularios
-useEffect(() => {
-  const fetchData = async () => {
-    try {
-      const response = await getSignup();
-      setOptions(response.data); // Establecer las opciones obtenidas del backend
-    } catch (error) {
-      console.error('Error al obtener opciones:', error);
-    }
-  };
-
-  fetchData(); // Llamar a la función para obtener las opciones al montar el componente
-}, []);
-
-// fetch para traer todos los usuarios
-useEffect(() => {
-  const fetchData = async () => {
-    try {
-      const response = await getUsers();
-      setCollabs(response.data); // Establecer las opciones obtenidas del backend
-    } catch (error) {
-      console.error('Error al obtener opciones:', error);
-    }
-  };
-
-  fetchData(); // Llamar a la función para obtener las opciones al montar el componente
-}, []);
 
   return (
     <AuthContext.Provider
@@ -140,8 +110,6 @@ useEffect(() => {
         user,
         isAuthenticated,
         errors,
-        options,
-        collabs,
         logout,
       }}
     >

@@ -1,6 +1,8 @@
 import { Title } from "../components/Headers/Title";
 import {useForm} from 'react-hook-form';
-import { useAuth } from "../context/AuthContex";
+import { useAuth } from "../context/AuthContext";
+import { useEffect } from "react";
+import { useNavigate} from "react-router-dom";
 
 export default function Login() {
 
@@ -10,7 +12,12 @@ export default function Login() {
     formState: { errors },
   } = useForm();
 
-  const {signinUser, errors: signinErrors} = useAuth()
+  const {signinUser, isAuthenticated,errors: signinErrors} = useAuth()
+  const navigate = useNavigate();
+
+  useEffect(()=> {
+    if (isAuthenticated) navigate('/tickets')
+  }, [isAuthenticated])
 
   const onSubmit = handleSubmit(data =>{
     signinUser(data)
