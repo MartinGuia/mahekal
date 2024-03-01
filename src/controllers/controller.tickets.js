@@ -51,7 +51,7 @@ export const addNewTicketPost = async (req, res) => {
 
     const newTicket = new Ticket({
       name: userFound.name + " " + userFound.lastname,
-      date: localDate,
+      // date: localDate,
       title: title,
       priority: priority,
       status: "Nuevo",
@@ -553,8 +553,29 @@ export const getTicketById = async (req, res) => {
 };
 
 export const reassignTicketPut = async (req, res) => {
+  // const { assignedTo, ejecutionTime } = req.body;
 
+  const now = Date.now();
+  const date = Date(now);
+  console.log(date)
 
+  let si = [5]
+  // si.
+
+  try {    
+    const ticket = await Ticket.findById(req.params.id);
+    // console.log(ticket);
+    const endData = ticket.date[0]
+    // console.log(endData);
+
+    // const ticketFound = await Ticket.findByIdAndUpdate(req.params.id, {
+    //   assignedTo: assignedTo,
+    //   ejecutionTime: ejecutionTime,
+    // });
+    return res.status(200).json(ticket);
+  } catch (error) {
+    return res.status(404).json({ message: "Ticket not found" });
+  }
 
   // const assignedToUpdate = await Ticket.findByIdAndUpdate(
   //   req.params.id,
