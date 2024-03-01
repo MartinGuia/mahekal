@@ -1,5 +1,5 @@
 import { createContext, useState, useContext, useEffect} from "react";
-import {registerTicket, getTicket} from "../api/tickets"
+import {registerTicket, getTicket, getAllTickets} from "../api/tickets"
 
 export const TicketContext = createContext()
 
@@ -14,20 +14,26 @@ export const useTicket = () =>{
 export const TicketProvider = ({children})=>{
   const [ticket, setTicket] = useState(null);
   const [errors, setErrors] = useState([]);
+  const [allTickets, setAllTickets] = useState([]);
 
   const signupTicket = async (ticket) => {
     const res = await registerTicket(ticket)
     console.log(res);
-    // try {
-    //   const res = await registerTicket(ticket);
-    //   console.log(res.data);
-    //   console.log(ticket);
-    //   setTicket(res.data);
-    // } catch (error) {
-    //   setErrors(error.response.data);
-    //   console.log(error.response);
-    // }
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await getAllTickets();
+        setAllTickets(response.data); // Establecer las opciones obtenidas del backend
+        console.log(response.data);
+      } catch (error) {
+        console.error('Error al obtener opciones:', error);
+      }
+    };
+  
+    fetchData(); // Llamar a la función para obtener las opciones al montar el componente
+  }, []);
   
   const obtenerDatosTicket = async () => {
     try {
@@ -53,6 +59,8 @@ export const TicketProvider = ({children})=>{
       value={{
         signupTicket,
         obtenerDatosTicket,
+        getAllTickets,
+        allTickets,
         errors,
         ticket,
       }}
