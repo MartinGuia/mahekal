@@ -525,23 +525,43 @@ export const getAllTicketsOnPauseOrReview = async (req,res) => {
 };
 
 export const getTicketById = async (req, res) => {
-    try {
-      console.log(req.user)
+  try {
     const ticketById = await Ticket.findById(req.params.id);
-    return res.status(200).json(ticketById);
+
+    const departmentFound = await Department.findById(
+      ticketById.assignedDepartment
+    );
+    const colaborators = departmentFound.colaborators;
+    const onlineColaborators = [];
+
+    for (const colaborator of colaborators) {
+      let colaboratorFound = await User.findById(colaborator);
+      if (colaboratorFound.islogged === true) {
+        colaboratorFound = {
+          id: colaboratorFound._id,
+          name: colaboratorFound.name + " " + colaboratorFound.lastname,
+        };
+        onlineColaborators.push(colaboratorFound);
+      }
+    }
+
+    return res.status(200).json({ ticketById, onlineColaborators });
   } catch (error) {
     console.log(error);
     return res.status(404).json({ message: "Ticket not found" });
   }
 };
 
-export const reassignTicket = async (req, res) => {
-  const assignedToUpdate = await Ticket.findByIdAndUpdate(
-    req.params.id,
-    { $push: req.body },
-    { new: true }
-  );
-  res.status(200).json(assignedToUpdate);
+export const reassignTicketPut = async (req, res) => {
+
+
+
+  // const assignedToUpdate = await Ticket.findByIdAndUpdate(
+  //   req.params.id,
+  //   { $push: req.body },
+  //   { new: true }
+  // );
+  // res.status(200).json(assignedToUpdate);
 };
 
 export const getAllTicketsByDepartment = async (req, res) => {

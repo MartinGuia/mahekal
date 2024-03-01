@@ -24,6 +24,6 @@ router.get("/pause-or-review", verifyToken, ticketsController.getAllTicketsOnPau
 
 router.get("/tickets-department", verifyToken, verifyRolesAdmins, ticketsController.getAllTicketsByDepartment);
 
-router.put("/reassignTicket/:id", ticketsController.reassignTicket);
+router.put("/reassignTicket/:id", ticketsController.reassignTicketPut);
 
 export default router 
