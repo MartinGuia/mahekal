@@ -1,4 +1,3 @@
-import React from 'react';
 import {clsx} from "clsx" 
 
 const ButtonAction = ({ className, rutaDestino, children }) => {

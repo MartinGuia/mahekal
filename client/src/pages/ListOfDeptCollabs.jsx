@@ -4,11 +4,11 @@ import Filter from '../components/ui/Filter'
 import { Title } from '../components/Headers/Title'
 import { Link } from 'react-router-dom'
 import { useEffect } from 'react';
-import { useAuth } from "../context/AuthContex";
+import { useCollab } from '../context/UsersContext'
 
 function ListOfDeptCollabs() {
 
-  const {collabs} = useAuth()
+  const {collabs} = useCollab()
 
   useEffect(()=>{
     //Mapear los datos recibidos para crear un nuevo array con el formato adecuados
