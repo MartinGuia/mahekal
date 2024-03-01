@@ -13,9 +13,9 @@ export const authRequired = (req, res, next) => {
         .json({ message: "No token, authorization denied" });
 
     // Check if the token is valid
-    jwt.verify(token, config.SECRET_KEY, async (err, user) => {
-        if (err) {
-            if (err instanceof jwt.TokenExpiredError) {
+    jwt.verify(token, config.SECRET_KEY, async (error, user) => {
+        if (error) {
+            if (error instanceof jwt.TokenExpiredError) {
                 // The token has expired
                 const now = new Date();
                 const localDate = new Date(now.getTime() - now.getTimezoneOffset() * 60000);

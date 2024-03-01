@@ -21,11 +21,11 @@ router.get("/tickets-department/:id", authRequired, verifyRolesAdmins, departame
 router.get("/colaborators-department/:id", authRequired, verifyRolesAdmins, departamentController.getColaboratorsByDepartment);
 
 // Delete a user and their reference
-router.delete("/delete-colaborator/:id", verifyToken, verifyRoleAdmin, departamentController.deleteColaboratorByDepartment);
+router.delete("/delete-colaborator/:id", authRequired, verifyRoleAdmin, departamentController.deleteColaboratorByDepartment);
 
-router.get("/get-users-online",verifyToken, departamentController.getAllUsersOnline);
+router.get("/get-users-online",authRequired, departamentController.getAllUsersOnline);
 
-router.get("/get-users-offline",verifyToken, departamentController.getAllUsersOffline);
+router.get("/get-users-offline",authRequired, departamentController.getAllUsersOffline);
 
 
 export default router
