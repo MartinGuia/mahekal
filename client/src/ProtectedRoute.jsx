@@ -1,5 +1,5 @@
 // Este componente permite seleccionar que datos "existen" al ser logueado y que continue, si no que redireccione
-import { useAuth } from "./context/AuthContex"
+import { useAuth } from "./context/AuthContext"
 import { Navigate, Outlet } from "react-router-dom";
 
 function ProtectedRoute() {

@@ -1,8 +1,8 @@
 import { Title } from "../components/Headers/Title";
 import { useForm } from "react-hook-form";
-import { useState, useEffect } from "react";
-import { useAuth } from "../context/AuthContex";
-
+import { useEffect } from "react";
+import { useCollab } from "../context/UsersContext";
+import { useAuth } from "../context/AuthContext";
 import Nav from "../components/Nav";
 
   
@@ -12,15 +12,23 @@ function RegisterPage() {
     const {register, handleSubmit, formState:{
       errors,
     }} = useForm()
-    const {signupUser,options,errors: registerErrors} = useAuth()
-    
+    const {options, getDatos} = useCollab()
+    const { signupUser,errors: registerErrors} = useAuth()
+  
+
   useEffect(()=>{
     //Mapear los datos recibidos para crear un nuevo array con el formato adecuados
-    options.map(option => ({
-      value: option.value,
-      label: option.name // Utilizar el valor 'name' como label en las opciones
-    }));
-  },[options])
+    getDatos(
+      options.map((option) => ({
+        value: option.value,
+        label: option.name, // Utilizar el valor 'name' como label en las opciones
+      }))
+    );
+    // options.map(option => ({
+    //   value: option.value,
+    //   label: option.name // Utilizar el valor 'name' como label en las opciones
+    // }));
+  },[options, getDatos])
 
   const onSubmit = handleSubmit(async (values) => {
     signupUser(values)
@@ -127,4 +135,4 @@ function RegisterPage() {
   );
 }
 
-export default RegisterPage
+export default RegisterPage;

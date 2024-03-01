@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import tickets from "../img/boleto.png";
 import dptos from "../img/departamento.png";
 import cuentas from "../img/agregar-usuario.png";
@@ -6,7 +6,7 @@ import mensaje from "../img/mensaje.png";
 import cuenta from "../img/usuario.png";
 import { Link } from 'react-router-dom';
 import LinkButton from "./ui/LinkButton";
-import { useAuth } from "../context/AuthContex";
+import { useAuth } from "../context/AuthContext";
 
 export default function Nav({children}) {
   const [open, setOpen] = useState(false);
