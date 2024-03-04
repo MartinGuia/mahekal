@@ -11,30 +11,42 @@ function ViewTicket() {
 
   const {getTicketById, errors:updateErrors} = useTicket()
   const params = useParams()
-
-  useEffect(()=>{
-    if (params)
-    getTicketById(params.id)
-  },[])
-  // const [dataTicket, setDataTicket] = useState('');
-  // const [dataUser, setDataUser] = useState([]);
-  // const [departamentos, setDepartamentos] = useState([]);
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const datosTicket = await getTicketById();
-  //     if (datosTicket) {
-  //       dataTicket(datosTicket.departmentFound);
-  //       dataUser(datosTicket.departments);
-  //       dataUser.map((option) => ({
-  //         value: option.id,
-  //         label: option.name, // Utilizar el valor 'name' como label en las opciones
-  //       }))
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, []);
+  const [name, setName] = useState()
+  const [title, setTitle] = useState()
+  const [status, setStatus] = useState()
+  const [area, setArea] = useState()
+  const [priority, setPriority] = useState()
+  const [dpto, setDpto] = useState()
+  const [description, setDescription] = useState()
+  const [usersOnline, setUsersOnline]=useState([])
+  
+  useEffect(() => {
+    async function loadTicket() {
+      try {
+        if (params.id) {
+          const ticket = await getTicketById(params.id);
+          console.log(ticket);
+          if(ticket){
+            setName(ticket.ticketById.name)
+            setTitle(ticket.ticketById.title)
+            setStatus(ticket.ticketById.status)
+            setArea(ticket.ticketById.roomOrArea)
+            setPriority(ticket.ticketById.priority)
+            setDpto(ticket.ticketById.assignedDepartment)
+            setDescription(ticket.ticketById.description)
+            setUsersOnline(ticket.onlineColaborators)
+            usersOnline.map((option)=>({
+              value: option.id,
+              label: option.name
+            }))
+          }
+        }
+      } catch (error) {
+        console.error(error)
+      }
+    }
+    loadTicket()
+  }, []);
 
     const {register, handleSubmit, formState:{
         errors,
@@ -75,7 +87,7 @@ function ViewTicket() {
                 <div className="w-[70%] flex flex-col">
                   <label htmlFor="">Nombre</label>
                   <input
-                    // value={nombreUsuario + " " + lastnameUsuario}
+                    defaultValue={name}
                     readOnly
                     className="text-xl font-semibold border-2 rounded-md text-black p-2 m-2 w-[70%] max-[541px]:w-[100%]"
                     type="text"
@@ -89,8 +101,9 @@ function ViewTicket() {
                   <label htmlFor="">Titulo ticket</label>
                   <input
                     type="text"
-                    autoFocus
-                    className="p-2 rounded m-2 border-2 w-[70%] max-[541px]:w-[100%]"
+                    defaultValue={title}
+                    readOnly
+                    className="text-black font-semibold text-xl p-2 rounded m-2 border-2 w-[70%] max-[541px]:w-[100%]"
                     {...register("title", { required: true })}
                   />
                   {errors.title && (
@@ -109,7 +122,7 @@ function ViewTicket() {
                     className="w-[50%] text-base rounded-md block p-2 bg-white border-gray-400 border-2 placeholder-gray-400 text-black focus:ring-blue-500 focus:border-blue-500 hover:focus:border-blue-500"
                     {...register("priority", { required: true })}
                   >
-                    <option>Selecciona una opccion . . .</option>
+                    <option>{priority}</option>
                     <option value="Bajo">Bajo</option>
                     <option value="Medio">Medio</option>
                     <option value="Alto">Alto</option>
@@ -135,7 +148,7 @@ function ViewTicket() {
                 <div className="w-auto flex-row flex justify-center items-center max-[281px]:flex-col">
                   <div className="w-[50%] max-[541px]:flex-col max-[541px]:flex max-[541px]:items-center max-[541px]:justify-center max-[281px]:w-[100%]">
                     <label htmlFor="">Departamento:</label>
-                    <input type="text" className='text-xl font-semibold border-2 rounded-md text-black p-2 m-2 w-[70%] max-[541px]:w-[100%]'/>
+                    <input {...register("assignedDepartment", { required: true })} type="text" className='w-[70%] text-xl font-semibold border-2 rounded-md text-black p-2 m-2 max-[541px]:w-[70%]' defaultValue={dpto} readOnly/>
                     {/* <select
                       className="w-[70%] text-base rounded-lg block p-2 bg-white border-gray-400 border-2 placeholder-gray-400 text-black focus:ring-blue-500 focus:border-blue-500"
                       {...register("assignedDepartment", { required: true })}
@@ -148,7 +161,7 @@ function ViewTicket() {
                       ))}
                     </select> */}
                   </div>
-                  {/* <div className="w-[50%] max-[541px]:flex-col max-[541px]:flex max-[541px]:items-center max-[541px]:justify-center max-[281px]:w-[100%]">
+                  <div className="w-[50%] max-[541px]:flex-col max-[541px]:flex max-[541px]:items-center max-[541px]:justify-center max-[281px]:w-[100%]">
                   <label htmlFor="">Asignar a:</label>
                   <select
                     className="w-[70%] text-base rounded-lg block p-2 bg-white border-gray-400 border-2 placeholder-gray-400 text-black focus:ring-blue-500 focus:border-blue-500"
@@ -157,8 +170,13 @@ function ViewTicket() {
                     {...register("assignedTo", { required: false })}
                   >
                     <option value="">Selecciona una opccion...</option>
+                    {usersOnline.map((option, i) => (
+                        <option key={i} value={option.id}>
+                          {option.name}
+                        </option>
+                      ))}
                   </select>
-                </div> */}
+                </div>
                 </div>
                 {/* Caja que contiene los inputs del tiempo de ejecucion y el No. de habitación */}
                 <div className="w-auto flex-row flex justify-center items-center max-[281px]:flex-col">
@@ -249,4 +267,4 @@ function ViewTicket() {
   );
 }
 
-export default ViewTicket
+export default ViewTicket;

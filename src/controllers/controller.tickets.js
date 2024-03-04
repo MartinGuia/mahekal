@@ -534,11 +534,13 @@ export const getTicketById = async (req, res) => {
     const colaborators = departmentFound.colaborators;
     const onlineColaborators = [];
 
-    for (const colaborator of colaborators) {
-      let colaboratorFound = await User.findById(colaborator);
+    for (const id of colaborators) {
+      console.log(id);
+      let colaboratorFound = await User.findById(id);
+      console.log(colaboratorFound)
       if (colaboratorFound.islogged === true) {
         colaboratorFound = {
-          id: colaboratorFound._id,
+          id: id,
           name: colaboratorFound.name + " " + colaboratorFound.lastname,
         };
         onlineColaborators.push(colaboratorFound);
@@ -547,8 +549,7 @@ export const getTicketById = async (req, res) => {
 
     return res.status(200).json({ ticketById, onlineColaborators });
   } catch (error) {
-    console.log(error);
-    return res.status(404).json({ message: "Ticket not found" });
+    return res.status(404).json({ message: error.message });
   }
 };
 

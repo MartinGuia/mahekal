@@ -22,12 +22,24 @@ function TicketsPage() {
     fetchData(); // Llamar a la función para obtener las opciones al montar el componente
   }, []);
 
+ 
 
   return (
     <>
       <Nav>
         <Title>Tickets</Title>
 
+
+        {ticket.length === 0 && (
+        <div className="flex justify-center items-center p-10">
+          <div>
+            <h1 className="font-bold text-xl">
+              No tasks yet, please add a new task
+            </h1>
+          </div>
+        </div>
+      )}
+      
         {/* Caja que contiene los sections */}
         <div className="flex h-screen flex-col select-none">
           {/* Etiqueta que engloba los filtros */}

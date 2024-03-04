@@ -63,8 +63,13 @@ export const TicketProvider = ({children})=>{
   // };
 
   const getTicketById = async (id) => {
-    const res = getTicketByIdRequest(id);
-    console.log(res);
+    try {
+      const res = await getTicketByIdRequest(id);
+    return res.data
+    // console.log(res);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   useEffect(() => {
