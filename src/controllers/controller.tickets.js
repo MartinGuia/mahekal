@@ -3,6 +3,7 @@ import Ticket from "../models/Ticket.model.js";
 import User from "../models/User.model.js";
 import Department from "../models/Departament.model.js";
 import Roles from "../models/Roles.model.js";
+import { formatDate } from "../libs/formatDate.js";
 
 export const addNewTicketGet = async (req, res) => {
   try {
@@ -46,12 +47,11 @@ export const addNewTicketPost = async (req, res) => {
     if (!departmentFound)
       return res.status(404).json({ message: "Departament not found" });
 
-    const now = new Date();
-    const localDate = new Date(now.getTime() - now.getTimezoneOffset() * 60000);
+    let dateInMiliseconds = Date.now();
 
     const newTicket = new Ticket({
       name: userFound.name + " " + userFound.lastname,
-      // date: localDate,
+      date: dateInMiliseconds,
       title: title,
       priority: priority,
       status: "Nuevo",
@@ -92,7 +92,7 @@ export const getAllTickets = async (req, res) => {
           ticket = {
             id: ticket.id,
             name: ticket.name,
-            date: ticket.date,
+            date : formatDate(ticket.date[ticket.date.length - 1]),
             title: ticket.title,
             priority: ticket.priority,
             status: ticket.status,
@@ -124,7 +124,7 @@ export const getAllTickets = async (req, res) => {
           ticket = {
             id: ticket.id,
             name: ticket.name,
-            date: ticket.date,
+            date : formatDate(ticket.date[ticket.date.length - 1]),
             title: ticket.title,
             priority: ticket.priority,
             status: ticket.status,
@@ -157,7 +157,7 @@ export const getAllTickets = async (req, res) => {
           ticketFound = {
             id: ticketFound.id,
             name: ticketFound.name,
-            date: ticketFound.date,
+            date : formatDate(ticketFound.date[ticketFound.date.length - 1]),
             title: ticketFound.title,
             priority: ticketFound.priority,
             status: ticketFound.status,
@@ -196,7 +196,7 @@ export const getAllNewTickets = async (req, res) => {
           ticket = {
             id: ticket.id,
             name: ticket.name,
-            date: ticket.date,
+            date: formatDate(ticket.date[ticket.date.length - 1]), 
             title: ticket.title,
             priority: ticket.priority,
             status: ticket.status,
@@ -224,7 +224,7 @@ export const getAllNewTickets = async (req, res) => {
           ticket = {
             id: ticket.id,
             name: ticket.name,
-            date: ticket.date,
+            date: formatDate(ticket.date[ticket.date.length - 1]), 
             title: ticket.title,
             priority: ticket.priority,
             status: ticket.status,
@@ -254,7 +254,7 @@ export const getAllNewTickets = async (req, res) => {
         ticket = {
           id: ticket.id,
           name: ticket.name,
-          date: ticket.date,
+          date: formatDate(ticket.date[ticket.date.length - 1]), 
           title: ticket.title,
           priority: ticket.priority,
           status: ticket.status,
@@ -289,7 +289,7 @@ export const getAllTicketsInProgress = async (req, res) => {
       ticket = {
         id: ticket.id,
         name: ticket.name,
-        date: ticket.date,
+        date: formatDate(ticket.date[ticket.date.length - 1]), 
         title: ticket.title,
         priority: ticket.priority,
         status: ticket.status,
@@ -312,7 +312,7 @@ export const getAllTicketsInProgress = async (req, res) => {
       ticket = {
         id: ticket.id,
         name: ticket.name,
-        date: ticket.date,
+        date: formatDate(ticket.date[ticket.date.length - 1]), 
         title: ticket.title,
         priority: ticket.priority,
         status: ticket.status,
@@ -339,7 +339,7 @@ export const getAllTicketsInProgress = async (req, res) => {
         ticket = {
           id: ticket.id,
           name: ticket.name,
-          date: ticket.date,
+          date: formatDate(ticket.date[ticket.date.length - 1]), 
           title: ticket.title,
           priority: ticket.priority,
           status: ticket.status,
@@ -372,7 +372,7 @@ export const getAllTicketsResolve = async (req,res) => {
       ticket = {
         id: ticket.id,
         name: ticket.name,
-        date: ticket.date,
+        date: formatDate(ticket.date[ticket.date.length - 1]), 
         title: ticket.title,
         priority: ticket.priority,
         status: ticket.status,
@@ -395,7 +395,7 @@ export const getAllTicketsResolve = async (req,res) => {
       ticket = {
         id: ticket.id,
         name: ticket.name,
-        date: ticket.date,
+        date: formatDate(ticket.date[ticket.date.length - 1]), 
         title: ticket.title,
         priority: ticket.priority,
         status: ticket.status,
@@ -422,7 +422,7 @@ export const getAllTicketsResolve = async (req,res) => {
         ticket = {
           id: ticket.id,
           name: ticket.name,
-          date: ticket.date,
+          date: formatDate(ticket.date[ticket.date.length - 1]), 
           title: ticket.title,
           priority: ticket.priority,
           status: ticket.status,
@@ -455,7 +455,7 @@ export const getAllTicketsOnPauseOrReview = async (req,res) => {
       ticket = {
         id: ticket.id,
         name: ticket.name,
-        date: ticket.date,
+        date: formatDate(ticket.date[ticket.date.length - 1]), 
         title: ticket.title,
         priority: ticket.priority,
         status: ticket.status,
@@ -478,7 +478,7 @@ export const getAllTicketsOnPauseOrReview = async (req,res) => {
       ticket = {
         id: ticket.id,
         name: ticket.name,
-        date: ticket.date,
+        date: formatDate(ticket.date[ticket.date.length - 1]), 
         title: ticket.title,
         priority: ticket.priority,
         status: ticket.status,
@@ -505,7 +505,7 @@ export const getAllTicketsOnPauseOrReview = async (req,res) => {
         ticket = {
           id: ticket.id,
           name: ticket.name,
-          date: ticket.date,
+          date: formatDate(ticket.date[ticket.date.length - 1]), 
           title: ticket.title,
           priority: ticket.priority,
           status: ticket.status,
@@ -526,19 +526,35 @@ export const getAllTicketsOnPauseOrReview = async (req,res) => {
 
 export const getTicketById = async (req, res) => {
   try {
-    const ticketById = await Ticket.findById(req.params.id);
+    let ticketById = await Ticket.findById(req.params.id);
+    if (!ticketById) return res.status(404).json({ message: "Not Found" });
 
     const departmentFound = await Department.findById(
       ticketById.assignedDepartment
     );
+
+    ticketById = {
+      id: ticketById.id,
+      name: ticketById.name + " " + ticketById.lastname,
+      date: formatDate(ticketById.date[ticketById.date.length - 1]),
+      title: ticketById.title,
+      priority: ticketById.priority,
+      status: ticketById.status,
+      assignedDepartment: departmentFound.name,
+      assignedTo: [],
+      roomOrArea: ticketById.roomOrArea,
+      description: ticketById.description,
+      imageURL: ticketById.imageURL
+    };
+
     const colaborators = departmentFound.colaborators;
     const onlineColaborators = [];
 
-    for (const colaborator of colaborators) {
-      let colaboratorFound = await User.findById(colaborator);
+    for (const id of colaborators) {
+      let colaboratorFound = await User.findById(id);
       if (colaboratorFound.islogged === true) {
         colaboratorFound = {
-          id: colaboratorFound._id,
+          id: id,
           name: colaboratorFound.name + " " + colaboratorFound.lastname,
         };
         onlineColaborators.push(colaboratorFound);
@@ -547,20 +563,19 @@ export const getTicketById = async (req, res) => {
 
     return res.status(200).json({ ticketById, onlineColaborators });
   } catch (error) {
-    console.log(error);
-    return res.status(404).json({ message: "Ticket not found" });
+    return res.status(404).json({ message: error.message });
   }
 };
 
 export const reassignTicketPut = async (req, res) => {
   // const { assignedTo, ejecutionTime } = req.body;
 
-  const now = Date.now();
-  const date = Date(now);
-  console.log(date)
+  let now = Date.now();
+  let dateCreated = new Date(now);
+  console.log(dateCreated)
 
-  let si = [5]
-  // si.
+  const dateFormat = `${dateCreated.getUTCDate()} `;
+  console.log(dateFormat)
 
   try {    
     const ticket = await Ticket.findById(req.params.id);
