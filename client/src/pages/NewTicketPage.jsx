@@ -6,7 +6,7 @@ import { Title } from '../components/Headers/Title'
 import { useForm } from "react-hook-form";
 import { useTicket } from '../context/TicketsContext'
 import { useState, useEffect } from 'react'
-import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 
 function NewTicketPage() {
@@ -18,6 +18,7 @@ function NewTicketPage() {
   const [nombreUsuario, setNombreUsuario] = useState('');
   const [lastnameUsuario, setLastnameUsuario] = useState('');
   const [departamentos, setDepartamentos] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -45,6 +46,7 @@ function NewTicketPage() {
   const onSubmit = handleSubmit((data) => {
     console.log(data);
     signupTicket(data)
+    navigate('/tickets')
   })
   
   

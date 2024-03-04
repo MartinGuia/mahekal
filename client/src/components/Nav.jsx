@@ -7,6 +7,7 @@ import cuenta from "../img/usuario.png";
 import { Link } from 'react-router-dom';
 import LinkButton from "./ui/LinkButton";
 import { useAuth } from "../context/AuthContext";
+import menu from '../img/menu.png'
 
 export default function Nav({children}) {
   const [open, setOpen] = useState(false);
@@ -62,7 +63,7 @@ export default function Nav({children}) {
             className="flex justify-center hover:bg-zinc-200 duration-500 items-center ml-5 border-mahekal-brown border-2 w-[14%] h-[70%] bg-gray-100 rounded-md drop-shadow-md max-[767px]:w-[24%]"
             id="buttonAside"
           >
-            <img src="menu.png" className="size-7" alt="" />
+            <img src={menu} className="size-7" alt="" />
           </button>
 
           <div className="flex items-center w-[50%] h-auto">
@@ -163,7 +164,7 @@ export default function Nav({children}) {
             </button> */}
             <LinkButton className={`hover:bg-water-blue rounded-md py-2 text-mahekal-brown px-4 flex gap-x-3 text-lg ${
                 !open && "invisible"
-              }`} to='/' onClick={() => logout()}>
+              }`} to='/' onClick={() => {logout()}}>
                 <img src="logout.png" alt="logout" className="size-6 flex mt-1" />
                 Logout
             </LinkButton>

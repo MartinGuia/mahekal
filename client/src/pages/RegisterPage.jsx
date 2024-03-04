@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useCollab } from "../context/UsersContext";
 import { useAuth } from "../context/AuthContext";
 import Nav from "../components/Nav";
+import { useNavigate } from "react-router-dom";
 
   
 
@@ -14,7 +15,7 @@ function RegisterPage() {
     }} = useForm()
     const {options, getDatos} = useCollab()
     const { signupUser,errors: registerErrors} = useAuth()
-  
+  const navigate = useNavigate();
 
   useEffect(()=>{
     //Mapear los datos recibidos para crear un nuevo array con el formato adecuados
@@ -32,6 +33,7 @@ function RegisterPage() {
 
   const onSubmit = handleSubmit(async (values) => {
     signupUser(values)
+    navigate('/accounts')
   })
 
   return (

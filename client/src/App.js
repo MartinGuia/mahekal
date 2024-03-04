@@ -28,6 +28,7 @@ function App() {
                 <Route path="/tickets" element={<TicketsPage />} />
                 <Route path="/newticket" element={<NewTicketPage />} />
                 <Route path="/departamentos" element={<DepartamentosPage />} />
+                <Route path="/ticket/:id" element={<ViewTicket/>} />
                 <Route
                   path="/listadptocollabs"
                   element={<ListOfDeptCollabs />}
@@ -35,7 +36,6 @@ function App() {
                 <Route path="/accounts" element={<AllAccountPage />} />
                 <Route path="/register" element={<RegisterPage />} />
                 <Route path="/profile" element={<AccountCollabPage />} />
-                <Route path="/ticket/:id" element={<ViewTicket/>} />
               </Route>
             </Routes>
           </BrowserRouter>

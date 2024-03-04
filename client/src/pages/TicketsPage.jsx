@@ -4,12 +4,24 @@ import { Tarjeta } from '../components/ui/Tarjeta';
 import { Title } from '../components/Headers/Title';
 import Filter from '../components/ui/Filter';
 import { useTicket } from '../context/TicketsContext';
+import { useEffect } from 'react';
 
 function TicketsPage() {
 
-  const {getAllTickets, allTickets} = useTicket()
+  const {getTickets, ticket} = useTicket()
 
-  getAllTickets(allTickets)
+ useEffect(() => {
+    const fetchData = async () => {
+      try {
+        getTickets()
+      } catch (error) {
+        console.error('Error al obtener opciones:', error);
+      }
+    };
+  
+    fetchData(); // Llamar a la función para obtener las opciones al montar el componente
+  }, []);
+
 
   return (
     <>
@@ -27,8 +39,9 @@ function TicketsPage() {
 
           <section className="h-screen mt-8 flex items-center flex-col">
             <div className="h-[100%] w-[100%] flex items-center flex-col">
-              {allTickets.map((ticket, i)=>(
-                <Tarjeta to={`${`/newticket`}/${ticket.id}`} key={i}  >
+              {ticket.map((ticket, i)=>(
+                // to={`${`/ticket`}/${ticket.id}`}
+                <Tarjeta to={`/ticket/${ticket.id}`} key={i}  >
                 {/* Caja dentro del ticket que contiene los componentes del lado izquierdo */}
                 <div className="w-[60%] max-[541px]:w-auto">
                   {/* Caja que contiene el estado del ticket */}
@@ -63,7 +76,7 @@ function TicketsPage() {
                       <span>{ticket.name}</span>
                     </div>
                     <span className="text-xs text-gray-400 ml-2">
-                      - Creado: {ticket.date}
+                      - Creado: {new Date(ticket.date).toLocaleDateString()}
                     </span>
                   </div>
                 </div>
