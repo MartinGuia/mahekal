@@ -8,15 +8,31 @@ import { useCollab } from '../context/UsersContext'
 
 function ListOfDeptCollabs() {
 
-  const {collabs} = useCollab()
+  const {getAllUsers,collabs} = useCollab()
 
-  useEffect(()=>{
-    //Mapear los datos recibidos para crear un nuevo array con el formato adecuados
-    collabs.map(collab => ({
-      value: collab.value,
-      label: collab.name // Utilizar el valor 'name' como label en las opciones
-    }));
-  },[collabs])
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        getAllUsers(
+          collabs.map(collab => ({
+                value: collab.value,
+                label: collab.name // Utilizar el valor 'name' como label en las opciones
+              }))
+        )
+      } catch (error) {
+        console.error('Error al obtener opciones:', error);
+      }
+    };
+  
+    fetchData(); // Llamar a la función para obtener las opciones al montar el componente
+  }, []);
+  // useEffect(()=>{
+  //   //Mapear los datos recibidos para crear un nuevo array con el formato adecuados
+  //   collabs.map(collab => ({
+  //     value: collab.value,
+  //     label: collab.name // Utilizar el valor 'name' como label en las opciones
+  //   }));
+  // },[collabs])
 
   // const [data, setData] = useState(collabs);
 

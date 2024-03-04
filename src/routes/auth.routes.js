@@ -11,6 +11,6 @@ router.post('/signin', authController.signin)
 router.post("/signup", authRequired, verifyRoleAdmin, authController.signup);
 router.get("/signup", authRequired, verifyRoleAdmin, authController.getSignup);
 router.get("/verify", authController.verifyToken)
-router.post("/logout",  authController.verifyToken,authController.logout);
+router.post("/logout",  authRequired, authController.logout);
 
 export default router;

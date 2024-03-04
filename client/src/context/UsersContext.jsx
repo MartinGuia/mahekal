@@ -32,18 +32,22 @@ export const CollabsProvider = ({children})=>{
       setOptions(res.data)
     }
   
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await getUsers();
-        setCollabs(response.data); // Establecer las opciones obtenidas del backend
-      } catch (error) {
-        console.error('Error al obtener opciones:', error);
-      }
-    };
+    const getAllUsers = async () =>{
+      const res = await getUsers();
+      setCollabs(res.data)
+    }
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await getUsers();
+  //       setCollabs(response.data); // Establecer las opciones obtenidas del backend
+  //     } catch (error) {
+  //       console.error('Error al obtener opciones:', error);
+  //     }
+  //   };
   
-    fetchData(); // Llamar a la función para obtener las opciones al montar el componente
-  }, []);
+  //   fetchData(); // Llamar a la función para obtener las opciones al montar el componente
+  // }, []);
   
     return (
       <CollabsContext.Provider
@@ -51,6 +55,7 @@ export const CollabsProvider = ({children})=>{
           errors,
           options,
           getDatos,
+          getAllUsers,
           collabs,
         }}
       >
