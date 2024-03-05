@@ -23,8 +23,12 @@ export const TicketProvider = ({children})=>{
   };
 
   const getTickets = async () => {
-    const res = await getAllTicketsRequest();
+    try {
+      const res = await getAllTicketsRequest();
     setTicket(res.data);
+    } catch (error) {
+      console.error(error)
+    }
   };
   // useEffect(() => {
   //   const fetchData = async () => {

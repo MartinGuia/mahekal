@@ -13,12 +13,11 @@ function TicketsPage() {
  useEffect(() => {
     const fetchData = async () => {
       try {
-        getTickets()
+        await getTickets()
       } catch (error) {
         console.error('Error al obtener opciones:', error);
       }
     };
-  
     fetchData(); // Llamar a la función para obtener las opciones al montar el componente
   }, []);
 
