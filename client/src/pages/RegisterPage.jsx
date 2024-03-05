@@ -29,7 +29,7 @@ function RegisterPage() {
     //   value: option.value,
     //   label: option.name // Utilizar el valor 'name' como label en las opciones
     // }));
-  },[options, getDatos])
+  },[])
 
   const onSubmit = handleSubmit(async (values) => {
     signupUser(values)

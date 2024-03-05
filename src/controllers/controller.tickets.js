@@ -535,7 +535,7 @@ export const getTicketById = async (req, res) => {
 
     ticketById = {
       id: ticketById.id,
-      name: ticketById.name + " " + ticketById.lastname,
+      name: ticketById.name,
       date: formatDate(ticketById.date[ticketById.date.length - 1]),
       title: ticketById.title,
       priority: ticketById.priority,

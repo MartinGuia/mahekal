@@ -1,5 +1,4 @@
 import { createContext, useState, useContext, useEffect} from "react";
-import { registerRequest, loginRequest, verifyTokenRequest,logoutToken } from "../api/auth";
 import { registerRequest, loginRequest, verifyTokenRequest, logoutToken } from "../api/auth";
 // import { getDepartaments } from "../api/departments";
 import Cookies from 'js-cookie'

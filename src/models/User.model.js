@@ -36,7 +36,7 @@ const userSchema = new Schema({
         type: Boolean
     },
     lastLogout: {
-        type: Date
+        type: Number
     }
 },{
     versionKey: false,
