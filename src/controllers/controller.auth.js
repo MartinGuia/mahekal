@@ -142,12 +142,12 @@ export const verifyToken = async (req, res) => {
 // Logout controller function
 export const logout = async (req, res) => {
   // Sets empty cookie and send status
-  const now = new Date();
-  const localDate = new Date(now.getTime() - now.getTimezoneOffset() * 60000);
+
+  let dateInMiliseconds = Date.now();
 
   const userFound = await User.findByIdAndUpdate(req.user.id, {
     islogged: false,
-    lastLogout: localDate,
+    lastLogout: dateInMiliseconds,
   });
 
   res.cookie("token", "", {

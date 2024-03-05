@@ -2,6 +2,7 @@ import Department from "../models/Departament.model.js";
 import User from "../models/User.model.js";
 import Ticket from "../models/Ticket.model.js";
 import Role from "../models/Roles.model.js";
+import { formatDate } from "../libs/formatDate.js";
 
 // Get all departments function
 export const getAllDepartments = async (req, res) => {
@@ -206,7 +207,7 @@ export const getAllUsersOffline = async (req, res) => {
         user = {
           name: user.name + " " + user.lastname,
           islogged: user.islogged,
-          lastLogout: user.lastLogout
+          lastLogout: formatDate(user.lastLogout)
         };
         offlineUsers.push(user);
       });
@@ -222,7 +223,7 @@ export const getAllUsersOffline = async (req, res) => {
         user = {
           name: user.name + " " + user.lastname,
           islogged: user.islogged,
-          lastLogout: user.lastLogout
+          lastLogout: formatDate(user.lastLogout)
         };
         offlineUsers.push(user);
       });
@@ -241,8 +242,7 @@ export const getAllUsersOffline = async (req, res) => {
         user = {
           name: user.name + " " + user.lastname,
           islogged: user.islogged,
-          lastLogout: user.lastLogout
-
+          lastLogout: formatDate(user.lastLogout)
         };
         console.log(user);
         offlineUsers.push(user);
