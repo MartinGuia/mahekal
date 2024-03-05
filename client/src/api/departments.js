@@ -1,1 +1,3 @@
-// import axios from './axios'
+import axios from './axios'
+
+export const getAllDepartments = () => axios.get('/departaments/alldepartments');

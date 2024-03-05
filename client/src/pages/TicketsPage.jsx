@@ -3,13 +3,43 @@ import Nav from '../components/Nav'
 import { Tarjeta } from '../components/ui/Tarjeta';
 import { Title } from '../components/Headers/Title';
 import Filter from '../components/ui/Filter';
+import { useTicket } from '../context/TicketsContext';
+import { useEffect } from 'react';
 
 function TicketsPage() {
+
+  const {getTickets, ticket} = useTicket()
+
+ useEffect(() => {
+    const fetchData = async () => {
+      try {
+        getTickets()
+      } catch (error) {
+        console.error('Error al obtener opciones:', error);
+      }
+    };
+  
+    fetchData(); // Llamar a la función para obtener las opciones al montar el componente
+  }, []);
+
+ 
+
   return (
     <>
       <Nav>
         <Title>Tickets</Title>
 
+
+        {ticket.length === 0 && (
+        <div className="flex justify-center items-center p-10">
+          <div>
+            <h1 className="font-bold text-xl">
+              No tasks yet, please add a new task
+            </h1>
+          </div>
+        </div>
+      )}
+      
         {/* Caja que contiene los sections */}
         <div className="flex h-screen flex-col select-none">
           {/* Etiqueta que engloba los filtros */}
@@ -21,14 +51,16 @@ function TicketsPage() {
 
           <section className="h-screen mt-8 flex items-center flex-col">
             <div className="h-[100%] w-[100%] flex items-center flex-col">
-              <Tarjeta to='/newticket'>
+              {ticket.map((ticket, i)=>(
+                // to={`${`/ticket`}/${ticket.id}`}
+                <Tarjeta to={`/ticket/${ticket.id}`} key={i}  >
                 {/* Caja dentro del ticket que contiene los componentes del lado izquierdo */}
                 <div className="w-[60%] max-[541px]:w-auto">
                   {/* Caja que contiene el estado del ticket */}
                   <div className="flex w-[100%] items-center">
                     <p>Estado:</p>
                     <span className="ml-1 h-5 w-auto flex justify-center items-center border-yellow-500 border-2 bg-yellow-200">
-                      En espera
+                      {ticket.status}
                     </span>
                   </div>
                   {/* Caja que contiene el tiempo de ejecución */}
@@ -39,7 +71,7 @@ function TicketsPage() {
                   {/* Caja que contiene el titulo de ticket y el numero */}
                   <div className="w-[100%] mt-1">
                     <span className="font-semibold text-black">
-                      Titulo de ticket
+                      {ticket.title}
                     </span>
                     <span className=" text-sm text-gray-400 ml-2">
                       #No. ticket
@@ -53,10 +85,10 @@ function TicketsPage() {
                         className="size-5 mr-2"
                         alt=""
                       />
-                      <span> Martin García Guía</span>
+                      <span>{ticket.name}</span>
                     </div>
                     <span className="text-xs text-gray-400 ml-2">
-                      - Creado: 18/01/2024 2:27pm
+                      - Creado: {new Date(ticket.date).toLocaleDateString()}
                     </span>
                   </div>
                 </div>
@@ -71,7 +103,7 @@ function TicketsPage() {
                         className="size-5 ml-2 mr-1"
                         alt=""
                       />
-                      <span>Critico</span>
+                      <span>{ticket.priority}</span>
                     </div>
                   </div>
                   <div className="items-center min-[1337px]:flex justify-center max-[913px]:justify-start max-[913px]:flex max-[769px]:flex-col max-[541px]:flex-row max-[281px]:flex-col">
@@ -82,7 +114,7 @@ function TicketsPage() {
                         className="size-5 ml-2 mr-1"
                         alt=""
                       />
-                      <span>Sistemas</span>
+                      <span>{ticket.assignedDepartment}</span>
                     </div>
                   </div>
                   <div className="items-center min-[1337px]:flex justify-center max-[913px]:justify-start max-[913px]:flex max-[769px]:flex-col max-[541px]:flex-row max-[281px]:flex-col">
@@ -98,6 +130,7 @@ function TicketsPage() {
                   </div>
                 </div>
               </Tarjeta>
+              ))}
             </div>
           </section>
         </div>
