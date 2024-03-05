@@ -12,8 +12,8 @@ import menu from '../img/menu.png'
 export default function Nav({children}) {
   const [open, setOpen] = useState(false);
 
-  const{logout}=useAuth()
-  
+  const { logout } = useAuth();
+
   const toggleAside = () => {
     setOpen(!open);
   };
@@ -23,31 +23,31 @@ export default function Nav({children}) {
       id: 1,
       title: "Tickets",
       image: tickets,
-      to: "/tickets"
+      to: "/tickets",
     },
     {
       id: 2,
       title: "Dptos.",
       image: dptos,
-      to: '/departamentos'
+      to: "/departamentos",
     },
     {
       id: 3,
       title: "Cuentas",
       image: cuentas,
-      to: '/accounts',
+      to: "/accounts",
     },
     {
       id: 4,
       title: "Foro",
       image: mensaje,
-      to: '/',
+      to: "/",
     },
     {
       id: 5,
       title: "Cuenta",
       image: cuenta,
-      to: '/profile',
+      to: "/profile",
     },
   ];
   const isSmallScreen = window.innerWidth < 541;
@@ -67,11 +67,10 @@ export default function Nav({children}) {
           </button>
 
           <div className="flex items-center w-[50%] h-auto">
-            <LinkButton to='/newticket' className='ml-4 max-[767px]:w-[50%]'>
+            <LinkButton to="/newticket" className="ml-4 max-[767px]:w-[50%]">
               {isSmallScreen ? "+" : "Nuevo Ticket +"}
             </LinkButton>
           </div>
-          
         </div>
 
         {/* Caja que engloba el apartado del buscador y notificaciones */}
@@ -125,23 +124,22 @@ export default function Nav({children}) {
 
           {/* Componente que contiene los iconos y nombres del menu */}
           <ul className={`pt-2`}>
-            {Menus.map(menu => (
-                <li key={menu.id}>
-                  <Link
-                    className="flex rounded-md p-3 mt-2 cursor-pointer hover:bg-water-blue items-center gap-x-3"
-                    to={menu.to} 
+            {Menus.map((menu) => (
+              <li key={menu.id}>
+                <Link
+                  className="flex rounded-md p-3 mt-2 cursor-pointer hover:bg-water-blue items-center gap-x-3"
+                  to={menu.to}
+                >
+                  <img src={menu.image} className="size-8" />
+                  <span
+                    className={`flex-1 text-mahekal-brown text-lg font-normal ${
+                      !open && "invisible"
+                    }`}
                   >
-                    <img src={menu.image} className="size-8" />
-                    <span
-                      className={`flex-1 text-mahekal-brown text-lg font-normal ${
-                        !open && "invisible"
-                      }`}
-                    >
-                      {menu.title}
-                    </span>
-                  </Link>
-                </li>
-              
+                    {menu.title}
+                  </span>
+                </Link>
+              </li>
             ))}
           </ul>
 
@@ -162,17 +160,27 @@ export default function Nav({children}) {
               <img src="logout.png" alt="logout" className="size-6 flex mt-1" />
               Logout
             </button> */}
-            <LinkButton className={`hover:bg-water-blue rounded-md py-2 text-mahekal-brown px-4 flex gap-x-3 text-lg ${
+            <LinkButton
+              className={`hover:bg-water-blue rounded-md py-2 text-mahekal-brown px-4 flex gap-x-3 text-lg ${
                 !open && "invisible"
-              }`} to='/' onClick={() => {logout()}}>
-                <img src="logout.png" alt="logout" className="size-6 flex mt-1" />
-                Logout
+              }`}
+              to="/"
+              onClick={() => {
+                logout();
+              }}
+            >
+              <img src="logout.png" alt="logout" className="size-6 flex mt-1" />
+              Logout
             </LinkButton>
           </div>
         </aside>
 
         {/* Elemento Section */}
-        <section className={`bg-light-bone w-screen ${open && "blur-sm max-[542px]:hidden"}`}>
+        <section
+          className={`bg-light-bone w-screen ${
+            open && "blur-sm max-[542px]:hidden"
+          }`}
+        >
           {children}
         </section>
       </div>

@@ -14,8 +14,6 @@ export const useTicket = () =>{
 export const TicketProvider = ({children})=>{
   const [ticket, setTicket] = useState([]);
   const [errors, setErrors] = useState([]);
-  // const [allTickets, setAllTickets] = useState([]);
-  const [idTicket, setIdTicket] = useState();
 
   const signupTicket = async (ticket) => {
     const res = await registerTicket(ticket);
@@ -91,7 +89,6 @@ export const TicketProvider = ({children})=>{
         signupTicket,
         obtenerDatosTicket,
         getTicketById,
-        idTicket,
         getTickets,
         errors,
         ticket,

@@ -10,6 +10,9 @@ import { useParams } from 'react-router-dom';
 function ViewTicket() {
 
   const {getTicketById, errors:updateErrors} = useTicket()
+  const {register, handleSubmit, formState:{
+    errors,
+  }} = useForm()
   const params = useParams()
   const [name, setName] = useState()
   const [title, setTitle] = useState()
@@ -19,7 +22,16 @@ function ViewTicket() {
   const [dpto, setDpto] = useState()
   const [description, setDescription] = useState()
   const [usersOnline, setUsersOnline]=useState([])
+  const [inputDisabled, setInputDisabled] = useState(true);
+
+  const handleDisableInputChange = () => {
+    setInputDisabled(!inputDisabled);
+  };
   
+  const onSubmit = handleSubmit(async (values) => {
+    console.log(values);
+  })
+
   useEffect(() => {
     async function loadTicket() {
       try {
@@ -47,10 +59,6 @@ function ViewTicket() {
     }
     loadTicket()
   }, []);
-
-    const {register, handleSubmit, formState:{
-        errors,
-      }} = useForm()
       
   return (
     <>
@@ -70,9 +78,15 @@ function ViewTicket() {
           </button>
         </div>
 
+        <section className='w-[100%] h-[8%] flex'>
+          <div className='w-[100%]'>
+            <button className='bg-water-blue hover:bg-water-blue-hover px-4 py-3 rounded-lg shadow-lg ml-8' onClick={handleDisableInputChange}>{inputDisabled ? 'Reasignar Ticket' : 'No reasignar Ticket'}</button>
+          </div>
+        </section>
+
         {/* Seccion que contiene el formulario del ticket */}
         <section className="h-[100%] w-[100%] select-none">
-          <form className="w-[100%] h-[100%]">
+          <form onSubmit={onSubmit} className="w-[100%] h-[100%]">
             {updateErrors.map((error, i) => (
               <div
                 key={i}
@@ -104,7 +118,7 @@ function ViewTicket() {
                     defaultValue={title}
                     readOnly
                     className="text-black font-semibold text-xl p-2 rounded m-2 border-2 w-[70%] max-[541px]:w-[100%]"
-                    {...register("title", { required: true })}
+                    {...register("title")}
                   />
                   {errors.title && (
                     <p className="text-red-500">El titulo es requerido*</p>
@@ -121,6 +135,7 @@ function ViewTicket() {
                   <select
                     className="w-[50%] text-base rounded-md block p-2 bg-white border-gray-400 border-2 placeholder-gray-400 text-black focus:ring-blue-500 focus:border-blue-500 hover:focus:border-blue-500"
                     {...register("priority", { required: true })}
+                    disabled={inputDisabled}
                   >
                     <option>{priority}</option>
                     <option value="Bajo">Bajo</option>
@@ -129,18 +144,19 @@ function ViewTicket() {
                     <option value="Critico">Critico</option>
                   </select>
                 </div>
-                {/* <div className="w-[70%] flex-col max-[541px]:w-[100%] max-[541px]:items-center max-[541px]:flex">
+                <div className="w-[70%] flex-col max-[541px]:w-[100%] max-[541px]:items-center max-[541px]:flex">
                 <label htmlFor="">Estado:</label>
                 <select
                   className="w-[50%] text-base rounded-md block p-2 bg-white border-gray-400 border-2 placeholder-gray-400 text-black focus:ring-blue-500 focus:border-blue-500 hover:focus:border-blue-500"
                   {...register("status", { required: true })}
+                  disabled={inputDisabled}
                 >
-                  <option>Selecciona una opccion . . .</option>
+                  <option>{status}</option>
                   <option value="En curso">En curso</option>
                   <option value="En pausa/revision">En pausa/revision</option>
                   <option value="Resuelto">Resuelto</option>
                 </select>
-              </div> */}
+              </div>
               </div>
               {/* Caja de los componentes tipo input del lado derecho */}
               <div className="w-[50%] max-[541px]:w-[100%]">
@@ -148,7 +164,7 @@ function ViewTicket() {
                 <div className="w-auto flex-row flex justify-center items-center max-[281px]:flex-col">
                   <div className="w-[50%] max-[541px]:flex-col max-[541px]:flex max-[541px]:items-center max-[541px]:justify-center max-[281px]:w-[100%]">
                     <label htmlFor="">Departamento:</label>
-                    <input {...register("assignedDepartment", { required: true })} type="text" className='w-[70%] text-xl font-semibold border-2 rounded-md text-black p-2 m-2 max-[541px]:w-[70%]' defaultValue={dpto} readOnly/>
+                    <input type="text" className='w-[70%] text-xl font-semibold border-2 rounded-md text-black p-2 m-2 max-[541px]:w-[70%]' defaultValue={dpto} readOnly/>
                     {/* <select
                       className="w-[70%] text-base rounded-lg block p-2 bg-white border-gray-400 border-2 placeholder-gray-400 text-black focus:ring-blue-500 focus:border-blue-500"
                       {...register("assignedDepartment", { required: true })}
@@ -167,7 +183,8 @@ function ViewTicket() {
                     className="w-[70%] text-base rounded-lg block p-2 bg-white border-gray-400 border-2 placeholder-gray-400 text-black focus:ring-blue-500 focus:border-blue-500"
                     name=""
                     id=""
-                    {...register("assignedTo", { required: false })}
+                    {...register("assignedTo", { required: true })}
+                    disabled={inputDisabled}
                   >
                     <option value="">Selecciona una opccion...</option>
                     {usersOnline.map((option, i) => (
@@ -180,24 +197,27 @@ function ViewTicket() {
                 </div>
                 {/* Caja que contiene los inputs del tiempo de ejecucion y el No. de habitación */}
                 <div className="w-auto flex-row flex justify-center items-center max-[281px]:flex-col">
-                  {/* <div className="w-[50%] max-[541px]:flex-col max-[541px]:flex max-[541px]:items-center max-[541px]:justify-center max-[281px]:w-[100%]">
+                  <div className="w-[50%] max-[541px]:flex-col max-[541px]:flex max-[541px]:items-center max-[541px]:justify-center max-[281px]:w-[100%]">
                   <label htmlFor="">Tiempo de ejecución:</label>
                   <select
                     className="w-[70%] text-base rounded-lg block p-2 bg-white border-gray-400 border-2 placeholder-gray-400 text-black focus:ring-blue-500 focus:border-blue-500"
                     name=""
                     id=""
-                    {...register("ejecutionTime", { required: false })}
+                    {...register("ejecutionTime", { required: true })}
+                    disabled={inputDisabled}
                   >
                     <option value="">Selecciona una opccion</option>
                   </select>
-                </div> */}
+                </div>
                   <div className="w-[50%] max-[541px]:flex-col max-[541px]:flex max-[541px]:items-center max-[541px]:justify-center max-[281px]:w-[100%]">
                     <label htmlFor="">No. habitacion:</label>
                     <div className="max-[541px]:flex max-[541px]:justify-center">
                       <input
-                        {...register("roomOrArea", { required: true })}
+                        {...register("roomOrArea")}
                         type="text"
-                        className="p-1 rounded border-2 w-[70%] max-[281px]:w-[100%]"
+                        defaultValue={area}
+                        readOnly
+                        className="text-black text-xl font-semibold p-1 rounded border-2 w-[70%] max-[281px]:w-[100%]"
                       />
                     </div>
                     {errors.roomOrArea && (
@@ -221,8 +241,10 @@ function ViewTicket() {
                 <textarea
                   rows="3"
                   placeholder="Describa el problema..."
+                  defaultValue={description}
+                  readOnly
                   {...register("description")}
-                  className="w-[60%] pb-3 border-2 rounded-md"
+                  className="text-black font-semibold text-xl w-[60%] pb-3 border-2 rounded-md"
                 ></textarea>
               </div>
             </div>
@@ -258,7 +280,7 @@ function ViewTicket() {
             </div>
             <br />
             <div className="w-[100%] flex justify-center">
-              <button>enviar</button>
+              <button disabled={inputDisabled}  className='bg-water-blue hover:bg-water-blue-hover px-4 py-3 rounded-lg shadow-lg'>Actualizar ticket</button>
             </div>
           </form>
         </section>
