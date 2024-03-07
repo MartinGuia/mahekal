@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom';
 import { Title } from '../components/Headers/Title'
 import { useForm } from "react-hook-form";
 import { useTicket } from '../context/TicketsContext'
-import flechaAtras from '../img/flechaAtras.png'
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import ReturnButton from '../components/ui/ReturnButton';
 
 function ViewTicket() {
 
@@ -69,11 +69,7 @@ function ViewTicket() {
         <div className="w-[9%] bottom-9 left-6 relative">
           <button className="rounded-full shadow-md">
             <Link to="/tickets">
-              <img
-                src={flechaAtras}
-                className="size-8 max-[281px]:size-6"
-                alt=""
-              />
+              <ReturnButton/>
             </Link>
           </button>
         </div>
@@ -210,7 +206,7 @@ function ViewTicket() {
                   </select>
                 </div>
                   <div className="w-[50%] max-[541px]:flex-col max-[541px]:flex max-[541px]:items-center max-[541px]:justify-center max-[281px]:w-[100%]">
-                    <label htmlFor="">No. habitacion:</label>
+                    <label htmlFor="">No. habitacion o area:</label>
                     <div className="max-[541px]:flex max-[541px]:justify-center">
                       <input
                         {...register("roomOrArea")}

@@ -8,6 +8,8 @@ import { Link } from 'react-router-dom';
 import LinkButton from "./ui/LinkButton";
 import { useAuth } from "../context/AuthContext";
 import menu from '../img/menu.png'
+import logo from '../img/LogoMahekal.png'
+import logoutImg from '../img/logout.png'
 
 export default function Nav({children}) {
   const [open, setOpen] = useState(false);
@@ -146,7 +148,7 @@ export default function Nav({children}) {
           {/* Caja que contiene el Logo mahekal */}
           <div className="flex items-center flex-col mt-6">
             <img
-              src="LogoMahekal.png"
+              src={logo}
               alt="LogoMahekal"
               className="max-[1025px]:size-28 size-36"
             />
@@ -169,7 +171,7 @@ export default function Nav({children}) {
                 logout();
               }}
             >
-              <img src="logout.png" alt="logout" className="size-6 flex mt-1" />
+              <img src={logoutImg} alt="logout" className="size-6 flex mt-1" />
               Logout
             </LinkButton>
           </div>

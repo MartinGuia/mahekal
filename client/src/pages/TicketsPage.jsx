@@ -12,21 +12,7 @@ function TicketsPage() {
   const{user} = useAuth();
   useEffect(() => {
     getTickets();
-    // const fetchData = async () => {
-    //   try {
-    //     getTickets();
-    //   } catch (error) {
-    //     console.error("Error al obtener opciones:", error);
-    //   }
-    // };
-    // fetchData(); // Llamar a la función para obtener las opciones al montar el componente
   }, []);
-
-  // {ticket.length === 0 ? (
-  //   <p>No hay tickets disponibles.</p>
-  // ) : (
-
-  // )}
 
   return (
     <>
@@ -35,8 +21,6 @@ function TicketsPage() {
 
         {/* Caja que contiene los sections */}
         <div className="flex h-screen flex-col select-none">
-         
-
           <section className="h-screen mt-8 flex items-center flex-col">
             <div className="h-[100%] w-[100%] flex items-center flex-col">
               {ticket && ticket.length > 0 ? (
