@@ -23,9 +23,9 @@ export const TicketProvider = ({children})=>{
   const getTickets = async () => {
     try {
       const res = await getAllTicketsRequest();
-    setTicket(res.data);
+      setTicket(res.data);
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
   };
   // useEffect(() => {
@@ -67,8 +67,8 @@ export const TicketProvider = ({children})=>{
   const getTicketById = async (id) => {
     try {
       const res = await getTicketByIdRequest(id);
-    return res.data
-    // console.log(res);
+      return res.data;
+      // console.log(res);
     } catch (error) {
       console.error(error);
     }

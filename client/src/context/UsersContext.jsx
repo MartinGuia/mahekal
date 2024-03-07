@@ -12,30 +12,29 @@ export const useCollab = () =>{
 } 
 
 export const CollabsProvider = ({children})=>{
-    const [errors, setErrors] = useState([])
-    const [options, setOptions] = useState([]);
-    const [collabs, setCollabs] = useState([]);
-  
-  
-  useEffect(()=>{
-      if (errors.length > 0){
-          const timer = setTimeout(()=>{
-              setErrors([])
-          },3000)
-          return() => clearTimeout(timer)
-      }
-  },[errors])
-  
+  const [errors, setErrors] = useState([]);
+  const [options, setOptions] = useState([]);
+  const [collabs, setCollabs] = useState([]);
+
+  useEffect(() => {
+    if (errors.length > 0) {
+      const timer = setTimeout(() => {
+        setErrors([]);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [errors]);
+
   // fetch para traer los datos en formularios
-    const getDatos = async() =>{
-      const res = await getSignup()
-      setOptions(res.data)
-    }
-  
-    const getAllUsers = async () =>{
-      const res = await getUsers();
-      setCollabs(res.data)
-    }
+  const getDatos = async () => {
+    const res = await getSignup();
+    setOptions(res.data);
+  };
+
+  const getAllUsers = async () => {
+    const res = await getUsers();
+    setCollabs(res.data);
+  };
   // useEffect(() => {
   //   const fetchData = async () => {
   //     try {
@@ -45,21 +44,21 @@ export const CollabsProvider = ({children})=>{
   //       console.error('Error al obtener opciones:', error);
   //     }
   //   };
-  
+
   //   fetchData(); // Llamar a la función para obtener las opciones al montar el componente
   // }, []);
-  
-    return (
-      <CollabsContext.Provider
-        value={{
-          errors,
-          options,
-          getDatos,
-          getAllUsers,
-          collabs,
-        }}
-      >
-        {children}
-      </CollabsContext.Provider>
-    );
-  }
+
+  return (
+    <CollabsContext.Provider
+      value={{
+        errors,
+        options,
+        getDatos,
+        getAllUsers,
+        collabs,
+      }}
+    >
+      {children}
+    </CollabsContext.Provider>
+  );
+}
