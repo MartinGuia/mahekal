@@ -13,34 +13,33 @@ export const useDepartment = () =>{
 }
 
 export const DepartmentProvider = ({children})=>{
-    const [department, setDepartment ] = useState([])
-    const [list, setList] = useState();
-    const [errors, setErrors] = useState([]);
+  const [department, setDepartment] = useState([]);
+  const [list, setList] = useState();
+  const [errors, setErrors] = useState([]);
 
-const createDepartment = async (department) =>{
-        const res = await createDepartmentRequest(department);
-        console.log(res); 
-    }
+  const createDepartment = async (department) => {
+    const res = await createDepartmentRequest(department);
+    console.log(res);
+  };
 
-const getAllDepartments = async () => {
+  const getAllDepartments = async () => {
     try {
-        const res = await getAllDepartmentsRequest()
-        setDepartment(res.data)
+      const res = await getAllDepartmentsRequest();
+      setDepartment(res.data);
     } catch (error) {
-        console.error(error)
+      console.error(error);
     }
-}
+  };
 
-const getAllCollabsOfDepartments = async (id) =>{
-  try {
-    const res = await getAllCollabsOfDepartmentsRequest(id);
-    return res.data
-  } catch (error) {
-    console.error("error when obtaining department data", error);
-    return null;
-  }
-}
-
+  const getAllCollabsOfDepartments = async (id) => {
+    try {
+      const res = await getAllCollabsOfDepartmentsRequest(id);
+      return res.data;
+    } catch (error) {
+      console.error("error when obtaining department data", error);
+      return null;
+    }
+  };
 
   useEffect(() => {
     if (errors.length > 0) {
@@ -51,18 +50,17 @@ const getAllCollabsOfDepartments = async (id) =>{
     }
   }, [errors]);
 
-
-    return (
-        <DepartmentContext.Provider
-          value={{
-            createDepartment,
-            getAllDepartments,
-            getAllCollabsOfDepartments,
-            errors,
-            department,
-          }}
-        >
-          {children}
-        </DepartmentContext.Provider>
-      );
+  return (
+    <DepartmentContext.Provider
+      value={{
+        createDepartment,
+        getAllDepartments,
+        getAllCollabsOfDepartments,
+        errors,
+        department,
+      }}
+    >
+      {children}
+    </DepartmentContext.Provider>
+  );
 }
