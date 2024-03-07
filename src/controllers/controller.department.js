@@ -90,171 +90,39 @@ export const getDepartmentTickestById = async (req, res) => {
 };
 
 // Get all colaborators of a department
-export const getColaboratorsByDepartment = async (req,res) => {
+export const getColaboratorsByDepartment = async (req, res) => {
   try {
     const departmentFound = await Department.findById(req.params.id);
-    const colaborators = departmentFound.colaborators;
-    const colaboratorsArray = [];
+    const departmentColaborators = departmentFound.colaborators;
+    const onlineColaborators = [];
+    const offlineColaborators = [];
 
-    if (colaborators.length === 0) 
-      res.status(204).josn({message: "Department without collaboratos" });
-
-    for (const colaborator of colaborators) {
-      let colaboratorFound = await User.findById(colaborator)
-      colaboratorFound = {
-        id: colaboratorFound.id,
-        name: colaboratorFound.name,
-        lastname: colaboratorFound.lastname
+    for (const id of departmentColaborators) {
+      let colaborator = await User.findById(id);
+      colaborator = {
+        id: id,
+        name: colaborator.name + " " + colaborator.lastname,
+        islogged: colaborator.islogged,
+        lastLogout: colaborator.lastLogout,
       };
-      colaboratorsArray.push(colaboratorFound);
-    };
-    
-    res.status(200).send(colaboratorsArray);
+      if (colaborator.islogged == true) {
+        onlineColaborators.push(colaborator);
+      } else {
+        colaborator.lastLogout = formatDate(colaborator.lastLogout);
+        offlineColaborators.push(colaborator);
+      }
+    }
 
+    const onlineCount = onlineColaborators.length;
+    const offlineCount = offlineColaborators.length;
+
+    res.status(200).json({
+      onlineColaborators,
+      offlineColaborators,
+      onlineCount,
+      offlineCount,
+    });
   } catch (error) {
-    return res.status(404).json({message: "Department not found"});
+    return res.status(500).json({ error: error.message });
   }
-};
-
-export const deleteColaboratorByDepartment = async (req, res) => {
-  try {
-    const userFound = await User.findById(req.params.id);
-    const departmentFound = await Department.findById(userFound.department);
-
-    const userDeletedFromDepartment = await Department.updateOne(
-      { _id: departmentFound._id },
-      { $pull: { colaborators: userFound._id } }
-    );
-    // Another query should go here that removes the user from the ticket
-    const userDeleted = await User.findByIdAndDelete(req.params.id);
-
-    return res.status(200).json({ message: "User deleted successfullys" });
-  } catch (error) {
-    return res.status(404).json({ message: "User not found" });
-  }
-};
-
-export const getAllUsersOnline = async (req, res) => {
-  try {
-    const userFound = await User.findById(req.user.id);
-    const roleFound = await Role.findById(userFound.role);
-
-    if (roleFound.name === "Administrador") {
-      const users = await User.find({ islogged: true });
-
-      const onlineUsers = [];
-      users.map((user) => {
-        user = {
-          name: user.name + " " + user.lastname,
-          islogged: user.islogged,
-        };
-        onlineUsers.push(user);
-      });
-      return res.status(200).json(onlineUsers);
-    }
-
-    if (roleFound.name === "Gerente Administrador") {
-      const users = await User.find({ islogged: true });
-
-      const onlineUsers = [];
-      users.map((user) => {
-        user = {
-          name: user.name + " " + user.lastname,
-          islogged: user.islogged,
-        };
-        onlineUsers.push(user);
-      });
-
-      return res.status(200).json(onlineUsers);
-    }
-
-    if (roleFound.name === "Gerente Área") {
-      const users = await User.find({
-        role: roleFound._id,
-        islogged: true,
-      });
-
-      const onlineUsers = [];
-      users.map((user) => {
-        user = {
-          name: user.name + " " + user.lastname,
-          islogged: user.islogged,
-        };
-        onlineUsers.push(user);
-      });
-
-      return res.status(200).json(onlineUsers);
-    }
-
-    if (roleFound.name === "Operador") {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-  } catch (error) {
-    return res.status(403).json({ error: error.message });
-  };
-};
-
-export const getAllUsersOffline = async (req, res) => {
-  try {
-    const userFound = await User.findById(req.user.id);
-    const roleFound = await Role.findById(userFound.role);
-
-    if (roleFound.name === "Administrador") {
-      const users = await User.find({ islogged: false });
-
-      const offlineUsers = [];
-      users.map((user) => {
-        user = {
-          name: user.name + " " + user.lastname,
-          islogged: user.islogged,
-          lastLogout: formatDate(user.lastLogout)
-        };
-        offlineUsers.push(user);
-      });
-
-      return res.status(200).json(offlineUsers);
-    }
-
-    if (roleFound.name === "Gerente Administrador") {
-      const users = await User.find({ islogged: false });
-
-      const offlineUsers = [];
-      users.map((user) => {
-        user = {
-          name: user.name + " " + user.lastname,
-          islogged: user.islogged,
-          lastLogout: formatDate(user.lastLogout)
-        };
-        offlineUsers.push(user);
-      });
-
-      return res.status(200).json(offlineUsers);
-    }
-
-    if (roleFound.name === "Gerente Área") {
-      const users = await User.find({
-        role: roleFound._id,
-        islogged: false,
-      });
-
-      const offlineUsers = [];
-      users.map((user) => {
-        user = {
-          name: user.name + " " + user.lastname,
-          islogged: user.islogged,
-          lastLogout: formatDate(user.lastLogout)
-        };
-        console.log(user);
-        offlineUsers.push(user);
-      });
-
-      return res.status(200).json(offlineUsers);
-    }
-
-    if (roleFound.name === "Operador") {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-  } catch (error) {
-    return res.status(403).json({ error: error.message });
-  };
 };

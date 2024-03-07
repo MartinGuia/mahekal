@@ -13,12 +13,15 @@ import ProtectedRoute from './ProtectedRoute';
 import { CollabsProvider } from './context/UsersContext';
 import { TicketProvider } from './context/TicketsContext';
 import ViewTicket from './pages/ViewTicket';
+import { DepartmentProvider } from './context/DepartmentContext';
+import NewDepartmentPage from './pages/NewDepartmentPage';
 
 function App() {
   return (
     <AuthProvider>
       <CollabsProvider>
         <TicketProvider>
+          <DepartmentProvider>
           <BrowserRouter>
             <Routes>
               {/* <Route path='/' element={<TicketsPage/>}/> */}
@@ -27,10 +30,11 @@ function App() {
               <Route element={<ProtectedRoute />}>
                 <Route path="/tickets" element={<TicketsPage />} />
                 <Route path="/newticket" element={<NewTicketPage />} />
-                <Route path="/departamentos" element={<DepartamentosPage />} />
                 <Route path="/ticket/:id" element={<ViewTicket/>} />
+                <Route path="/departamentos" element={<DepartamentosPage />} />
+                <Route path="/add-department" element={<NewDepartmentPage />} />
                 <Route
-                  path="/listadptocollabs"
+                  path="/listadptocollabs/:id"
                   element={<ListOfDeptCollabs />}
                 />
                 <Route path="/accounts" element={<AllAccountPage />} />
@@ -39,6 +43,7 @@ function App() {
               </Route>
             </Routes>
           </BrowserRouter>
+          </DepartmentProvider>
         </TicketProvider>
       </CollabsProvider>
     </AuthProvider>

@@ -184,7 +184,7 @@ function NewTicketPage() {
                     </select>
                   </div> */}
                   <div className="w-[50%] max-[541px]:flex-col max-[541px]:flex max-[541px]:items-center max-[541px]:justify-center max-[281px]:w-[100%]">
-                    <label htmlFor="">No. habitacion:</label>
+                    <label htmlFor="">No. habitacion o area:</label>
                     <div className="max-[541px]:flex max-[541px]:justify-center">
                       <input
                         {...register("roomOrArea", { required: true })}
