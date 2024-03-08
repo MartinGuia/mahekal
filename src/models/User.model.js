@@ -33,10 +33,12 @@ const userSchema = new Schema({
         type: Schema.Types.ObjectId
     }],
     islogged: {
-        type: Boolean
+        type: Boolean,
+        default: false
     },
     lastLogout: {
-        type: Number
+        type: Number,
+        default: 0
     }
 },{
     versionKey: false,

@@ -15,17 +15,9 @@ router.get("/alldepartments", authRequired, verifyRoleAdmin, departamentControll
 router.post("/add-department", authRequired, verifyRoleAdmin, departamentController.newDepartment);
 
 // Get department by Id
-router.get("/tickets-department/:id", authRequired, verifyRolesAdmins, departamentController.getDepartmentTickestById);
+router.get("/tickets-department/:id", authRequired, verifyRolesAdmins, departamentController.getDepartmentTicketsById);
 
 // Get Colaborator by id of department
-router.get("/colaborators-department/:id", authRequired, verifyRolesAdmins, departamentController.getColaboratorsByDepartment);
-
-// Delete a user and their reference
-router.delete("/delete-colaborator/:id", authRequired, verifyRoleAdmin, departamentController.deleteColaboratorByDepartment);
-
-router.get("/get-users-online",authRequired, departamentController.getAllUsersOnline);
-
-router.get("/get-users-offline",authRequired, departamentController.getAllUsersOffline);
-
+router.get("/colaborators-department/:id", authRequired, verifyRoleWithoutOperator, departamentController.getColaboratorsByDepartment);
 
 export default router

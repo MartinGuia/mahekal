@@ -92,7 +92,7 @@ export const getAllTickets = async (req, res) => {
           ticket = {
             id: ticket.id,
             name: ticket.name,
-            date : formatDate(ticket.date[ticket.date.length - 1]),
+            date: formatDate(ticket.date),
             title: ticket.title,
             priority: ticket.priority,
             status: ticket.status,
@@ -103,7 +103,7 @@ export const getAllTickets = async (req, res) => {
 
           ticketsArray.push(ticket);
         }
-        return res.status(200).json(ticketsArray);
+        return res.status(200).json(ticketsArray.reverse());
       } catch (error) {
         return res.status(500).json({ message: error.message });
       }
@@ -124,7 +124,7 @@ export const getAllTickets = async (req, res) => {
           ticket = {
             id: ticket.id,
             name: ticket.name,
-            date : formatDate(ticket.date[ticket.date.length - 1]),
+            date: formatDate(ticket.date),
             title: ticket.title,
             priority: ticket.priority,
             status: ticket.status,
@@ -134,7 +134,7 @@ export const getAllTickets = async (req, res) => {
           };
           ticketsArray.push(ticket);
         }
-        return res.status(200).json(ticketsArray);
+        return res.status(200).json(ticketsArray.reverse());
       } catch (error) {
         return res.status(500).json({ message: error.message });
       }
@@ -157,7 +157,7 @@ export const getAllTickets = async (req, res) => {
           ticketFound = {
             id: ticketFound.id,
             name: ticketFound.name,
-            date : formatDate(ticketFound.date[ticketFound.date.length - 1]),
+            date: formatDate(ticket.date),
             title: ticketFound.title,
             priority: ticketFound.priority,
             status: ticketFound.status,
@@ -166,7 +166,7 @@ export const getAllTickets = async (req, res) => {
           };
           ticketsArray.push(ticketFound);
         }
-        return res.status(200).json(ticketsArray);
+        return res.status(200).json(ticketsArray.reserve());
       } catch (error) {
         return res.status(500).json({ message: error.message });
       }
@@ -196,7 +196,7 @@ export const getAllNewTickets = async (req, res) => {
           ticket = {
             id: ticket.id,
             name: ticket.name,
-            date: formatDate(ticket.date[ticket.date.length - 1]), 
+            date: formatDate(ticket.date),
             title: ticket.title,
             priority: ticket.priority,
             status: ticket.status,
@@ -206,7 +206,7 @@ export const getAllNewTickets = async (req, res) => {
           };
           ticketsArray.push(ticket);
         }
-        return res.status(200).json(ticketsArray);
+        return res.status(200).json(ticketsArray.reverse());
       } catch (error) {
         return res.status(500).json({ error: error });
       }
@@ -224,7 +224,7 @@ export const getAllNewTickets = async (req, res) => {
           ticket = {
             id: ticket.id,
             name: ticket.name,
-            date: formatDate(ticket.date[ticket.date.length - 1]), 
+            date: formatDate(ticket.date),
             title: ticket.title,
             priority: ticket.priority,
             status: ticket.status,
@@ -234,7 +234,7 @@ export const getAllNewTickets = async (req, res) => {
           };
           ticketsArray.push(ticket);
         }
-        return res.status(200).json(ticketsArray);
+        return res.status(200).json(ticketsArray.reverse());
       } catch (error) {
         return res.status(500).json({ error: error });
       }
@@ -254,7 +254,7 @@ export const getAllNewTickets = async (req, res) => {
         ticket = {
           id: ticket.id,
           name: ticket.name,
-          date: formatDate(ticket.date[ticket.date.length - 1]), 
+          date: formatDate(ticket.date),
           title: ticket.title,
           priority: ticket.priority,
           status: ticket.status,
@@ -264,7 +264,7 @@ export const getAllNewTickets = async (req, res) => {
         ticketsArray.push(ticket);
       }
 
-      return res.status(200).json(ticketsArray);
+      return res.status(200).json(ticketsArray.reverse());
     };
 
     if (roleFound.name === "Operador") {
@@ -289,7 +289,7 @@ export const getAllTicketsInProgress = async (req, res) => {
       ticket = {
         id: ticket.id,
         name: ticket.name,
-        date: formatDate(ticket.date[ticket.date.length - 1]), 
+        date: formatDate(ticket.date),
         title: ticket.title,
         priority: ticket.priority,
         status: ticket.status,
@@ -299,7 +299,7 @@ export const getAllTicketsInProgress = async (req, res) => {
       ticketsArray.push(ticket);
     }
 
-    return res.status(200).json(ticketsArray);
+    return res.status(200).json(ticketsArray.reverse());
   };
 
   if (roleFound.name === "Gerente Administrador") {
@@ -312,7 +312,7 @@ export const getAllTicketsInProgress = async (req, res) => {
       ticket = {
         id: ticket.id,
         name: ticket.name,
-        date: formatDate(ticket.date[ticket.date.length - 1]), 
+        date: formatDate(ticket.date),
         title: ticket.title,
         priority: ticket.priority,
         status: ticket.status,
@@ -322,7 +322,7 @@ export const getAllTicketsInProgress = async (req, res) => {
       ticketsArray.push(ticket);
     }
 
-    return res.status(200).json(ticketsArray);
+    return res.status(200).json(ticketsArray.reverse());
   };
 
   if (roleFound.name === "Gerente Área") {
@@ -339,7 +339,7 @@ export const getAllTicketsInProgress = async (req, res) => {
         ticket = {
           id: ticket.id,
           name: ticket.name,
-          date: formatDate(ticket.date[ticket.date.length - 1]), 
+          date: formatDate(ticket.date),
           title: ticket.title,
           priority: ticket.priority,
           status: ticket.status,
@@ -349,7 +349,7 @@ export const getAllTicketsInProgress = async (req, res) => {
         ticketsArray.push(ticket);
       }
 
-      return res.status(200).json(ticketsArray);
+      return res.status(200).json(ticketsArray.reverse());
   };
 
   if (roleFound.name === "Operador") {};
@@ -372,7 +372,7 @@ export const getAllTicketsResolve = async (req,res) => {
       ticket = {
         id: ticket.id,
         name: ticket.name,
-        date: formatDate(ticket.date[ticket.date.length - 1]), 
+        date: formatDate(ticket.date),
         title: ticket.title,
         priority: ticket.priority,
         status: ticket.status,
@@ -382,7 +382,7 @@ export const getAllTicketsResolve = async (req,res) => {
       ticketsArray.push(ticket);
     }
 
-    return res.status(200).json(ticketsArray);
+    return res.status(200).json(ticketsArray.reverse());
   };
 
   if (roleFound.name === "Gerente Administrador") {
@@ -395,7 +395,7 @@ export const getAllTicketsResolve = async (req,res) => {
       ticket = {
         id: ticket.id,
         name: ticket.name,
-        date: formatDate(ticket.date[ticket.date.length - 1]), 
+        date: formatDate(ticket.date),
         title: ticket.title,
         priority: ticket.priority,
         status: ticket.status,
@@ -405,7 +405,7 @@ export const getAllTicketsResolve = async (req,res) => {
       ticketsArray.push(ticket);
     }
 
-    return res.status(200).json(ticketsArray);
+    return res.status(200).json(ticketsArray.reverse());
   };
 
   if (roleFound.name === "Gerente Área") {
@@ -422,7 +422,7 @@ export const getAllTicketsResolve = async (req,res) => {
         ticket = {
           id: ticket.id,
           name: ticket.name,
-          date: formatDate(ticket.date[ticket.date.length - 1]), 
+          date: formatDate(ticket.date),
           title: ticket.title,
           priority: ticket.priority,
           status: ticket.status,
@@ -432,7 +432,7 @@ export const getAllTicketsResolve = async (req,res) => {
         ticketsArray.push(ticket);
       }
 
-      return res.status(200).json(ticketsArray);
+      return res.status(200).json(ticketsArray.reverse());
   };
 
   if (roleFound.name === "Operador") {};
@@ -455,7 +455,7 @@ export const getAllTicketsOnPauseOrReview = async (req,res) => {
       ticket = {
         id: ticket.id,
         name: ticket.name,
-        date: formatDate(ticket.date[ticket.date.length - 1]), 
+        date: formatDate(ticket.date),
         title: ticket.title,
         priority: ticket.priority,
         status: ticket.status,
@@ -465,7 +465,7 @@ export const getAllTicketsOnPauseOrReview = async (req,res) => {
       ticketsArray.push(ticket);
     }
 
-    return res.status(200).json(ticketsArray);
+    return res.status(200).json(ticketsArray.reverse());
   };
 
   if (roleFound.name === "Gerente Administrador") {
@@ -478,7 +478,7 @@ export const getAllTicketsOnPauseOrReview = async (req,res) => {
       ticket = {
         id: ticket.id,
         name: ticket.name,
-        date: formatDate(ticket.date[ticket.date.length - 1]), 
+        date: formatDate(ticket.date),
         title: ticket.title,
         priority: ticket.priority,
         status: ticket.status,
@@ -488,7 +488,7 @@ export const getAllTicketsOnPauseOrReview = async (req,res) => {
       ticketsArray.push(ticket);
     }
 
-    return res.status(200).json(ticketsArray);
+    return res.status(200).json(ticketsArray.reverse());
   };
 
   if (roleFound.name === "Gerente Área") {
@@ -505,7 +505,7 @@ export const getAllTicketsOnPauseOrReview = async (req,res) => {
         ticket = {
           id: ticket.id,
           name: ticket.name,
-          date: formatDate(ticket.date[ticket.date.length - 1]), 
+          date: formatDate(ticket.date),
           title: ticket.title,
           priority: ticket.priority,
           status: ticket.status,
@@ -515,7 +515,7 @@ export const getAllTicketsOnPauseOrReview = async (req,res) => {
         ticketsArray.push(ticket);
       }
 
-      return res.status(200).json(ticketsArray);
+      return res.status(200).json(ticketsArray.reverse());
   };
 
   if (roleFound.name === "Operador") {};
@@ -526,25 +526,25 @@ export const getAllTicketsOnPauseOrReview = async (req,res) => {
 
 export const getTicketById = async (req, res) => {
   try {
-    let ticketById = await Ticket.findById(req.params.id);
-    if (!ticketById) return res.status(404).json({ message: "Not Found" });
+    let ticket = await Ticket.findById(req.params.id);
+    if (!ticket) return res.status(404).json({ message: "Not Found" });
 
     const departmentFound = await Department.findById(
-      ticketById.assignedDepartment
+      ticket.assignedDepartment
     );
 
-    ticketById = {
-      id: ticketById.id,
-      name: ticketById.name,
-      date: formatDate(ticketById.date[ticketById.date.length - 1]),
-      title: ticketById.title,
-      priority: ticketById.priority,
-      status: ticketById.status,
+    ticket = {
+      id: ticket.id,
+      name: ticket.name,
+      date: formatDate(ticket.date),
+      title: ticket.title,
+      priority: ticket.priority,
+      status: ticket.status,
       assignedDepartment: departmentFound.name,
       assignedTo: [],
-      roomOrArea: ticketById.roomOrArea,
-      description: ticketById.description,
-      imageURL: ticketById.imageURL
+      roomOrArea: ticket.roomOrArea,
+      description: ticket.description,
+      imageURL: ticket.imageURL
     };
 
     const colaborators = departmentFound.colaborators;
@@ -561,55 +561,44 @@ export const getTicketById = async (req, res) => {
       }
     }
 
-    return res.status(200).json({ ticketById, onlineColaborators });
+    return res.status(200).json({ ticket, onlineColaborators });
   } catch (error) {
     return res.status(404).json({ message: error.message });
   }
 };
 
 export const reassignTicketPut = async (req, res) => {
-  // const { assignedTo, ejecutionTime } = req.body;
+  // prioridad, estado, asignar a , tiempo de ejecución
+  const { priority, status, assignedTo, ejecutionTime } = req.body;
+  try {
+    const ticketToUpdate = await Ticket.findById(req.params.id);
 
-  let now = Date.now();
-  let dateCreated = new Date(now);
-  console.log(dateCreated)
+    if (ticketToUpdate === null)
+      return res.status(404).json({ message: "Ticket not found" });
 
-  const dateFormat = `${dateCreated.getUTCDate()} `;
-  console.log(dateFormat)
+    const colaboratorUpdated = await User.findByIdAndUpdate(assignedTo, {
+      $push: { tickets: ticketToUpdate._id },
+    });
 
-  try {    
-    const ticket = await Ticket.findById(req.params.id);
-    // console.log(ticket);
-    const endData = ticket.date[0]
-    // console.log(endData);
+    if (!colaboratorUpdated)
+      return res.status(404).json({ message: "User to reassing not found" });
 
-    // const ticketFound = await Ticket.findByIdAndUpdate(req.params.id, {
-    //   assignedTo: assignedTo,
-    //   ejecutionTime: ejecutionTime,
-    // });
-    return res.status(200).json(ticket);
+    const ejecutionDate = Date.now() + ejecutionTime * 60 * 1000;
+
+    const ticketUpdate = await Ticket.findByIdAndUpdate(
+      ticketToUpdate.id,
+      {
+        $push: {
+          assignedTo: assignedTo,
+          ejecutionTime: ejecutionDate,
+          dateUpdated: Date.now(),
+        },
+        status: status, priority: priority
+      },
+    );
+
+    res.status(200).json({ message: "Ticket reassigned successfully" });
   } catch (error) {
-    return res.status(404).json({ message: "Ticket not found" });
+    return res.status(404).json({ message: error.message });
   }
-
-  // const assignedToUpdate = await Ticket.findByIdAndUpdate(
-  //   req.params.id,
-  //   { $push: req.body },
-  //   { new: true }
-  // );
-  // res.status(200).json(assignedToUpdate);
-};
-
-export const getAllTicketsByDepartment = async (req, res) => {
-  const departmentFound = await Department.findById(req.user.department);
-  const ticketsDepartment = departmentFound.ticketsDepartment;
-
-  const tickets = [];
-
-  for (const ticket of ticketsDepartment) {
-    const ticketFound = await Ticket.findById(ticket);
-    tickets.push(ticketFound);
-  }
-
-  return res.status(200).json(tickets);
 };
