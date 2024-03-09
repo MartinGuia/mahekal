@@ -11,7 +11,7 @@ function AccountCollabPage() {
         {/* Caja que contiene el boton para regresar una pagina atras */}
         <div className="w-[9%] bottom-9 left-6 relative">
           <button className="rounded-full shadow-md">
-            <Link to="/allaccounts">
+            <Link to="/accounts">
               <img
                 src="flechaAtras.png"
                 className="size-8 max-[281px]:size-6"

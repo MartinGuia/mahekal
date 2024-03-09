@@ -42,7 +42,6 @@ const toggleOnline = () => {
     fetchData(); // Llamar a la función para obtener las opciones al montar el componente
   }, []);
 
-  
 
   return (
     <>
