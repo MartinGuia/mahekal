@@ -4,16 +4,36 @@ import { Tarjeta } from '../components/ui/Tarjeta';
 import { Title } from '../components/Headers/Title';
 import Filter from '../components/ui/Filter';
 import { useTicket } from '../context/TicketsContext';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 
 function TicketsPage() {
-  const { getTickets, ticket } = useTicket();
+  const { getTickets, ticket,getAllTicketsInProgress,getAllTicketsNews,getAllTicketsResolve } = useTicket();
   const{user} = useAuth();
+  const [filter, setFilter] = useState('nuevo'); // Estado por defecto
+
   useEffect(() => {
     getTickets();
   }, []);
 
+  useEffect(() => {
+    getAllTicketsInProgress();
+  }, []);
+
+  useEffect(() => {
+    getAllTicketsNews();
+  }, []);
+  useEffect(() => {
+    getAllTicketsResolve();
+  }, []);
+  // const toggleTicket = () => {
+  //   getAllTicketsInProgress()
+  // };
+
+  const handleFilterChange = (newFilter) => {
+    setFilter(newFilter);
+  };
+   ticket.filter(ticket => ticket.estatus === filter);
   return (
     <>
       <Nav>
@@ -26,14 +46,22 @@ function TicketsPage() {
               {ticket && ticket.length > 0 ? (
                 <>
                  {/* Etiqueta que engloba los filtros */}
-          <section className="justify-center mx-2 mb-10 w-auto h-20 text-lg max-[767px]:flex max-[767px]:text-sm max-[767px]:h-340 max-[767px]:items-center">
-            <Filter>
-              <p>Pendientes</p>
-            </Filter>
+          <section className="justify-center mx-2 w-auto h-20 text-lg max-[767px]:flex max-[767px]:text-sm max-[767px]:h-340 max-[767px]:items-center">
+             {/* Botones de filtro */}
+      <button onClick={() => handleFilterChange('nuevo')}>Nuevo</button>
+      <button onClick={() => handleFilterChange('en curso')}>En curso</button>
+      <button onClick={() => handleFilterChange('en pausa')}>En pausa</button>
+      <button onClick={() => handleFilterChange('resuelto')}>Resuelto</button>
+            {/* <Filter>
+            <button
+              className="hover:-translate-y-2 hover:shadow-2xl duration-500 w-32 shadow-md h-24 rounded-xl p-2 bg-white max-[767px]:mx-3 max-[767px]:px-5"
+            >
+            </button>
+            </Filter> */}
           </section>
                   {ticket.map((ticket, i) => (
                     // to={`${`/ticket`}/${ticket.id}`}
-                    <Tarjeta to={`/ticket/${ticket.id}`} key={i}>
+                    <Tarjeta to={`/ticket/${ticket.id}`} key={i} >
                       {/* Caja dentro del ticket que contiene los componentes del lado izquierdo */}
                       <div className="w-[60%] max-[541px]:w-auto">
                         {/* Caja que contiene el estado del ticket */}
