@@ -5,12 +5,10 @@ const ticketSchema = new Schema({
         type: String,
         required: true,
     },
-    date:[{
+    date:{
         type: Number,
-        // default: Date.now,
-        // type: String,
-        // required: true,
-    }],
+        required: true,
+    },
     title: {
         type: String,
         required: true,
@@ -32,10 +30,9 @@ const ticketSchema = new Schema({
         ref: "User",
         type: Schema.Types.ObjectId,
     }],
-    ejecutionTime:{
+    ejecutionTime:[{
         type: Number,
-        // required: true,
-    },
+    }],
     roomOrArea:{
         type: String,
         required: true,
@@ -48,6 +45,9 @@ const ticketSchema = new Schema({
         type: String,
         required: false,
     },
+    dateUpdated:[{
+        type: Number
+    }]
 },{
     timestamps: false,
     versionKey: false,
