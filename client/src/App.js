@@ -7,14 +7,12 @@ import DepartamentosPage from './pages/DepartamentosPage';
 import ListOfDeptCollabs from './pages/ListOfDeptCollabs';
 import AllAccountPage from './pages/AllAccountPage';
 import AccountCollabPage from './pages/AccountCollabPage';
-import RegisterPage from './pages/RegisterPage';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './ProtectedRoute';
 import { CollabsProvider } from './context/UsersContext';
 import { TicketProvider } from './context/TicketsContext';
 import ViewTicket from './pages/ViewTicket';
 import { DepartmentProvider } from './context/DepartmentContext';
-import NewDepartmentPage from './pages/NewDepartmentPage';
 
 function App() {
   return (
@@ -32,13 +30,12 @@ function App() {
                 <Route path="/newticket" element={<NewTicketPage />} />
                 <Route path="/ticket/:id" element={<ViewTicket/>} />
                 <Route path="/departamentos" element={<DepartamentosPage />} />
-                <Route path="/add-department" element={<NewDepartmentPage />} />
                 <Route
                   path="/listadptocollabs/:id"
                   element={<ListOfDeptCollabs />}
                 />
                 <Route path="/accounts" element={<AllAccountPage />} />
-                <Route path="/register" element={<RegisterPage />} />
+                {/* <Route path="/register" element={<RegisterPage />} /> */}
                 <Route path="/profile" element={<AccountCollabPage />} />
               </Route>
             </Routes>

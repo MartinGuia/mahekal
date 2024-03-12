@@ -7,5 +7,12 @@ export const updateTicketRequest = (ticket) =>
   axios.put(`/tickets/reassignTicket/${ticket._id}`,ticket);
 
 export const getDataTicketRequest = () => axios.get('/tickets/add-ticket')
+
 export const getAllTicketsInProgressRequest = () =>
   axios.get("/tickets/progress-tickets");
+export const getAllTicketsNewsRequest = () =>
+  axios.get("/tickets/new-tickets");
+export const getAllTicketsResolveRequest = () =>
+  axios.get("/tickets/resolved");
+export const getAllTicketsInRevisionRequest = () =>
+  axios.get("/tickets/pause-or-review");

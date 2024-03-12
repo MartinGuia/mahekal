@@ -4,7 +4,10 @@ import { Tarjeta } from '../components/ui/Tarjeta';
 import { Title } from '../components/Headers/Title';
 import ButtonAction from '../components/ui/ButtonAction';
 import {useDepartment} from '../context/DepartmentContext'
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import logo from '../img/LogoMahekal.png'
+import Modal from '../components/ui/Modal';
+import {useForm} from 'react-hook-form';
 
 function DepartamentosPage() {
 const {department, getAllDepartments} = useDepartment()
@@ -12,21 +15,42 @@ const {department, getAllDepartments} = useDepartment()
   useEffect(()=>{
     getAllDepartments();
   },[])
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+  const {createDepartment, errors:signinErrors} = useDepartment()
+
+  const onSubmit = handleSubmit(async (values) => {
+    createDepartment(values)
+    handleCloseModal()
+  })
   return (
     <>
       <Nav>
         <Title>Departamentos</Title>
-
         <section className="w-[100%] h-[8%] flex max-[541px]:mt-4">
-          <div className="w-[100%]">
-            <ButtonAction
-              rutaDestino="/add-department"
-              className=" bg-water-blue hover:bg-water-blue-hover px-4 py-3 rounded-lg shadow-lg ml-8"
-            >
-              Agregar Departamento
-            </ButtonAction>
-          </div>
-        </section>
+        <div className="w-[100%]">
+        <button
+          onClick={handleOpenModal}
+          className="bg-water-blue hover:bg-water-blue-hover px-4 py-3 rounded-lg shadow-lg ml-8"
+        >
+          Agregar Departamento
+        </button>
+        </div>
+      </section>
 
         <section className="h-screen mt-8 flex items-center flex-col">
           <div className="h-[100%] w-[100%] flex items-center flex-col">
@@ -55,6 +79,43 @@ const {department, getAllDepartments} = useDepartment()
             ))}
           </div>
         </section>
+
+        <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
+          <div className="relative bg-white rounded-lg" >
+            <Title>MAHEKAL</Title>
+
+            <form className="flex flex-col items-center" onSubmit={onSubmit}>
+              <img
+                className="w-20 p-1"
+                src={logo}
+                alt="Mahekal Logo"
+              />
+              {signinErrors.map((error, i) => (
+                <div
+                  key={i}
+                  className="bg-red-500 text-white w-[100%] rounded-md py-1"
+                >
+                  {error}
+                </div>
+              ))}
+              <input
+                className="w-full bg-mahekal-input p-2 rounded m-2"
+                type="text"
+                {...register("name", { required: true })}
+                placeholder="Nombre del dpto"
+              />
+              {errors.name && (
+                <p className="text-red-500">El Nombre es requerido*</p>
+              )}
+              <button
+                className="p-2 m-2 w-1/2 rounded-lg bg-water-blue hover:bg-water-blue-hover"
+                type="submit"
+              >
+                Agregar
+              </button>
+            </form>
+          </div>
+        </Modal>
       </Nav>
     </>
   );
