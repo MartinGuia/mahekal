@@ -7,6 +7,7 @@ import departamentsRouthes from "./routes/departament.routes.js";
 import { createRoles } from "./libs/initialRoles.js";
 import cookieParser from "cookie-parser";
 import cors from 'cors'
+import { checkTicketExpired } from "./middlewares/checkTicketExpired.js";
 
 const app = express();
 createRoles();
@@ -15,6 +16,9 @@ app.use(cors({
     //*Es para establecer las credenciales
     credentials:true
 }))
+
+// checkTicketExpired();
+
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(cookieParser());

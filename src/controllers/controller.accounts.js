@@ -117,6 +117,8 @@ export const updatePassword = async (req, res) => {
 export const getUserById = async (req, res) => {
   try {
     const userFound = await User.findById(req.params.id);
+    console.log(userFound)
+    if (userFound === null) return res.status(404).json({ message: "User not found " });
     res.status(200).json(userFound);
   } catch (error) {
     return res.status(500).json({ message: "User not found" });

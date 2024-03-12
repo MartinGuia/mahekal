@@ -26,7 +26,7 @@ export const getAllDepartments = async (req, res) => {
     // Returns status and list with news obbjects
     return res.status(200).json(listDepartments);
   } catch (error) {
-    return res.status(500).json({message: error.message});
+    return res.status(500).json({ message: error.message });
   }
 };
 
@@ -60,7 +60,7 @@ export const newDepartment = async (req, res) => {
 };
 
 // Get all tickets department
-export const getDepartmentTickestById = async (req, res) => {
+export const getDepartmentTicketsById = async (req, res) => {
   try {
     const departmentFound = await Department.findById(req.params.id);
     const departmentTickets = departmentFound.ticketsDepartment;
@@ -68,11 +68,13 @@ export const getDepartmentTickestById = async (req, res) => {
 
     for (const ticket of departmentTickets) {
       let ticketFound = await Ticket.findById(ticket);
-      const departmentFound = await Department.findById(ticketFound.assignedDepartment);
+      const departmentFound = await Department.findById(
+        ticketFound.assignedDepartment
+      );
       ticketFound = {
         id: ticketFound.id,
         name: ticketFound.name,
-        date: ticketFound.date,
+        date: formatDate(ticketFound.date),
         title: ticketFound.title,
         priority: ticketFound.priority,
         status: ticketFound.status,
@@ -97,19 +99,22 @@ export const getColaboratorsByDepartment = async (req, res) => {
     const onlineColaborators = [];
     const offlineColaborators = [];
 
-    for (const id of departmentColaborators) {
-      let colaborator = await User.findById(id);
-      colaborator = {
-        id: id,
-        name: colaborator.name + " " + colaborator.lastname,
-        islogged: colaborator.islogged,
-        lastLogout: colaborator.lastLogout,
-      };
-      if (colaborator.islogged == true) {
-        onlineColaborators.push(colaborator);
-      } else {
-        colaborator.lastLogout = formatDate(colaborator.lastLogout);
-        offlineColaborators.push(colaborator);
+    for (const idColaborator of departmentColaborators) {
+      let colaborator = await User.findById(idColaborator);
+      if ("islogged" in colaborator) {
+        colaborator = {
+          id: colaborator.id,
+          name: `${colaborator.name} ${colaborator.lastname}`,
+          islogged: colaborator.islogged,
+          lastLogout: colaborator.islogged
+            ? undefined
+            : colaborator.lastLogout != 0
+            ? formatDate(colaborator.lastLogout)
+            : "Sin iniciar sesión",
+        };
+        colaborator.islogged
+          ? onlineColaborators.push(colaborator)
+          : offlineColaborators.push(colaborator);
       }
     }
 
@@ -123,6 +128,71 @@ export const getColaboratorsByDepartment = async (req, res) => {
       offlineCount,
     });
   } catch (error) {
-    return res.status(500).json({ error: error.message });
-  }
+    return res.status(403).json({ error: error.message });
+  };
+};
+
+export const getAllUsersOffline = async (req, res) => {
+  try {
+    const userFound = await User.findById(req.user.id);
+    const roleFound = await Role.findById(userFound.role);
+
+    if (roleFound.name === "Administrador") {
+      const users = await User.find({ islogged: false });
+
+      const offlineUsers = [];
+      users.map((user) => {
+        user = {
+          name: user.name + " " + user.lastname,
+          islogged: user.islogged,
+          lastLogout: formatDate(user.lastLogout)
+        };
+        offlineUsers.push(user);
+      });
+
+      return res.status(200).json(offlineUsers);
+    }
+
+    if (roleFound.name === "Gerente Administrador") {
+      const users = await User.find({ islogged: false });
+
+      const offlineUsers = [];
+      users.map((user) => {
+        user = {
+          name: user.name + " " + user.lastname,
+          islogged: user.islogged,
+          lastLogout: formatDate(user.lastLogout)
+        };
+        offlineUsers.push(user);
+      });
+
+      return res.status(200).json(offlineUsers);
+    }
+
+    if (roleFound.name === "Gerente Área") {
+      const users = await User.find({
+        role: roleFound._id,
+        islogged: false,
+      });
+
+      const offlineUsers = [];
+      users.map((user) => {
+        user = {
+          name: user.name + " " + user.lastname,
+          islogged: user.islogged,
+          lastLogout: formatDate(user.lastLogout)
+        };
+        console.log(user);
+        offlineUsers.push(user);
+      });
+
+      return res.status(200).json(offlineUsers);
+    }
+
+    if (roleFound.name === "Operador") {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+  } catch (error) {
+    return res.status(403).json({ error: error.message });
+  };
 };

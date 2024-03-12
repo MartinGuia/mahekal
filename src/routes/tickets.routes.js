@@ -20,10 +20,6 @@ router.get('/progress-tickets', authRequired, ticketsController.getAllTicketsInP
 router.get('/resolved', authRequired, ticketsController.getAllTicketsResolve);
 router.get('/pause-or-review', authRequired, ticketsController.getAllTicketsOnPauseOrReview);
 
-
-
-router.get('/tickets-department', authRequired, verifyRolesAdmins, ticketsController.getAllTicketsByDepartment);
-
-router.put("/reassignTicket/:id", ticketsController.reassignTicketPut);
+router.put("/reassignTicket/:id", authRequired, ticketsController.reassignTicketPut);
 
 export default router 
