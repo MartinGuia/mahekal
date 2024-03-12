@@ -51,7 +51,7 @@ const toggleOnline = () => {
         {/* Caja que contiene el boton para regresar una pagina atras */}
         <div className="w-[9%] bottom-9 left-6 relative">
           <button className="rounded-full shadow-md">
-            <Link to="/tickets">
+            <Link to="/departamentos">
               <ReturnButton/>
             </Link>
           </button>

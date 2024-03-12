@@ -159,7 +159,7 @@ function ViewTicket() {
                 {/* Caja que contiene los inputs de asignar departamento y asignar persona */}
                 <div className="w-auto flex-row flex justify-center items-center max-[281px]:flex-col">
                   <div className="w-[50%] max-[541px]:flex-col max-[541px]:flex max-[541px]:items-center max-[541px]:justify-center max-[281px]:w-[100%]">
-                    <label htmlFor="">Departamento:</label>
+                    <label className='flex' htmlFor="">Departamento:</label>
                     <input type="text" className='w-[70%] text-xl font-semibold border-2 rounded-md text-black p-2 m-2 max-[541px]:w-[70%]' defaultValue={dpto} readOnly/>
                     {/* <select
                       className="w-[70%] text-base rounded-lg block p-2 bg-white border-gray-400 border-2 placeholder-gray-400 text-black focus:ring-blue-500 focus:border-blue-500"

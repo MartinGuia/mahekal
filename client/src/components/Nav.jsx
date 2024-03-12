@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import tickets from "../img/boleto.png";
 import dptos from "../img/departamento.png";
 import cuentas from "../img/agregar-usuario.png";
@@ -10,6 +10,11 @@ import { useAuth } from "../context/AuthContext";
 import menu from '../img/menu.png'
 import logo from '../img/LogoMahekal.png'
 import logoutImg from '../img/logout.png'
+import {useForm} from 'react-hook-form';
+import { useTicket } from '../context/TicketsContext'
+import Modal from '../components/ui/Modal';
+import { Title } from '../components/Headers/Title'
+import cerrar from '../img/cerrar.png'
 
 export default function Nav({children}) {
   const [open, setOpen] = useState(false);
@@ -53,6 +58,46 @@ export default function Nav({children}) {
     },
   ];
   const isSmallScreen = window.innerWidth < 541;
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const {register, handleSubmit,formState:{
+    errors,
+  }} = useForm()
+  const {obtenerDatosTicket, signupTicket, errors:registerErrors} = useTicket()
+  const [nombreUsuario, setNombreUsuario] = useState('');
+  const [lastnameUsuario, setLastnameUsuario] = useState('');
+  const [departamentos, setDepartamentos] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const datosTicket = await obtenerDatosTicket();
+      if (datosTicket) {
+        setNombreUsuario(datosTicket.userFound.name);
+        setLastnameUsuario(datosTicket.userFound.lastname)
+        setDepartamentos(datosTicket.departments);
+        departamentos.map((option) => ({
+          value: option.id,
+          label: option.name, // Utilizar el valor 'name' como label en las opciones
+        }))
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const onSubmit = handleSubmit((data) => {
+    console.log(data);
+    signupTicket(data)
+    handleCloseModal()
+  })
 
   return (
     <>
@@ -69,7 +114,10 @@ export default function Nav({children}) {
           </button>
 
           <div className="flex items-center w-[50%] h-auto">
-            <LinkButton to="/newticket" className="ml-4 max-[767px]:w-[50%]">
+            <LinkButton
+              className="ml-4 max-[767px]:w-[50%]"
+              onClick={handleOpenModal}
+            >
               {isSmallScreen ? "+" : "Nuevo Ticket +"}
             </LinkButton>
           </div>
@@ -186,6 +234,131 @@ export default function Nav({children}) {
           {children}
         </section>
       </div>
+
+      <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
+        <div className="relative bg-white rounded-lg">
+        <div className="w-[100%] flex justify-end"><button><img src={cerrar} alt="" className="size-8"/></button></div>
+          <Title>Nuevo Ticket</Title>
+
+          <form
+            className="flex flex-col items-center"
+            onSubmit={onSubmit}
+            // onSubmit={handleSubmit}
+          >
+            {/* <img className="w-20 p-1" src={logo} alt="Mahekal Logo" /> */}
+            {registerErrors.map((error, i) => (
+              <div
+                key={i}
+                className="bg-red-500 text-white w-[100%] rounded-md py-1"
+              >
+                {error}
+              </div>
+            ))}
+            <label className="mt-2" htmlFor="">Nombre</label>
+            <input
+              className="w-full bg-mahekal-input p-2 rounded m-2"
+              type="text"
+              {...register("name")}
+              value={nombreUsuario + " " + lastnameUsuario}
+              readOnly
+            />
+            <label htmlFor="">Titulo ticket</label>
+            <input
+              className="w-full bg-mahekal-input p-2 rounded m-2"
+              type="text"
+              {...register("title", { required: true })}
+              placeholder="Titulo de ticket"
+              autoFocus
+            />
+            {errors.title && (
+              <p className="text-red-500">El titulo es requerido*</p>
+            )}
+            <label htmlFor="">Prioridad:</label>
+            <select
+              className="w-[100%] text-base rounded-md block p-2 bg-white border-gray-400 border-2 placeholder-gray-400 text-black focus:ring-blue-500 focus:border-blue-500 hover:focus:border-blue-500"
+              {...register("priority", { required: true })}
+            >
+              <option>Selecciona una opccion . . .</option>
+              <option value="Bajo">Bajo</option>
+              <option value="Medio">Medio</option>
+              <option value="Alto">Alto</option>
+              <option value="Critico">Critico</option>
+            </select>
+            {errors.userName && (
+              <p className="text-red-500">La prioridad es requerida*</p>
+            )}
+            <label htmlFor="">Rol:</label>
+            <label htmlFor="">Departamento:</label>
+            <select
+              className="w-[100%] text-base rounded-lg block p-2 bg-white border-gray-400 border-2 placeholder-gray-400 text-black focus:ring-blue-500 focus:border-blue-500"
+              {...register("assignedDepartment", { required: true })}
+            >
+              <option>Selecciona una opccion...</option>
+              {departamentos.map((option, i) => (
+                <option key={i} value={option.id}>
+                  {option.name}
+                </option>
+              ))}
+            </select>
+            <label htmlFor="">No. habitacion o area:</label>
+            <div className="max-[541px]:flex max-[541px]:justify-center">
+              <input
+                {...register("roomOrArea", { required: true })}
+                type="text"
+                className="p-1 rounded border-2 border-blacks w-[100%] max-[281px]:w-[100%] mb-3"
+              />
+            </div>
+            {errors.roomOrArea && (
+              <p className="text-red-500">
+                La habitacion o area es requerido/a*
+              </p>
+            )}
+            <div className="flex w-[100%] justify-center">
+              <textarea
+                rows="3"
+                placeholder="Describa el problema..."
+                {...register("description")}
+                className="w-[100%] border-2 rounded-md"
+              ></textarea>
+            </div>
+             {/* Caja que contiene la insercion de imagenes */}
+             <div className="flex justify-center mt-3">
+              {/* <input  type="file" {...register("imageURL")}/> */}
+              {/* <div
+                {...getRootProps()}
+                className="text-gray-400 border-2 py-[4%] px-[4%] border-dashed border-mahekal-brown cursor-pointer shadow-lg"
+              >
+                <input
+                  {...getInputProps()}
+                  {...register("imageURL", { required: false })}
+                />
+                {isDragActive ? (
+                  <p>Drop the files here ...</p>
+                ) : (
+                  <p>Arrastra o selecciona los archivos</p>
+                )}
+              </div>
+              {/* <input type="file"
+              onChange={e => setFile(e.target.files[0])}
+            /> */}
+              {/*Toma el objeto file y lo convierte a una url para mostrarlo como previsualizacion de la img escogida */}
+              {/* {acceptedFiles[0] && (
+                // <img
+                //   src={URL.createObjectURL(acceptedFiles[0])}
+                //   className="size-40"
+                //   alt=""
+                // />
+              )} */} 
+            </div>
+            <button
+              className="p-2 m-2 w-1/2 rounded-lg bg-water-blue hover:bg-water-blue-hover"
+              type="submit"
+            >
+              Enviar
+            </button>
+          </form>
+        </div>
+      </Modal>
     </>
   );
 }
