@@ -1,5 +1,5 @@
 import { createContext, useState, useContext, useEffect} from "react";
-import { getUsers,getSignup } from "../api/collabs";
+import { getUsers,getSignup, getUserByIdToModifyRequest } from "../api/collabs";
 
 export const CollabsContext = createContext()
 
@@ -35,6 +35,17 @@ export const CollabsProvider = ({children})=>{
     const res = await getUsers();
     setCollabs(res.data);
   };
+  
+  const getUserByIdToModify = async (id) => {
+    try {
+      const res = await getUserByIdToModifyRequest(id);
+      console.log(res.data);
+      return res.data;
+      // console.log(res);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   // useEffect(() => {
   //   const fetchData = async () => {
   //     try {
@@ -55,6 +66,7 @@ export const CollabsProvider = ({children})=>{
         options,
         getDatos,
         getAllUsers,
+        getUserByIdToModify,
         collabs,
       }}
     >
