@@ -91,6 +91,8 @@ export const getAllTickets = async (req, res) => {
             let departmentFound = await Department.findById(
               ticket.assignedDepartment
             );
+            ticket.id = ticket._id
+            delete ticket._id
             ticket.date = formatDate(ticket.date);
             ticket.assignedDepartment = departmentFound.name;
             delete ticket.imageURL;
