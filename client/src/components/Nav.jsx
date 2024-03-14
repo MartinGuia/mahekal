@@ -18,13 +18,30 @@ import cerrar from '../img/cerrar.png'
 
 export default function Nav({children}) {
   const [open, setOpen] = useState(false);
-
-  const { logout } = useAuth();
-
+  const isSmallScreen = window.innerWidth < 541;
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+  const {
+    obtenerDatosTicket,
+    signupTicket,
+    errors: registerErrors,
+  } = useTicket();
+  const [nombreUsuario, setNombreUsuario] = useState("");
+  const [lastnameUsuario, setLastnameUsuario] = useState("");
+  const [departamentos, setDepartamentos] = useState([]);
+  const { logout, role } = useAuth();
   const toggleAside = () => {
     setOpen(!open);
   };
-
+  
+  const token = role; // Aquí debes proporcionar el token JWT
+  const decodedToken = JSON.parse(atob(token.split(".")[1])); // Decodificar la carga útil
+  const userRole = decodedToken.role; // Obtener el valor del rol
+  const userDpto = decodedToken.department;
   const Menus = [
     {
       id: 1,
@@ -57,8 +74,67 @@ export default function Nav({children}) {
       to: "/profile",
     },
   ];
-  const isSmallScreen = window.innerWidth < 541;
-  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const Menus2 = [
+    {
+      id: 1,
+      title: "Tickets",
+      image: tickets,
+      to: "/tickets",
+    },
+    {
+      id: 2,
+      title: "Dptos.",
+      image: dptos,
+      to: "/departamentos",
+    },
+    {
+      id: 3,
+      title: "Foro",
+      image: mensaje,
+      to: "/",
+    },
+    {
+      id: 4,
+      title: "Cuenta",
+      image: cuenta,
+      to: "/profile",
+    },
+  ];
+  const Menus3 = [
+    {
+      id: 1,
+      title: "Tickets",
+      image: tickets,
+      to: "/tickets",
+    },
+    {
+      id: 2,
+      title: "Dptos.",
+      image: dptos,
+      to: `/listadptocollabs/${userDpto}`,
+    },
+    {
+      id: 3,
+      title: "Foro",
+      image: mensaje,
+      to: "/",
+    },
+    {
+      id: 4,
+      title: "Cuenta",
+      image: cuenta,
+      to: "/profile",
+    },
+  ];
+  const Menus4 = [
+    {
+      id: 1,
+      title: "Tickets",
+      image: tickets,
+      to: "/tickets",
+    },
+  ];
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -68,36 +144,107 @@ export default function Nav({children}) {
     setIsModalOpen(false);
   };
 
-  const {register, handleSubmit,formState:{
-    errors,
-  }} = useForm()
-  const {obtenerDatosTicket, signupTicket, errors:registerErrors} = useTicket()
-  const [nombreUsuario, setNombreUsuario] = useState('');
-  const [lastnameUsuario, setLastnameUsuario] = useState('');
-  const [departamentos, setDepartamentos] = useState([]);
+  const onSubmit = handleSubmit((data) => {
+    console.log(data);
+    signupTicket(data);
+    handleCloseModal();
+  });
 
   useEffect(() => {
     const fetchData = async () => {
       const datosTicket = await obtenerDatosTicket();
       if (datosTicket) {
         setNombreUsuario(datosTicket.userFound.name);
-        setLastnameUsuario(datosTicket.userFound.lastname)
+        setLastnameUsuario(datosTicket.userFound.lastname);
         setDepartamentos(datosTicket.departments);
         departamentos.map((option) => ({
           value: option.id,
           label: option.name, // Utilizar el valor 'name' como label en las opciones
-        }))
+        }));
       }
     };
 
     fetchData();
   }, []);
 
-  const onSubmit = handleSubmit((data) => {
-    console.log(data);
-    signupTicket(data)
-    handleCloseModal()
-  })
+  let navegador1;
+  if (userRole === "65d0e2ca3ba6e268905bad79") {
+    navegador1 = Menus.map((menu) => (
+      <li key={menu.id}>
+        <Link
+          className="flex rounded-md p-3 mt-2 cursor-pointer hover:bg-water-blue items-center gap-x-3"
+          to={menu.to}
+        >
+          <img src={menu.image} className="size-8" />
+          <span
+            className={`flex-1 text-mahekal-brown text-lg font-normal ${
+              !open && "invisible"
+            }`}
+          >
+            {menu.title}
+          </span>
+        </Link>
+      </li>
+    ));
+  } else if (userRole === "65d0e2ca3ba6e268905bad7a") {
+    navegador1 = Menus2.map((menu) => (
+      <li key={menu.id}>
+        <Link
+          className="flex rounded-md p-3 mt-2 cursor-pointer hover:bg-water-blue items-center gap-x-3"
+          to={menu.to}
+        >
+          <img src={menu.image} className="size-8" />
+          <span
+            className={`flex-1 text-mahekal-brown text-lg font-normal ${
+              !open && "invisible"
+            }`}
+          >
+            {menu.title}
+          </span>
+        </Link>
+      </li>
+    ));
+  } else if (userRole === "65d0e2ca3ba6e268905bad7b") {
+    navegador1 = Menus3.map((menu) => (
+      <li key={menu.id}>
+        <Link
+          className="flex rounded-md p-3 mt-2 cursor-pointer hover:bg-water-blue items-center gap-x-3"
+          to={menu.to}
+        >
+          <img src={menu.image} className="size-8" />
+          <span
+            className={`flex-1 text-mahekal-brown text-lg font-normal ${
+              !open && "invisible"
+            }`}
+          >
+            {menu.title}
+          </span>
+        </Link>
+      </li>
+    ));
+  } else if (userRole === "65d0e2ca3ba6e268905bad7c") {
+    navegador1 = Menus4.map((menu) => (
+      <li key={menu.id}>
+        <Link
+          className="flex rounded-md p-3 mt-2 cursor-pointer hover:bg-water-blue items-center gap-x-3"
+          to={menu.to}
+        >
+          <img src={menu.image} className="size-8" />
+          <span
+            className={`flex-1 text-mahekal-brown text-lg font-normal ${
+              !open && "invisible"
+            }`}
+          >
+            {menu.title}
+          </span>
+        </Link>
+      </li>
+    ));
+  }
+
+  // useEffect(() => {
+  //   getRole();
+  // }, []);
 
   return (
     <>
@@ -174,7 +321,8 @@ export default function Nav({children}) {
 
           {/* Componente que contiene los iconos y nombres del menu */}
           <ul className={`pt-2`}>
-            {Menus.map((menu) => (
+            {navegador1}
+            {/* {Menus.map((menu) => (
               <li key={menu.id}>
                 <Link
                   className="flex rounded-md p-3 mt-2 cursor-pointer hover:bg-water-blue items-center gap-x-3"
@@ -190,7 +338,7 @@ export default function Nav({children}) {
                   </span>
                 </Link>
               </li>
-            ))}
+            ))} */}
           </ul>
 
           {/* Caja que contiene el Logo mahekal */}
@@ -237,7 +385,11 @@ export default function Nav({children}) {
 
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
         <div className="relative bg-white rounded-lg">
-        <div className="w-[100%] flex justify-end"><button><img src={cerrar} alt="" className="size-8"/></button></div>
+          <div className="w-[100%] flex justify-end">
+            <button>
+              <img src={cerrar} alt="" className="size-8" />
+            </button>
+          </div>
           <Title>Nuevo Ticket</Title>
 
           <form
@@ -254,7 +406,9 @@ export default function Nav({children}) {
                 {error}
               </div>
             ))}
-            <label className="mt-2" htmlFor="">Nombre</label>
+            <label className="mt-2" htmlFor="">
+              Nombre
+            </label>
             <input
               className="w-full bg-mahekal-input p-2 rounded m-2"
               type="text"
@@ -321,8 +475,8 @@ export default function Nav({children}) {
                 className="w-[100%] border-2 rounded-md"
               ></textarea>
             </div>
-             {/* Caja que contiene la insercion de imagenes */}
-             <div className="flex justify-center mt-3">
+            {/* Caja que contiene la insercion de imagenes */}
+            <div className="flex justify-center mt-3">
               {/* <input  type="file" {...register("imageURL")}/> */}
               {/* <div
                 {...getRootProps()}
@@ -348,7 +502,7 @@ export default function Nav({children}) {
                 //   className="size-40"
                 //   alt=""
                 // />
-              )} */} 
+              )} */}
             </div>
             <button
               className="p-2 m-2 w-1/2 rounded-lg bg-water-blue hover:bg-water-blue-hover"
