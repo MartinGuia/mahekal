@@ -8,6 +8,7 @@ import {
   getAllTicketsInRevisionRequest,
   getAllTicketsNewsRequest,
   getAllTicketsResolveRequest,
+  updateTicketRequest,
 } from "../api/tickets";
 
 export const TicketContext = createContext()
@@ -29,6 +30,15 @@ export const TicketProvider = ({children})=>{
     const res = await registerTicket(ticket);
     console.log(res);
   };
+
+  const updateTicket = async(id, ticket)=>{
+    try {
+    await updateTicketRequest(id, ticket)
+
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   const getTickets = async () => {
     try {
@@ -106,6 +116,7 @@ export const TicketProvider = ({children})=>{
         obtenerDatosTicket,
         getTicketById,
         getTickets,
+        updateTicket,
         getAllTicketsInProgress,
         getAllTicketsNews,
         getAllTicketsResolve,
