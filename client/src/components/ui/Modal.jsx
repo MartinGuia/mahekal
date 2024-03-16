@@ -8,7 +8,7 @@ const Modal = ({ isOpen, onClose, children }) => {
         <div className="fixed inset-0 transition-opacity" onClick={onClose}>
           <div className="absolute inset-0 bg-black opacity-50"></div>
         </div>
-        <div className="relative bg-white rounded-lg shadow-xl w-96 max-[541px]:w-60">
+        <div className="relative bg-white rounded-lg shadow-xl w-96 max-[541px]:w-80 max-[281px]:w-60">
           <div className="p-8">{children}</div>
         </div>
       </div>

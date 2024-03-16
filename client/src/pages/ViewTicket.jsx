@@ -9,8 +9,8 @@ import ReturnButton from '../components/ui/ReturnButton';
 
 function ViewTicket() {
 
-  const {getTicketById, errors:updateErrors} = useTicket()
-  const {register, handleSubmit, formState:{
+  const {getTicketById, updateTicket,errors:updateErrors} = useTicket()
+  const {register, handleSubmit,formState:{
     errors,
   }} = useForm()
   const params = useParams()
@@ -28,9 +28,10 @@ function ViewTicket() {
     setInputDisabled(!inputDisabled);
   };
   
-  const onSubmit = handleSubmit(async (values) => {
+  const onSubmit = handleSubmit((values) => {
+    updateTicket(params.id, values);
     console.log(values);
-  })
+  });
 
   useEffect(() => {
     async function loadTicket() {
@@ -39,13 +40,13 @@ function ViewTicket() {
           const ticket = await getTicketById(params.id);
           console.log(ticket);
           if(ticket){
-            setName(ticket.ticketById.name)
-            setTitle(ticket.ticketById.title)
-            setStatus(ticket.ticketById.status)
-            setArea(ticket.ticketById.roomOrArea)
-            setPriority(ticket.ticketById.priority)
-            setDpto(ticket.ticketById.assignedDepartment)
-            setDescription(ticket.ticketById.description)
+            setName(ticket.ticket.name)
+            setTitle(ticket.ticket.title)
+            setStatus(ticket.ticket.status)
+            setArea(ticket.ticket.roomOrArea)
+            setPriority(ticket.ticket.priority)
+            setDpto(ticket.ticket.assignedDepartment)
+            setDescription(ticket.ticket.description)
             setUsersOnline(ticket.onlineColaborators)
             usersOnline.map((option)=>({
               value: option.id,
@@ -159,7 +160,7 @@ function ViewTicket() {
                 {/* Caja que contiene los inputs de asignar departamento y asignar persona */}
                 <div className="w-auto flex-row flex justify-center items-center max-[281px]:flex-col">
                   <div className="w-[50%] max-[541px]:flex-col max-[541px]:flex max-[541px]:items-center max-[541px]:justify-center max-[281px]:w-[100%]">
-                    <label htmlFor="">Departamento:</label>
+                    <label className='flex' htmlFor="">Departamento:</label>
                     <input type="text" className='w-[70%] text-xl font-semibold border-2 rounded-md text-black p-2 m-2 max-[541px]:w-[70%]' defaultValue={dpto} readOnly/>
                     {/* <select
                       className="w-[70%] text-base rounded-lg block p-2 bg-white border-gray-400 border-2 placeholder-gray-400 text-black focus:ring-blue-500 focus:border-blue-500"
@@ -202,7 +203,8 @@ function ViewTicket() {
                     {...register("ejecutionTime", { required: true })}
                     disabled={inputDisabled}
                   >
-                    <option value="">Selecciona una opccion</option>
+                    <option value="10">10 min</option>
+                    <option value="20">20 min</option>
                   </select>
                 </div>
                   <div className="w-[50%] max-[541px]:flex-col max-[541px]:flex max-[541px]:items-center max-[541px]:justify-center max-[281px]:w-[100%]">

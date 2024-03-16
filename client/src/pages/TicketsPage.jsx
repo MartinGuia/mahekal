@@ -16,24 +16,24 @@ function TicketsPage() {
     getTickets();
   }, []);
 
-  useEffect(() => {
-    getAllTicketsInProgress();
-  }, []);
+  // useEffect(() => {
+  //   getAllTicketsInProgress();
+  // }, []);
 
-  useEffect(() => {
-    getAllTicketsNews();
-  }, []);
-  useEffect(() => {
-    getAllTicketsResolve();
-  }, []);
+  // useEffect(() => {
+  //   getAllTicketsNews();
+  // }, []);
+  // useEffect(() => {
+  //   getAllTicketsResolve();
+  // }, []);
   // const toggleTicket = () => {
   //   getAllTicketsInProgress()
   // };
 
-  const handleFilterChange = (newFilter) => {
-    setFilter(newFilter);
-  };
-   ticket.filter(ticket => ticket.estatus === filter);
+  // const handleFilterChange = (newFilter) => {
+  //   setFilter(newFilter);
+  // };
+  //  ticket.filter(ticket => ticket.estatus === filter);
   return (
     <>
       <Nav>
@@ -48,10 +48,10 @@ function TicketsPage() {
                  {/* Etiqueta que engloba los filtros */}
           <section className="justify-center mx-2 w-auto h-20 text-lg max-[767px]:flex max-[767px]:text-sm max-[767px]:h-340 max-[767px]:items-center">
              {/* Botones de filtro */}
-      <button onClick={() => handleFilterChange('nuevo')}>Nuevo</button>
+      {/* <button onClick={() => handleFilterChange('nuevo')}>Nuevo</button>
       <button onClick={() => handleFilterChange('en curso')}>En curso</button>
       <button onClick={() => handleFilterChange('en pausa')}>En pausa</button>
-      <button onClick={() => handleFilterChange('resuelto')}>Resuelto</button>
+      <button onClick={() => handleFilterChange('resuelto')}>Resuelto</button> */}
             {/* <Filter>
             <button
               className="hover:-translate-y-2 hover:shadow-2xl duration-500 w-32 shadow-md h-24 rounded-xl p-2 bg-white max-[767px]:mx-3 max-[767px]:px-5"
@@ -74,7 +74,7 @@ function TicketsPage() {
                         {/* Caja que contiene el tiempo de ejecución */}
                         <div className="flex text-sm text-gray-400 mt-2">
                           <p>Tiempo de ejecución:</p>
-                          <span className="ml-2">4h</span>
+                          <span className="ml-2">{ticket.ejecutionTime}</span>
                         </div>
                         {/* Caja que contiene el titulo de ticket y el numero */}
                         <div className="w-[100%] mt-1">
