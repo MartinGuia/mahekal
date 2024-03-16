@@ -1,19 +1,10 @@
-FROM node:18-bullseye as build
+# Establecer la imagen base de Nginx
+FROM nginx:alpine
 
-WORKDIR /app
+# Copiar los archivos estáticos de la aplicación React al directorio de Nginx
+COPY build/ /usr/share/nginx/html
 
-COPY package*.json .
-
-RUN npm install
-
-COPY . .
-
-RUN npm run build
-
-FROM nginx
-
-COPY --from=build /app/build /usr/share/nginx/html
-
-EXPOSE 80
+# Copiar el archivo de configuración de Nginx personalizado
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 CMD ["nginx", "-g", "daemon off;"]
