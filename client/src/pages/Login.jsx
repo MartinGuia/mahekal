@@ -3,6 +3,7 @@ import {useForm} from 'react-hook-form';
 import { useAuth } from "../context/AuthContext";
 import { useEffect } from "react";
 import { useNavigate} from "react-router-dom";
+import logo from '../img/LogoMahekal.png'
 
 export default function Login() {
 
@@ -32,7 +33,7 @@ export default function Login() {
          <Title>MAHEKAL</Title>
          <form className="flex flex-col items-center" onSubmit={onSubmit}>
          
-           <img className="w-20 p-1" src="LogoMahekal.png" alt="Mahekal Logo" />
+           <img className="w-20 p-1" src={logo} alt="Mahekal Logo" />
            {signinErrors.map((error, i) => (
               <div
                 key={i}

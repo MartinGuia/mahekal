@@ -1,5 +1,5 @@
 import { createContext, useState, useContext, useEffect} from "react";
-import { getUsers,getSignup } from "../api/collabs";
+import { getUsers,getSignup, getUserByIdToModifyRequest } from "../api/collabs";
 
 export const CollabsContext = createContext()
 
@@ -12,30 +12,40 @@ export const useCollab = () =>{
 } 
 
 export const CollabsProvider = ({children})=>{
-    const [errors, setErrors] = useState([])
-    const [options, setOptions] = useState([]);
-    const [collabs, setCollabs] = useState([]);
-  
-  
-  useEffect(()=>{
-      if (errors.length > 0){
-          const timer = setTimeout(()=>{
-              setErrors([])
-          },3000)
-          return() => clearTimeout(timer)
-      }
-  },[errors])
-  
+  const [errors, setErrors] = useState([]);
+  const [options, setOptions] = useState([]);
+  const [collabs, setCollabs] = useState([]);
+
+  useEffect(() => {
+    if (errors.length > 0) {
+      const timer = setTimeout(() => {
+        setErrors([]);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [errors]);
+
   // fetch para traer los datos en formularios
-    const getDatos = async() =>{
-      const res = await getSignup()
-      setOptions(res.data)
-    }
+  const getDatos = async () => {
+    const res = await getSignup();
+    setOptions(res.data);
+  };
+
+  const getAllUsers = async () => {
+    const res = await getUsers();
+    setCollabs(res.data);
+  };
   
-    const getAllUsers = async () =>{
-      const res = await getUsers();
-      setCollabs(res.data)
+  const getUserByIdToModify = async (id) => {
+    try {
+      const res = await getUserByIdToModifyRequest(id);
+      console.log(res.data);
+      return res.data;
+      // console.log(res);
+    } catch (error) {
+      console.error(error);
     }
+  };
   // useEffect(() => {
   //   const fetchData = async () => {
   //     try {
@@ -45,21 +55,22 @@ export const CollabsProvider = ({children})=>{
   //       console.error('Error al obtener opciones:', error);
   //     }
   //   };
-  
+
   //   fetchData(); // Llamar a la función para obtener las opciones al montar el componente
   // }, []);
-  
-    return (
-      <CollabsContext.Provider
-        value={{
-          errors,
-          options,
-          getDatos,
-          getAllUsers,
-          collabs,
-        }}
-      >
-        {children}
-      </CollabsContext.Provider>
-    );
-  }
+
+  return (
+    <CollabsContext.Provider
+      value={{
+        errors,
+        options,
+        getDatos,
+        getAllUsers,
+        getUserByIdToModify,
+        collabs,
+      }}
+    >
+      {children}
+    </CollabsContext.Provider>
+  );
+}

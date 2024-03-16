@@ -1,5 +1,15 @@
 import { createContext, useState, useContext, useEffect} from "react";
-import {registerTicket, getDataTicketRequest, getAllTicketsRequest, getTicketByIdRequest} from "../api/tickets"
+import {
+  registerTicket,
+  getDataTicketRequest,
+  getAllTicketsRequest,
+  getTicketByIdRequest,
+  getAllTicketsInProgressRequest,
+  getAllTicketsInRevisionRequest,
+  getAllTicketsNewsRequest,
+  getAllTicketsResolveRequest,
+  updateTicketRequest,
+} from "../api/tickets";
 
 export const TicketContext = createContext()
 
@@ -14,31 +24,30 @@ export const useTicket = () =>{
 export const TicketProvider = ({children})=>{
   const [ticket, setTicket] = useState([]);
   const [errors, setErrors] = useState([]);
-  // const [allTickets, setAllTickets] = useState([]);
-  const [idTicket, setIdTicket] = useState();
+  const [ticketInProgress, setTicketInProgress] =useState([])
 
   const signupTicket = async (ticket) => {
     const res = await registerTicket(ticket);
     console.log(res);
   };
 
-  const getTickets = async () => {
-    const res = await getAllTicketsRequest();
-    setTicket(res.data);
-  };
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await getAllTickets();
-  //       setAllTickets(response.data); // Establecer las opciones obtenidas del backend
-  //       // console.log(response.data);
-  //     } catch (error) {
-  //       console.error('Error al obtener opciones:', error);
-  //     }
-  //   };
+  const updateTicket = async(id, ticket)=>{
+    try {
+    await updateTicketRequest(id, ticket)
 
-  //   fetchData(); // Llamar a la función para obtener las opciones al montar el componente
-  // }, []);
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  const getTickets = async () => {
+    try {
+      const res = await getAllTicketsRequest();
+      setTicket(res.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const obtenerDatosTicket = async () => {
     try {
@@ -50,27 +59,46 @@ export const TicketProvider = ({children})=>{
     }
   };
 
-  // const getTicketById = async (id) => {
-  //   try {
-  //     const response = await getTicketByIdRequest(id);
-  //     setIdTicket(response.data)
-  //     console.log(response.data);
-  //     return response.data;
-  //   } catch (error) {
-  //     console.error('Error al obtener datos del ticket:', error);
-  //     return null;
-  //   }
-  // };
-
   const getTicketById = async (id) => {
     try {
       const res = await getTicketByIdRequest(id);
-    return res.data
-    // console.log(res);
+      return res.data;
+      // console.log(res);
     } catch (error) {
       console.error(error);
     }
   };
+
+  const getAllTicketsInProgress = async () =>{
+    try {
+      const res = await getAllTicketsInProgressRequest()
+      // setTicketInProgress(res.data)
+      console.log(res.data);
+      // return res.data
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  const getAllTicketsNews = async () =>{
+    try {
+      const res = await getAllTicketsNewsRequest()
+      // setTicketInProgress(res.data)
+      console.log(res.data);
+      // return res.data
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  const getAllTicketsResolve = async () =>{
+    try {
+      const res = await getAllTicketsResolveRequest()
+      // setTicketInProgress(res.data)
+      console.log(res.data);
+      // return res.data
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   useEffect(() => {
     if (errors.length > 0) {
@@ -87,8 +115,11 @@ export const TicketProvider = ({children})=>{
         signupTicket,
         obtenerDatosTicket,
         getTicketById,
-        idTicket,
         getTickets,
+        updateTicket,
+        getAllTicketsInProgress,
+        getAllTicketsNews,
+        getAllTicketsResolve,
         errors,
         ticket,
       }}
