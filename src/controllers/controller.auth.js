@@ -1,7 +1,7 @@
 // Imported libreries
 import User from "../models/User.model.js";
 import Roles from "../models/Roles.model.js";
-import Department from "../models/Departament.model.js";
+import Department from "../models/Department.model.js";
 import { createdAccessToken } from "../libs/jwt.js";
 import bcryptjs from "bcryptjs";
 import config from "../config.js";
