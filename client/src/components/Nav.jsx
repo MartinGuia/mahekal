@@ -33,12 +33,17 @@ export default function Nav({children}) {
   const [nombreUsuario, setNombreUsuario] = useState("");
   const [lastnameUsuario, setLastnameUsuario] = useState("");
   const [departamentos, setDepartamentos] = useState([]);
-  const { logout, role, signinUser } = useAuth();
+  const { logout, role, getRole } = useAuth();
   const toggleAside = () => {
     setOpen(!open);
   };
 const [userRole1, setUserRole1] = useState()
 const [userDpto1, setUserDpto1] = useState()
+
+const [roleAdmin, setRoleAdmin] = useState([])
+const [roleManager, setRoleManager] = useState()
+const [roleChiefArea, setRoleChiefArea] = useState()
+const [roleOperator, setRoleOperator] = useState()
 
 
   useEffect(() => {
@@ -178,6 +183,26 @@ const [userDpto1, setUserDpto1] = useState()
 
     fetchData();
   }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const dataRoles = await getRole();
+      if (dataRoles) {
+        setRoleAdmin(dataRoles.roles)
+        console.log(dataRoles.id);
+        // setNombreUsuario(datosTicket.userFound.name);
+        // setLastnameUsuario(datosTicket.userFound.lastname);
+        // setDepartamentos(datosTicket.departments);
+        // departamentos.map((option) => ({
+        //   value: option.id,
+        //   label: option.name, // Utilizar el valor 'name' como label en las opciones
+        // }));
+      }
+    };
+
+    fetchData();
+  }, []);
+  
 
   let navegador1;
   if (userRole1 === "65d0e2ca3ba6e268905bad79") {

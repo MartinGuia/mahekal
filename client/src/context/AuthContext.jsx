@@ -1,5 +1,5 @@
 import { createContext, useState, useContext, useEffect} from "react";
-import { registerRequest, loginRequest, verifyTokenRequest, logoutToken } from "../api/auth";
+import { registerRequest, loginRequest, verifyTokenRequest, logoutToken, getRoleRequest } from "../api/auth";
 import Cookies from 'js-cookie'
 
 // se crea una constante en la cual se guarda la ejecucion de createContext
@@ -23,6 +23,7 @@ export const AuthProvider = ({children})=>{
   const [errors, setErrors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [role, setRole] = useState(null)
+  const [getAllRoles, setGetAllRoles] = useState([])
 
   // Funcion para registrar usuario y todo lo que este dentro de las etiquetas
   // AuthContext.Provider prodra usarlo
@@ -53,6 +54,19 @@ export const AuthProvider = ({children})=>{
         return setErrors(error.response.data);
       }
       setErrors([error.response.data.message]);
+    }
+  };
+
+  const getRole = async () => {
+    try {
+      const res = await getRoleRequest();
+      console.log(res.data);
+      return res.data; 
+      // setGetAllRoles(res.data)
+      // console.log(res.data);
+      // console.log(res);
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -110,6 +124,7 @@ export const AuthProvider = ({children})=>{
         signinUser,
         signupUser,
         loading,
+        getRole,
         role,
         user,
         isAuthenticated,
