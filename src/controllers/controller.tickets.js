@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import Ticket from "../models/Ticket.model.js";
 import User from "../models/User.model.js";
-import Department from "../models/Departament.model.js";
+import Department from "../models/Department.model.js";
 import Roles from "../models/Roles.model.js";
 import { formatDate } from "../libs/formatDate.js";
 
