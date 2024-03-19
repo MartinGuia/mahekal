@@ -33,15 +33,27 @@ export default function Nav({children}) {
   const [nombreUsuario, setNombreUsuario] = useState("");
   const [lastnameUsuario, setLastnameUsuario] = useState("");
   const [departamentos, setDepartamentos] = useState([]);
-  const { logout, role } = useAuth();
+  const { logout, role, signinUser } = useAuth();
   const toggleAside = () => {
     setOpen(!open);
   };
+const [userRole1, setUserRole1] = useState()
+const [userDpto1, setUserDpto1] = useState()
+
+
+  useEffect(() => {
+    try {
+      const token = role; // Aquí debes proporcionar el token JWT
+      const decodedToken = JSON.parse(atob(token.split(".")[1])); // Decodificar la carga útil
+      const userRole = decodedToken.role; // Obtener el valor del rol
+      const userDpto = decodedToken.department;
+      setUserRole1(userRole);
+      setUserDpto1(userDpto);
+    } catch (error) {
+      console.error(error);
+    }
+  }, []);
   
-  const token = role; // Aquí debes proporcionar el token JWT
-  const decodedToken = JSON.parse(atob(token.split(".")[1])); // Decodificar la carga útil
-  const userRole = decodedToken.role; // Obtener el valor del rol
-  const userDpto = decodedToken.department;
   const Menus = [
     {
       id: 1,
@@ -112,7 +124,7 @@ export default function Nav({children}) {
       id: 2,
       title: "Dptos.",
       image: dptos,
-      to: `/listadptocollabs/${userDpto}`,
+      to: `/listadptocollabs/${userDpto1}`,
     },
     {
       id: 3,
@@ -168,7 +180,7 @@ export default function Nav({children}) {
   }, []);
 
   let navegador1;
-  if (userRole === "65d0e2ca3ba6e268905bad79") {
+  if (userRole1 === "65d0e2ca3ba6e268905bad79") {
     navegador1 = Menus.map((menu) => (
       <li key={menu.id}>
         <Link
@@ -186,7 +198,7 @@ export default function Nav({children}) {
         </Link>
       </li>
     ));
-  } else if (userRole === "65d0e2ca3ba6e268905bad7a") {
+  } else if (userRole1 === "65d0e2ca3ba6e268905bad7a") {
     navegador1 = Menus2.map((menu) => (
       <li key={menu.id}>
         <Link
@@ -204,7 +216,7 @@ export default function Nav({children}) {
         </Link>
       </li>
     ));
-  } else if (userRole === "65d0e2ca3ba6e268905bad7b") {
+  } else if (userRole1 === "65d0e2ca3ba6e268905bad7b") {
     navegador1 = Menus3.map((menu) => (
       <li key={menu.id}>
         <Link
@@ -222,7 +234,7 @@ export default function Nav({children}) {
         </Link>
       </li>
     ));
-  } else if (userRole === "65d0e2ca3ba6e268905bad7c") {
+  } else if (userRole1 === "65d0e2ca3ba6e268905bad7c") {
     navegador1 = Menus4.map((menu) => (
       <li key={menu.id}>
         <Link
@@ -379,6 +391,7 @@ export default function Nav({children}) {
             open && "blur-sm max-[542px]:hidden"
           }`}
         >
+          
           {children}
         </section>
       </div>

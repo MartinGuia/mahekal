@@ -13,6 +13,7 @@ import { CollabsProvider } from './context/UsersContext';
 import { TicketProvider } from './context/TicketsContext';
 import ViewTicket from './pages/ViewTicket';
 import { DepartmentProvider } from './context/DepartmentContext';
+import EditCollabPage from './pages/EditCollabPage';
 
 function App() {
   return (
@@ -34,9 +35,13 @@ function App() {
                   path="/listadptocollabs/:id"
                   element={<ListOfDeptCollabs />}
                 />
+                <Route
+                  path="/edit-collab/:id"
+                  element={<EditCollabPage/>}
+                />
                 <Route path="/accounts" element={<AllAccountPage />} />
                 {/* <Route path="/register" element={<RegisterPage />} /> */}
-                <Route path="/profile" element={<AccountCollabPage />} />
+                <Route path="/profile/:id" element={<AccountCollabPage />} />
               </Route>
             </Routes>
           </BrowserRouter>

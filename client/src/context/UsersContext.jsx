@@ -1,5 +1,5 @@
 import { createContext, useState, useContext, useEffect} from "react";
-import { getUsers,getSignup, getUserByIdToModifyRequest } from "../api/collabs";
+import { getUsers,getSignup, getUserByIdToModifyRequest,updateUserRequest, getUserByIdRequest } from "../api/collabs";
 
 export const CollabsContext = createContext()
 
@@ -25,6 +25,13 @@ export const CollabsProvider = ({children})=>{
     }
   }, [errors]);
 
+  const updateUser = async(id,user)=>{
+    try {
+    await updateUserRequest(id,user)
+    } catch (error) {
+      console.error(error)
+    }
+  }
   // fetch para traer los datos en formularios
   const getDatos = async () => {
     const res = await getSignup();
@@ -36,28 +43,23 @@ export const CollabsProvider = ({children})=>{
     setCollabs(res.data);
   };
   
-  const getUserByIdToModify = async (id) => {
+  const getUserById = async (id) => {
     try {
-      const res = await getUserByIdToModifyRequest(id);
+      const res = await getUserByIdRequest(id);
       console.log(res.data);
       return res.data;
-      // console.log(res);
     } catch (error) {
       console.error(error);
     }
   };
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await getUsers();
-  //       setCollabs(response.data); // Establecer las opciones obtenidas del backend
-  //     } catch (error) {
-  //       console.error('Error al obtener opciones:', error);
-  //     }
-  //   };
-
-  //   fetchData(); // Llamar a la función para obtener las opciones al montar el componente
-  // }, []);
+  const getUserByIdToModify = async (id) => {
+    try {
+      const res = await getUserByIdToModifyRequest(id);
+      return res.data;
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <CollabsContext.Provider
@@ -65,6 +67,8 @@ export const CollabsProvider = ({children})=>{
         errors,
         options,
         getDatos,
+        updateUser,
+        getUserById,
         getAllUsers,
         getUserByIdToModify,
         collabs,
