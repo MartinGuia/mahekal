@@ -123,6 +123,7 @@ export const signin = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
 export const verifyToken = async (req, res) => {
   const { token } = req.cookies;
   if (!token) return res.send(false);
@@ -139,6 +140,7 @@ export const verifyToken = async (req, res) => {
     });
   });
 };
+
 // Logout controller function
 export const logout = async (req, res) => {
   // Sets empty cookie and send status

@@ -68,16 +68,17 @@ export const getUserByIdToModify = async (req, res) => {
 };
 
 export const updateUser = async (req, res) => {
-  const { id, userName, role, department } = req.body;
-
+  const { userName, role, department } = req.body;
+  
   try {
-    const userFound = await User.findById(id);
+    const userFound = await User.findById(req.params.id).lean();
+    console.log(userFound)
 
     if (userName !== userFound.userName)
-      await User.findByIdAndUpdate(id, { userName: userName });
+      await User.findByIdAndUpdate(userFound._id, { userName: userName });
 
     if (role !== userFound.role)
-      await User.findByIdAndUpdate(id, { role: role });
+      await User.findByIdAndUpdate(userFound._id, { role: role });
 
     if (department !== userFound.department) {
       await Departament.updateOne(
@@ -90,22 +91,22 @@ export const updateUser = async (req, res) => {
         { $push: { colaborators: userFound._id } }
       );
 
-      await User.findByIdAndUpdate(id, { department: department });
+      await User.findByIdAndUpdate(userFound._id, { department: department });
     }
 
     res.status(200).json({ message: "User updated successfully" });
   } catch (error) {
-    res.status(500).json({ message: "Error updating user" });
+    res.status(500).json({ message: error.message });
   }
 };
 
 export const updatePassword = async (req, res) => {
-  const { id, password } = req.body;
+  const { password } = req.body;
 
   try {
     const passwordHash = await bcrypt.hash(password, 10);
 
-    await User.findByIdAndUpdate(id, { password: passwordHash });
+    await User.findByIdAndUpdate(req.params.id, { password: passwordHash });
     return res.status(200).json({ message: "Password updated successfully" });
   } catch (error) {
     // return res.status(500).json({ message: "Error updating password" });

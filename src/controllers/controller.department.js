@@ -128,71 +128,7 @@ export const getColaboratorsByDepartment = async (req, res) => {
       offlineCount,
     });
   } catch (error) {
-    return res.status(403).json({ error: error.message });
-  };
+    return res.status(500).json({ error: error.message });
+  }
 };
-
-export const getAllUsersOffline = async (req, res) => {
-  try {
-    const userFound = await User.findById(req.user.id);
-    const roleFound = await Role.findById(userFound.role);
-
-    if (roleFound.name === "Administrador") {
-      const users = await User.find({ islogged: false });
-
-      const offlineUsers = [];
-      users.map((user) => {
-        user = {
-          name: user.name + " " + user.lastname,
-          islogged: user.islogged,
-          lastLogout: formatDate(user.lastLogout)
-        };
-        offlineUsers.push(user);
-      });
-
-      return res.status(200).json(offlineUsers);
-    }
-
-    if (roleFound.name === "Gerente Administrador") {
-      const users = await User.find({ islogged: false });
-
-      const offlineUsers = [];
-      users.map((user) => {
-        user = {
-          name: user.name + " " + user.lastname,
-          islogged: user.islogged,
-          lastLogout: formatDate(user.lastLogout)
-        };
-        offlineUsers.push(user);
-      });
-
-      return res.status(200).json(offlineUsers);
-    }
-
-    if (roleFound.name === "Gerente Área") {
-      const users = await User.find({
-        role: roleFound._id,
-        islogged: false,
-      });
-
-      const offlineUsers = [];
-      users.map((user) => {
-        user = {
-          name: user.name + " " + user.lastname,
-          islogged: user.islogged,
-          lastLogout: formatDate(user.lastLogout)
-        };
-        console.log(user);
-        offlineUsers.push(user);
-      });
-
-      return res.status(200).json(offlineUsers);
-    }
-
-    if (roleFound.name === "Operador") {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-  } catch (error) {
-    return res.status(403).json({ error: error.message });
-  };
-};
+ 
