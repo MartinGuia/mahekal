@@ -1,13 +1,19 @@
-FROM node:18-bullseye
+FROM node:18
 
 WORKDIR /app
 
 COPY package*.json .
 
-RUN npm install
+RUN npm install --only=production
 
 COPY . .
 
+WORKDIR /app/src
+
+ENV PORT=4000
+
+ENV DB="mongodb://mongoDB:27017/mahekal"
+
 EXPOSE 4000
 
-CMD [ "npm", "start" ]
+CMD [ "node", "index.js" ]

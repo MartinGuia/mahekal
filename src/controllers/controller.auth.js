@@ -1,7 +1,7 @@
 // Imported libreries
 import User from "../models/User.model.js";
 import Roles from "../models/Roles.model.js";
-import Department from "../models/Departament.model.js";
+import Department from "../models/Department.model.js";
 import { createdAccessToken } from "../libs/jwt.js";
 import bcryptjs from "bcryptjs";
 import config from "../config.js";
@@ -123,6 +123,7 @@ export const signin = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
 export const verifyToken = async (req, res) => {
   const { token } = req.cookies;
   if (!token) return res.send(false);
@@ -139,6 +140,7 @@ export const verifyToken = async (req, res) => {
     });
   });
 };
+
 // Logout controller function
 export const logout = async (req, res) => {
   // Sets empty cookie and send status

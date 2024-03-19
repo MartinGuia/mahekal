@@ -1,7 +1,9 @@
 import User from "../models/User.model.js";
 import Role from "../models/Roles.model.js";
-import Departament from "../models/Departament.model.js";
+import Department from "../models/Department.model.js";
+import Ticket from "../models/Ticket.model.js";
 import bcrypt from "bcryptjs";
+import { formatDate } from "../libs/formatDate.js";
 
 export const getAllUsers = async (req, res) => {
   try {
@@ -10,7 +12,7 @@ export const getAllUsers = async (req, res) => {
 
     for (let user of users) {
       const roleUser = await Role.findById(user.role);
-      const departmentUser = await Departament.findById(user.department);
+      const departmentUser = await Department.findById(user.department);
 
       user = {
         id: user.id,
@@ -30,10 +32,10 @@ export const getAllUsers = async (req, res) => {
 export const getUserByIdToModify = async (req, res) => {
   try {
     let userFound = await User.findById(req.params.id);
-    let userDepartment = await Departament.findById(userFound.department);
+    let userDepartment = await Department.findById(userFound.department);
     const userRole = await Role.findById(userFound.role);
 
-    const departments = await Departament.find();
+    const departments = await Department.find();
     const departmentList = [];
 
     const rolesList = await Role.find();
@@ -44,7 +46,7 @@ export const getUserByIdToModify = async (req, res) => {
     };
 
     for (let department of departments) {
-      const departmentFound = await Departament.findById(department.id);
+      const departmentFound = await Department.findById(department.id);
       department = {
         id: department.id,
         name: department.name,
@@ -68,44 +70,45 @@ export const getUserByIdToModify = async (req, res) => {
 };
 
 export const updateUser = async (req, res) => {
-  const { id, userName, role, department } = req.body;
-
+  const { userName, role, department } = req.body;
+  
   try {
-    const userFound = await User.findById(id);
+    const userFound = await User.findById(req.params.id).lean();
+    console.log(userFound)
 
     if (userName !== userFound.userName)
-      await User.findByIdAndUpdate(id, { userName: userName });
+      await User.findByIdAndUpdate(userFound._id, { userName: userName });
 
     if (role !== userFound.role)
-      await User.findByIdAndUpdate(id, { role: role });
+      await User.findByIdAndUpdate(userFound._id, { role: role });
 
     if (department !== userFound.department) {
-      await Departament.updateOne(
+      await Department.updateOne(
         { _id: userFound.department },
         { $pull: { colaborators: userFound._id } }
       );
 
-      await Departament.updateOne(
+      await Department.updateOne(
         { _id: department },
         { $push: { colaborators: userFound._id } }
       );
 
-      await User.findByIdAndUpdate(id, { department: department });
+      await User.findByIdAndUpdate(userFound._id, { department: department });
     }
 
     res.status(200).json({ message: "User updated successfully" });
   } catch (error) {
-    res.status(500).json({ message: "Error updating user" });
+    res.status(500).json({ message: error.message });
   }
 };
 
 export const updatePassword = async (req, res) => {
-  const { id, password } = req.body;
+  const { password } = req.body;
 
   try {
     const passwordHash = await bcrypt.hash(password, 10);
 
-    await User.findByIdAndUpdate(id, { password: passwordHash });
+    await User.findByIdAndUpdate(req.params.id, { password: passwordHash });
     return res.status(200).json({ message: "Password updated successfully" });
   } catch (error) {
     // return res.status(500).json({ message: "Error updating password" });
@@ -116,11 +119,49 @@ export const updatePassword = async (req, res) => {
 // FALTAN ALGUNAS OPCIONES AQUI
 export const getUserById = async (req, res) => {
   try {
-    const userFound = await User.findById(req.params.id);
-    console.log(userFound)
-    if (userFound === null) return res.status(404).json({ message: "User not found " });
-    res.status(200).json(userFound);
+    let userFound = await User.findById(req.params.id);
+    if (userFound === null)
+      return res.status(404).json({ message: "User not found " });
+
+    let tickets = userFound.tickets;
+    let ticketsForUser = await Promise.all(
+      tickets.map(async (idTicket) => {
+        let ticket = await Ticket.findById(idTicket).lean();
+        let ticketDepartment = await Department.findById(
+          ticket.assignedDepartment
+        );
+        ticket.assignedDepartment = ticketDepartment.name;
+        ticket.assignedTo = userFound.name + " " + userFound.lastname;
+        ticket.date = formatDate(ticket.date);
+        ticket.id = ticket._id;
+
+        let lastEjecutionTime = new Date(
+          ticket.ejecutionTime[ticket.ejecutionTime.length - 1]
+        );
+        let lastDateUpdated = new Date(
+          ticket.dateUpdated[ticket.dateUpdated.length - 1]
+        );
+
+        let differenceInMilliseconds = lastEjecutionTime - lastDateUpdated;
+        let differenceInMinutes = differenceInMilliseconds / (60 * 1000);
+        let differenceHours =
+          differenceInMinutes >= 60 ? differenceInMinutes / 60 : 0;
+
+        ticket.ejecutionTime =
+          differenceHours >= 1
+            ? `${differenceHours}h`
+            : `${differenceInMinutes}m`;
+
+        delete ticket.dateUpdated;
+        delete ticket.description;
+        delete ticket.imageURL;
+        delete ticket._id;
+        return ticket;
+      })
+    );
+
+    res.status(200).json(ticketsForUser);
   } catch (error) {
-    return res.status(500).json({ message: "User not found" });
+    return res.status(500).json({ message: error.message });
   }
 };
