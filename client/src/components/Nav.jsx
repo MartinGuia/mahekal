@@ -3,7 +3,6 @@ import tickets from "../img/boleto.png";
 import dptos from "../img/departamento.png";
 import cuentas from "../img/agregar-usuario.png";
 import mensaje from "../img/mensaje.png";
-import cuenta from "../img/usuario.png";
 import { Link } from 'react-router-dom';
 import LinkButton from "./ui/LinkButton";
 import { useAuth } from "../context/AuthContext";
@@ -33,7 +32,8 @@ export default function Nav({children}) {
   const [nombreUsuario, setNombreUsuario] = useState("");
   const [lastnameUsuario, setLastnameUsuario] = useState("");
   const [departamentos, setDepartamentos] = useState([]);
-  const { logout, role, getRole } = useAuth();
+  const { logout, role,  getRole} =
+    useAuth();
   const toggleAside = () => {
     setOpen(!open);
   };
@@ -44,6 +44,20 @@ const [roleAdmin, setRoleAdmin] = useState([])
 const [roleManager, setRoleManager] = useState()
 const [roleChiefArea, setRoleChiefArea] = useState()
 const [roleOperator, setRoleOperator] = useState()
+
+useEffect(() => {
+    const fetchData = async () => {
+      const res = await getRole();
+      if (res) {
+        setRoleAdmin(res[0]._id)
+        setRoleManager(res[3]._id)
+        setRoleChiefArea(res[2]._id)
+        setRoleOperator(res[1]._id)
+      }
+    };
+
+    fetchData();
+  }, []);
 
 
   useEffect(() => {
@@ -84,12 +98,6 @@ const [roleOperator, setRoleOperator] = useState()
       image: mensaje,
       to: "/",
     },
-    {
-      id: 5,
-      title: "Cuenta",
-      image: cuenta,
-      to: "/profile",
-    },
   ];
 
   const Menus2 = [
@@ -111,12 +119,6 @@ const [roleOperator, setRoleOperator] = useState()
       image: mensaje,
       to: "/",
     },
-    {
-      id: 4,
-      title: "Cuenta",
-      image: cuenta,
-      to: "/profile",
-    },
   ];
   const Menus3 = [
     {
@@ -136,12 +138,6 @@ const [roleOperator, setRoleOperator] = useState()
       title: "Foro",
       image: mensaje,
       to: "/",
-    },
-    {
-      id: 4,
-      title: "Cuenta",
-      image: cuenta,
-      to: "/profile",
     },
   ];
   const Menus4 = [
@@ -183,29 +179,10 @@ const [roleOperator, setRoleOperator] = useState()
 
     fetchData();
   }, []);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const dataRoles = await getRole();
-      if (dataRoles) {
-        setRoleAdmin(dataRoles.roles)
-        console.log(dataRoles.id);
-        // setNombreUsuario(datosTicket.userFound.name);
-        // setLastnameUsuario(datosTicket.userFound.lastname);
-        // setDepartamentos(datosTicket.departments);
-        // departamentos.map((option) => ({
-        //   value: option.id,
-        //   label: option.name, // Utilizar el valor 'name' como label en las opciones
-        // }));
-      }
-    };
-
-    fetchData();
-  }, []);
   
 
   let navegador1;
-  if (userRole1 === "65d0e2ca3ba6e268905bad79") {
+  if (userRole1 === roleAdmin) {
     navegador1 = Menus.map((menu) => (
       <li key={menu.id}>
         <Link
@@ -223,7 +200,7 @@ const [roleOperator, setRoleOperator] = useState()
         </Link>
       </li>
     ));
-  } else if (userRole1 === "65d0e2ca3ba6e268905bad7a") {
+  } else if (userRole1 === roleManager) {
     navegador1 = Menus2.map((menu) => (
       <li key={menu.id}>
         <Link
@@ -241,7 +218,7 @@ const [roleOperator, setRoleOperator] = useState()
         </Link>
       </li>
     ));
-  } else if (userRole1 === "65d0e2ca3ba6e268905bad7b") {
+  } else if (userRole1 === roleChiefArea) {
     navegador1 = Menus3.map((menu) => (
       <li key={menu.id}>
         <Link
@@ -259,7 +236,7 @@ const [roleOperator, setRoleOperator] = useState()
         </Link>
       </li>
     ));
-  } else if (userRole1 === "65d0e2ca3ba6e268905bad7c") {
+  } else if (userRole1 === roleOperator) {
     navegador1 = Menus4.map((menu) => (
       <li key={menu.id}>
         <Link
@@ -479,7 +456,6 @@ const [roleOperator, setRoleOperator] = useState()
             {errors.userName && (
               <p className="text-red-500">La prioridad es requerida*</p>
             )}
-            <label htmlFor="">Rol:</label>
             <label htmlFor="">Departamento:</label>
             <select
               className="w-[100%] text-base rounded-lg block p-2 bg-white border-gray-400 border-2 placeholder-gray-400 text-black focus:ring-blue-500 focus:border-blue-500"

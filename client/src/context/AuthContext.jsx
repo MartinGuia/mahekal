@@ -23,8 +23,11 @@ export const AuthProvider = ({children})=>{
   const [errors, setErrors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [role, setRole] = useState(null)
-  const [getAllRoles, setGetAllRoles] = useState([])
-
+  // const [getAllRoles, setGetAllRoles] = useState([])
+  const [roleAdmin, setRoleAdmin] = useState([])
+  const [roleManager, setRoleManager] = useState()
+  const [roleChiefArea, setRoleChiefArea] = useState()
+  const [roleOperator, setRoleOperator] = useState()
   // Funcion para registrar usuario y todo lo que este dentro de las etiquetas
   // AuthContext.Provider prodra usarlo
   const signupUser = async (user) => {
@@ -60,15 +63,34 @@ export const AuthProvider = ({children})=>{
   const getRole = async () => {
     try {
       const res = await getRoleRequest();
-      console.log(res.data);
-      return res.data; 
-      // setGetAllRoles(res.data)
       // console.log(res.data);
-      // console.log(res);
+      return res.data; 
     } catch (error) {
       console.error(error);
     }
   };
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const res = await getRoleRequest();
+  //     if (res) {
+  //       setRoleAdmin(res.data[0]._id)
+  //       setRoleManager(res.data[3]._id)
+  //       setRoleChiefArea(res.data[2]._id)
+  //       setRoleOperator(res.data[1]._id)
+  //       console.log(res.data[1]);
+  //       // setNombreUsuario(datosTicket.userFound.name);
+  //       // setLastnameUsuario(datosTicket.userFound.lastname);
+  //       // setDepartamentos(datosTicket.departments);
+  //       // departamentos.map((option) => ({
+  //       //   value: option.id,
+  //       //   label: option.name, // Utilizar el valor 'name' como label en las opciones
+  //       // }));
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, []);
 
   const logout = async () => {
     await logoutToken();
@@ -125,6 +147,10 @@ export const AuthProvider = ({children})=>{
         signupUser,
         loading,
         getRole,
+        roleAdmin,
+        roleManager,
+        roleChiefArea,
+        roleOperator,
         role,
         user,
         isAuthenticated,

@@ -93,10 +93,10 @@ function AllAccountPage() {
                 key={item.id}
                 className="border-b border-gray-200 hover:bg-gray-100 hover:-translate-y-1"
               >
-                <Link className='flex' to={`/profile/${item.id}`}>
-                <td className="py-3 px-6 text-left whitespace-nowrap">
-                      {item.name}
-                    </td>
+                <Link className="flex" to={`/profile/${item.id}`}>
+                  <td className="py-3 px-6 text-left whitespace-nowrap">
+                    {item.name}
+                  </td>
                 </Link>
                 <td className="py-3 px-6 text-left whitespace-nowrap">
                   {item.role}
@@ -116,13 +116,15 @@ function AllAccountPage() {
                       Editar
                     </button>
                   </Link>
-                  <button
-                    // onClick={() => handleEdit(index)}
-                    onClick={handleOpenModalEditPass}
-                    className="text-green-500 hover:text-green-700 hover:-translate-y-1"
-                  >
-                    Editar contraseña
-                  </button>
+                  <Link to={`/edit-password-collab/${item.id}`}>
+                    <button
+                      // onClick={() => handleEdit(index)}
+                      // onClick={handleOpenModalEditPass}
+                      className="text-green-500 hover:text-green-700 hover:-translate-y-1"
+                    >
+                      Editar contraseña
+                    </button>
+                  </Link>
                 </td>
               </tr>
             ))}

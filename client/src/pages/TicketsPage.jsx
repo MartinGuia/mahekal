@@ -1,4 +1,3 @@
-import React from 'react'
 import Nav from '../components/Nav'
 import { Tarjeta } from '../components/ui/Tarjeta';
 import { Title } from '../components/Headers/Title';
@@ -11,6 +10,7 @@ function TicketsPage() {
   const {
     getTickets,
     ticket,
+    getStatus,
     getAllTicketsInProgress,
     getAllTicketsNews,
     getAllTicketsResolve,
@@ -20,26 +20,8 @@ function TicketsPage() {
 
   useEffect(() => {
     getTickets();
-  }, []);
+  }, []); 
 
-  // useEffect(() => {
-  //   getAllTicketsInProgress();
-  // }, []);
-
-  // useEffect(() => {
-  //   getAllTicketsNews();
-  // }, []);
-  // useEffect(() => {
-  //   getAllTicketsResolve();
-  // }, []);
-  // const toggleTicket = () => {
-  //   getAllTicketsInProgress()
-  // };
-
-  // const handleFilterChange = (newFilter) => {
-  //   setFilter(newFilter);
-  // };
-  //  ticket.filter(ticket => ticket.estatus === filter);
   return (
     <>
       <Nav>
@@ -72,13 +54,13 @@ function TicketsPage() {
                   </section>
                     {ticket.map((ticket, i) => (
                       // to={`${`/ticket`}/${ticket.id}`}
-                      <Tarjeta to={`/ticket/${ticket.id}`} key={i}>
+                      <Tarjeta to={`/ticket/${ticket.id || ticket._id}`} key={i}>
                         {/* Caja dentro del ticket que contiene los componentes del lado izquierdo */}
                         <div className="w-[60%] max-[541px]:w-auto">
                           {/* Caja que contiene el estado del ticket */}
                           <div className="flex w-[100%] items-center">
                             <p>Estado:</p>
-                            <span className="ml-1 h-5 w-auto flex justify-center items-center border-yellow-500 border-2 bg-yellow-200">
+                            <span className={`ml-1 h-5 w-auto flex justify-center items-center`}>
                               {ticket.status}
                             </span>
                           </div>

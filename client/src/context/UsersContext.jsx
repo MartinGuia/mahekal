@@ -1,5 +1,5 @@
 import { createContext, useState, useContext, useEffect} from "react";
-import { getUsers,getSignup, getUserByIdToModifyRequest,updateUserRequest, getUserByIdRequest } from "../api/collabs";
+import { getUsers,getSignup, getUserByIdToModifyRequest,updateUserRequest, getUserByIdRequest,updatePasswordUserRequest } from "../api/collabs";
 
 export const CollabsContext = createContext()
 
@@ -32,6 +32,15 @@ export const CollabsProvider = ({children})=>{
       console.error(error)
     }
   }
+
+  const updatePasswordUser = async(id,user)=>{
+    try {
+    await updatePasswordUserRequest(id,user)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   // fetch para traer los datos en formularios
   const getDatos = async () => {
     const res = await getSignup();
@@ -46,7 +55,7 @@ export const CollabsProvider = ({children})=>{
   const getUserById = async (id) => {
     try {
       const res = await getUserByIdRequest(id);
-      console.log(res.data);
+      // console.log(res.data);
       return res.data;
     } catch (error) {
       console.error(error);
@@ -68,6 +77,7 @@ export const CollabsProvider = ({children})=>{
         options,
         getDatos,
         updateUser,
+        updatePasswordUser,
         getUserById,
         getAllUsers,
         getUserByIdToModify,

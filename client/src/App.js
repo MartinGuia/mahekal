@@ -14,6 +14,7 @@ import { TicketProvider } from './context/TicketsContext';
 import ViewTicket from './pages/ViewTicket';
 import { DepartmentProvider } from './context/DepartmentContext';
 import EditCollabPage from './pages/EditCollabPage';
+import EditPasswordPage from './pages/EditPasswordPage';
 
 function App() {
   return (
@@ -38,6 +39,10 @@ function App() {
                 <Route
                   path="/edit-collab/:id"
                   element={<EditCollabPage/>}
+                />
+                <Route
+                  path="/edit-password-collab/:id"
+                  element={<EditPasswordPage/>}
                 />
                 <Route path="/accounts" element={<AllAccountPage />} />
                 {/* <Route path="/register" element={<RegisterPage />} /> */}
