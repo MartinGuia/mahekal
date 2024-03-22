@@ -65,7 +65,7 @@ function ViewTicket() {
     <>
       <Nav>
         {/* Caja que contiene el Titulo principal de la vista */}
-        <Title>Nuevo Ticket</Title>
+        <Title>Reasignar Ticket</Title>
         {/* Caja que contiene el boton para regresar una pagina atras */}
         <div className="w-[9%] bottom-9 left-6 relative">
           <button className="rounded-full shadow-md">
