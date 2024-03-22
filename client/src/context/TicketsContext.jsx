@@ -25,6 +25,9 @@ export const TicketProvider = ({children})=>{
   const [ticket, setTicket] = useState([]);
   const [errors, setErrors] = useState([]);
   const [ticketInProgress, setTicketInProgress] =useState([])
+  const [tickestNews, setTicketsNews] =useState([])
+  const [ticketsResolves, setTicketsResolves] =useState([])
+  const [ticketsInRevision, setTicketsInRevision] =useState([])
 
   const signupTicket = async (ticket) => {
     const res = await registerTicket(ticket);
@@ -72,9 +75,7 @@ export const TicketProvider = ({children})=>{
   const getAllTicketsInProgress = async () =>{
     try {
       const res = await getAllTicketsInProgressRequest()
-      // setTicketInProgress(res.data)
-      console.log(res.data);
-      // return res.data
+      setTicketInProgress(res.data)
     } catch (error) {
       console.error(error);
     }
@@ -82,9 +83,15 @@ export const TicketProvider = ({children})=>{
   const getAllTicketsNews = async () =>{
     try {
       const res = await getAllTicketsNewsRequest()
-      // setTicketInProgress(res.data)
-      console.log(res.data);
-      // return res.data
+      setTicketsNews(res.data)      
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  const getAllTicketsInRevision = async () =>{
+    try {
+      const res = await getAllTicketsInRevisionRequest()
+      setTicketsInRevision(res.data)
     } catch (error) {
       console.error(error);
     }
@@ -92,9 +99,7 @@ export const TicketProvider = ({children})=>{
   const getAllTicketsResolve = async () =>{
     try {
       const res = await getAllTicketsResolveRequest()
-      // setTicketInProgress(res.data)
-      console.log(res.data);
-      // return res.data
+      setTicketsResolves(res.data)
     } catch (error) {
       console.error(error);
     }
@@ -120,8 +125,13 @@ export const TicketProvider = ({children})=>{
         getAllTicketsInProgress,
         getAllTicketsNews,
         getAllTicketsResolve,
+        getAllTicketsInRevision,
         errors,
         ticket,
+        ticketInProgress,
+        tickestNews,
+        ticketsInRevision,
+        ticketsResolves,
       }}
     >
       {children}

@@ -257,7 +257,7 @@ useEffect(() => {
   }
 
   // useEffect(() => {
-  //   getRole();
+  //   console.log(userRole1);
   // }, []);
 
   return (

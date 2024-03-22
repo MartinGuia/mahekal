@@ -150,6 +150,7 @@ function AccountCollabPage() {
   } else if (vista === 'estadisticas') {
     contenido = <Estadisticas />;
   }
+  
   return (
     <Nav>
       <Title>Cuenta</Title>
