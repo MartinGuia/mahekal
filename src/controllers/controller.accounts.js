@@ -119,7 +119,7 @@ export const updatePassword = async (req, res) => {
 // FALTAN ALGUNAS OPCIONES AQUI
 export const getUserById = async (req, res) => {
   try {
-    let userFound = await User.findById(req.params.id);
+    let userFound = await User.findById(req.params.id).lean();
     if (userFound === null)
       return res.status(404).json({ message: "User not found " });
 
@@ -159,8 +159,10 @@ export const getUserById = async (req, res) => {
         return ticket;
       })
     );
+    
+    userFound = { name: userFound.name + " " + userFound.lastname}
 
-    res.status(200).json(ticketsForUser);
+    res.status(200).json({ticketsForUser, userFound});
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
