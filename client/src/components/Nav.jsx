@@ -256,9 +256,9 @@ useEffect(() => {
     ));
   }
 
-  // useEffect(() => {
-  //   getRole();
-  // }, []);
+  useEffect(() => {
+    console.log(userRole1);
+  }, []);
 
   return (
     <>
