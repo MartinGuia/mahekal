@@ -18,6 +18,7 @@ function AccountCollabPage() {
   // const [getLastnameUser, setGetLastnameUser] = useState();
   // const [getUserName, setGetUserName] = useState();
   const [assignedTickets, setAssignedTickets] = useState([])
+  const [getName, setGetName] = useState()
  // Estado para controlar qué vista se muestra
  const [vista, setVista] = useState('tickets'); // Inicia con la vista de tickets
 
@@ -33,8 +34,9 @@ function AccountCollabPage() {
           // setGetUserName(userById.userName);
           // setGetRole(userById.role.name);
           // setGetDpto(userById.department.name);
+          setGetName(userById.userFound.name)
           setAssignedTickets(userById)
-          console.log(assignedTickets);
+          console.log(userById.userFound.name);
         }
       }
     } catch (error) {
@@ -150,6 +152,7 @@ function AccountCollabPage() {
   } else if (vista === 'estadisticas') {
     contenido = <Estadisticas />;
   }
+  
   return (
     <Nav>
       <Title>Cuenta</Title>
@@ -169,7 +172,7 @@ function AccountCollabPage() {
               <div className="w-[90%] flex">
                 <div className="">
                   <Title className="">
-                    
+                    {getName}
                   </Title>
                 </div>
               </div>

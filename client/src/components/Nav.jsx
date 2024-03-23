@@ -50,9 +50,10 @@ useEffect(() => {
       const res = await getRole();
       if (res) {
         setRoleAdmin(res[0]._id)
-        setRoleManager(res[3]._id)
+        // console.log(res[2]._id);
+        setRoleManager(res[1]._id)
         setRoleChiefArea(res[2]._id)
-        setRoleOperator(res[1]._id)
+        setRoleOperator(res[3]._id)
       }
     };
 
@@ -256,9 +257,9 @@ useEffect(() => {
     ));
   }
 
-  useEffect(() => {
-    console.log(userRole1);
-  }, []);
+  // useEffect(() => {
+  //   console.log(userRole1);
+  // }, []);
 
   return (
     <>
