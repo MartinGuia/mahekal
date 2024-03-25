@@ -1,9 +1,9 @@
-import dayjs from "dayjs";
 import Ticket from "../models/Ticket.model.js";
 import User from "../models/User.model.js";
 import Department from "../models/Department.model.js";
 import Roles from "../models/Roles.model.js";
 import { formatDate } from "../libs/formatDate.js";
+import { generateTicketNumber } from "../libs/generateTicketNumber.js";
 
 export const addNewTicketGet = async (req, res) => {
   try {
@@ -32,14 +32,14 @@ export const addNewTicketGet = async (req, res) => {
   }
 };
 
-export const addNewTicketPost = async (req, res) => {
+export const addNewTicketPost = async (req, res) => {  
   const {
     title,
     priority,
     assignedDepartment,
     roomOrArea,
     description,
-    imageURL,
+    // imageURL,
   } = req.body;
 
   try {
@@ -59,7 +59,8 @@ export const addNewTicketPost = async (req, res) => {
       assignedDepartment: departmentFound._id,
       roomOrArea: roomOrArea,
       description: description,
-      imageURL: imageURL,
+      ticketNumber: generateTicketNumber()
+      // imageURL: imageURL,
     });
 
     const departmentUpdated = await Department.findByIdAndUpdate(
@@ -67,7 +68,7 @@ export const addNewTicketPost = async (req, res) => {
       { $push: { ticketsDepartment: newTicket._id } }
     );
 
-    const ticketSaved = await newTicket.save();
+    const savedTicket = await newTicket.save();    
     return res.status(201).json({ message: "Ticket saved successfully" });
   } catch (error) {
     return res.status(500).json({ message: error.message });
@@ -83,16 +84,13 @@ export const getAllTickets = async (req, res) => {
       case "Gerente Administrador":
         const ticketsForAdminsFound = await Ticket.find().lean();
 
-        if (ticketsForAdminsFound.length === 0)
-          return res.status(204).json({ message: "Tickets not found" });
-
         const ticketsForAdmins = await Promise.all(
           ticketsForAdminsFound.map(async (ticket) => {
             let departmentFound = await Department.findById(
               ticket.assignedDepartment
             );
-            ticket.id = ticket._id
-            delete ticket._id
+            ticket.id = ticket._id;
+            delete ticket._id;
             ticket.date = formatDate(ticket.date);
             ticket.assignedDepartment = departmentFound.name;
             delete ticket.imageURL;
@@ -134,9 +132,6 @@ export const getAllTickets = async (req, res) => {
       case "Gerente Área":
         const departmentFound = await Department.findById(req.user.department);
         const departmentsTickets = departmentFound.ticketsDepartment;
-
-        if (departmentsTickets.length === 0)
-          return res.status(204).json({ message: "Tickets not found" });
 
         const ticketsForAreaManager = await Promise.all(
           departmentsTickets.map(async (idTicket) => {
@@ -185,41 +180,42 @@ export const getAllTickets = async (req, res) => {
       case "Operador":
         let operator = await User.findById(req.user.id);
         let tickets = operator.tickets;
-        
-        let ticketsForOperador = await Promise.all(tickets.map(async (idTicket) => {
-        let ticket = await Ticket.findById(idTicket).lean();
-        let ticketDepartment = await Department.findById(ticket.assignedDepartment);
-        ticket.assignedDepartment = ticketDepartment.name;
-        ticket.assignedTo = operator.name + ' ' + operator.lastname;
-        ticket.date = formatDate(ticket.date);
 
-        let lastEjecutionTime = new Date(
-            ticket.ejecutionTime[ticket.ejecutionTime.length - 1]
-          );
-          let lastDateUpdated = new Date(
-            ticket.dateUpdated[ticket.dateUpdated.length - 1]
-          );
+        let ticketsForOperador = await Promise.all(
+          tickets.map(async (idTicket) => {
+            let ticket = await Ticket.findById(idTicket).lean();
+            let ticketDepartment = await Department.findById(
+              ticket.assignedDepartment
+            );
+            ticket.assignedDepartment = ticketDepartment.name;
+            ticket.assignedTo = operator.name + " " + operator.lastname;
+            ticket.date = formatDate(ticket.date);
 
-          let differenceInMilliseconds =
-            lastEjecutionTime - lastDateUpdated;
-          let differenceInMinutes = differenceInMilliseconds / (60 * 1000);
-          let differenceHours =
-            differenceInMinutes >= 60 ? differenceInMinutes / 60 : 0;
+            let lastEjecutionTime = new Date(
+              ticket.ejecutionTime[ticket.ejecutionTime.length - 1]
+            );
+            let lastDateUpdated = new Date(
+              ticket.dateUpdated[ticket.dateUpdated.length - 1]
+            );
 
-          ticket.ejecutionTime =
-            differenceHours >= 1
-              ? `${differenceHours}h`
-              : `${differenceInMinutes}m`;
+            let differenceInMilliseconds = lastEjecutionTime - lastDateUpdated;
+            let differenceInMinutes = differenceInMilliseconds / (60 * 1000);
+            let differenceHours =
+              differenceInMinutes >= 60 ? differenceInMinutes / 60 : 0;
 
-          delete ticket.dateUpdated;
-          delete ticket.description;
-          delete ticket.imageURL;
-          return ticket
-        }));
+            ticket.ejecutionTime =
+              differenceHours >= 1
+                ? `${differenceHours}h`
+                : `${differenceInMinutes}m`;
 
-        return res.status(200).json(ticketsForOperador);
+            delete ticket.dateUpdated;
+            delete ticket.description;
+            delete ticket.imageURL;
+            return ticket;
+          })
+        );
     }
-
+    return res.status(200).json(ticketsForOperador);
   } catch (error) {
     return res.status(400).json({ message: error.message });
   }
@@ -229,90 +225,57 @@ export const getAllNewTickets = async (req, res) => {
   try {
     const roleFound = await Roles.findById(req.user.role);
 
-    if (roleFound.name === "Administrador") {
-      try {
-        const newTickets = await Ticket.find({ status: "Nuevo" });
-        const ticketsArray = [];
+    switch (roleFound.name) {
+      case "Administrador":
+      case "Gerente Administrador":
+        const ticketsForAdminsFound = await Ticket.find({
+          status: "Nuevo",
+        }).lean();
 
-        for (let ticket of newTickets) {
-          const departmentFound = await Department.findById(
-            ticket.assignedDepartment
-          );
-          ticket = {
-            id: ticket.id,
-            name: ticket.name,
-            date: formatDate(ticket.date),
-            title: ticket.title,
-            priority: ticket.priority,
-            status: ticket.status,
-            assignedDepartment: departmentFound.name,
-            assignedTo: ticket.assignedTo,
-            roomOrArea: ticket.roomOrArea,
-          };
-          ticketsArray.push(ticket);
-        }
-        return res.status(200).json(ticketsArray.reverse());
-      } catch (error) {
-        return res.status(500).json({ error: error });
-      }
-    }
+        const ticketsForAdmins = await Promise.all(
+          ticketsForAdminsFound.map(async (ticket) => {
+            let departmentFound = await Department.findById(
+              ticket.assignedDepartment
+            );
+            ticket.id = ticket._id;
+            delete ticket._id;
+            ticket.date = formatDate(ticket.date);
+            ticket.assignedDepartment = departmentFound.name;
+            delete ticket.imageURL;
 
-    if (roleFound.name === "Gerente Administrador") {
-      try {
-        const newTickets = await Ticket.find({ status: "Nuevo" });
-        const ticketsArray = [];
+            ticket.assignedTo = "Sin asignar";
+            ticket.ejecutionTime = "Sin asignar";
+            delete ticket.dateUpdated;
 
-        for (let ticket of newTickets) {
-          const departmentFound = await Department.findById(
-            ticket.assignedDepartment
-          );
-          ticket = {
-            id: ticket.id,
-            name: ticket.name,
-            date: formatDate(ticket.date),
-            title: ticket.title,
-            priority: ticket.priority,
-            status: ticket.status,
-            assignedDepartment: departmentFound.name,
-            assignedTo: ticket.assignedTo,
-            roomOrArea: ticket.roomOrArea,
-          };
-          ticketsArray.push(ticket);
-        }
-        return res.status(200).json(ticketsArray.reverse());
-      } catch (error) {
-        return res.status(500).json({ error: error });
-      }
-    }
-
-    if (roleFound.name === "Gerente Área") {
-      const ticketsArray = [];
-      const newTickets = await Ticket.find({
-        assignedDepartment: req.user.department,
-        status: "Nuevo",
-      });
-
-      for (let ticket of newTickets) {
-        const departmentFound = await Department.findById(
-          ticket.assignedDepartment
+            return ticket;
+          })
         );
-        ticket = {
-          id: ticket.id,
-          name: ticket.name,
-          date: formatDate(ticket.date),
-          title: ticket.title,
-          priority: ticket.priority,
-          status: ticket.status,
-          assignedDepartment: departmentFound.name,
-          assignedTo: ticket.assignedTo,
-        };
-        ticketsArray.push(ticket);
-      }
+        return res.status(200).json(ticketsForAdmins.reverse());
+      case "Gerente Área":
+        const ticketsForAreaManagerFound = await Ticket.find({
+          assignedDepartment: req.user.department,
+          status: "Nuevo",
+        }).lean();
 
-      return res.status(200).json(ticketsArray.reverse());
-    }
+        const ticketsForAreaManager = await Promise.all(
+          ticketsForAreaManagerFound.map(async (ticket) => {
+            let ticketDepartment = await Department.findById(
+              ticket.assignedDepartment
+            );
 
-    if (roleFound.name === "Operador") {
+            ticket.assignedDepartment = ticketDepartment.name;
+            ticket.date = formatDate(ticket.date);
+            delete ticket.imageURL;
+
+            ticket.assignedTo = "Sin asignar";
+            ticket.ejecutionTime = "Sin asignar";
+            delete ticket.dateUpdated;
+
+            return ticket;
+          })
+        );
+
+        return res.status(200).json(ticketsForAreaManager.reverse());
     }
   } catch (error) {
     return res.status(500).json({ message: error.message });
@@ -323,86 +286,145 @@ export const getAllTicketsInProgress = async (req, res) => {
   try {
     const roleFound = await Roles.findById(req.user.role);
 
-    if (roleFound.name === "Administrador") {
-      const ticketsArray = [];
-      const ticketsFound = await Ticket.find({ status: "En curso" });
-      if (ticketsFound.length === 0)
-        return res.status(204).json({ message: "No tickets found" });
+    switch (roleFound.name) {
+      case "Administrador":
+      case "Gernte Administrador":
+        const ticketsForAdminsFound = await Ticket.find({
+          status: "En curso",
+        }).lean();
 
-      for (let ticket of ticketsFound) {
-        const departmentFound = await Department.findById(
-          ticket.assignedDepartment
+        const ticketsForAdmins = await Promise.all(
+          ticketsForAdminsFound.map(async (ticket) => {
+            let departmentFound = await Department.findById(
+              ticket.assignedDepartment
+            );
+            ticket.id = ticket._id;
+            delete ticket._id;
+            ticket.date = formatDate(ticket.date);
+            ticket.assignedDepartment = departmentFound.name;
+            delete ticket.imageURL;
+
+            if (ticket.assignedTo.length === 0) {
+              ticket.assignedTo = "Sin asignar";
+              ticket.ejecutionTime = "Sin asignar";
+              delete ticket.dateUpdated;
+            } else {
+              let lastEjecutionTime = new Date(
+                ticket.ejecutionTime[ticket.ejecutionTime.length - 1]
+              );
+              let lastDateUpdated = new Date(
+                ticket.dateUpdated[ticket.dateUpdated.length - 1]
+              );
+
+              let differenceInMilliseconds =
+                lastEjecutionTime - lastDateUpdated;
+              let differenceInMinutes = differenceInMilliseconds / (60 * 1000);
+              let differenceHours =
+                differenceInMinutes >= 60 ? differenceInMinutes / 60 : 0;
+
+              ticket.ejecutionTime =
+                differenceHours >= 1
+                  ? `${differenceHours}H`
+                  : `${differenceInMinutes}m`;
+
+              let lastAssigned =
+                ticket.assignedTo[ticket.assignedTo.length - 1];
+              let colaboratorAssigned = await User.findById(lastAssigned);
+              ticket.assignedTo = `${colaboratorAssigned.name} ${colaboratorAssigned.lastname}`;
+              delete ticket.dateUpdated;
+            }
+            return ticket;
+          })
         );
-        ticket = {
-          id: ticket.id,
-          name: ticket.name,
-          date: formatDate(ticket.date),
-          title: ticket.title,
-          priority: ticket.priority,
-          status: ticket.status,
-          assignedDepartment: departmentFound.name,
-          assignedTo: ticket.assignedTo,
-        };
-        ticketsArray.push(ticket);
-      }
 
-      return res.status(200).json(ticketsArray.reverse());
-    }
+        return res.status(200).json(ticketsForAdmins);
+      case "Gerente Área":
+        const ticketsForAreaManagerFound = await Ticket.find({
+          assignedDepartment: req.user.department,
+          status: "En curso",
+        }).lean();
 
-    if (roleFound.name === "Gerente Administrador") {
-      const ticketsArray = [];
-      const ticketsFound = await Ticket.find({ status: "En curso" });
-      if (ticketsFound.length === 0)
-        return res.status(204).json({ message: "No tickets found" });
+        const ticketsForAreaManager = await Promise.all(
+          ticketsForAreaManagerFound.map(async (ticket) => {
+            let departmentFound = await Department.findById(
+              ticket.assignedDepartment
+            );
+            ticket.id = ticket._id;
+            delete ticket._id;
+            ticket.date = formatDate(ticket.date);
+            ticket.assignedDepartment = departmentFound.name;
+            delete ticket.imageURL;
 
-      for (let ticket of ticketsFound) {
-        const departmentFound = await Department.findById(
-          ticket.assignedDepartment
+            let lastEjecutionTime = new Date(
+              ticket.ejecutionTime[ticket.ejecutionTime.length - 1]
+            );
+            let lastDateUpdated = new Date(
+              ticket.dateUpdated[ticket.dateUpdated.length - 1]
+            );
+
+            let differenceInMilliseconds = lastEjecutionTime - lastDateUpdated;
+            let differenceInMinutes = differenceInMilliseconds / (60 * 1000);
+            let differenceHours =
+              differenceInMinutes >= 60 ? differenceInMinutes / 60 : 0;
+
+            ticket.ejecutionTime =
+              differenceHours >= 1
+                ? `${differenceHours}H`
+                : `${differenceInMinutes}m`;
+
+            let lastAssigned = ticket.assignedTo[ticket.assignedTo.length - 1];
+            let colaboratorAssigned = await User.findById(lastAssigned);
+            ticket.assignedTo = `${colaboratorAssigned.name} ${colaboratorAssigned.lastname}`;
+            delete ticket.dateUpdated;
+
+            return ticket;
+          })
         );
-        ticket = {
-          id: ticket.id,
-          name: ticket.name,
-          date: formatDate(ticket.date),
-          title: ticket.title,
-          priority: ticket.priority,
-          status: ticket.status,
-          assignedDepartment: departmentFound.name,
-          assignedTo: ticket.assignedTo,
-        };
-        ticketsArray.push(ticket);
-      }
 
-      return res.status(200).json(ticketsArray.reverse());
-    }
+        return res.status(200).json(ticketsForAreaManager.reverse());
+      case "Operador":
+        const userFound = await User.findById(req.user.id);
+        const assignedTickets = userFound.tickets;
 
-    if (roleFound.name === "Gerente Área") {
-      const ticketsArray = [];
-      const newTickets = await Ticket.find({
-        assignedDepartment: req.user.department,
-        status: "En curso",
-      });
+        const operatorTickers = await Promise.all(
+          assignedTickets.map(async (idTicket) => {
+            let ticket = await Ticket.findById(idTicket).lean();
+            let departmentFound = await Department.findById(
+              ticket.assignedDepartment
+            );
+            ticket.id = ticket._id;
+            delete ticket._id;
+            ticket.date = formatDate(ticket.date);
+            ticket.assignedDepartment = departmentFound.name;
+            delete ticket.imageURL;
 
-      for (let ticket of newTickets) {
-        const departmentFound = await Department.findById(
-          ticket.assignedDepartment
+            let lastEjecutionTime = new Date(
+              ticket.ejecutionTime[ticket.ejecutionTime.length - 1]
+            );
+            let lastDateUpdated = new Date(
+              ticket.dateUpdated[ticket.dateUpdated.length - 1]
+            );
+
+            let differenceInMilliseconds = lastEjecutionTime - lastDateUpdated;
+            let differenceInMinutes = differenceInMilliseconds / (60 * 1000);
+            let differenceHours =
+              differenceInMinutes >= 60 ? differenceInMinutes / 60 : 0;
+
+            ticket.ejecutionTime =
+              differenceHours >= 1
+                ? `${differenceHours}H`
+                : `${differenceInMinutes}m`;
+
+            let lastAssigned = ticket.assignedTo[ticket.assignedTo.length - 1];
+            let colaboratorAssigned = await User.findById(lastAssigned);
+            ticket.assignedTo = `${colaboratorAssigned.name} ${colaboratorAssigned.lastname}`;
+            delete ticket.dateUpdated;
+
+            return ticket;
+          })
         );
-        ticket = {
-          id: ticket.id,
-          name: ticket.name,
-          date: formatDate(ticket.date),
-          title: ticket.title,
-          priority: ticket.priority,
-          status: ticket.status,
-          assignedDepartment: departmentFound.name,
-          assignedTo: ticket.assignedTo,
-        };
-        ticketsArray.push(ticket);
-      }
 
-      return res.status(200).json(ticketsArray.reverse());
-    }
-
-    if (roleFound.name === "Operador") {
+        return res.status(200).json(operatorTickers.reverse());
     }
   } catch (error) {
     return res.status(500).json({ message: error.message });
@@ -413,86 +435,145 @@ export const getAllTicketsResolve = async (req, res) => {
   try {
     const roleFound = await Roles.findById(req.user.role);
 
-    if (roleFound.name === "Administrador") {
-      const ticketsArray = [];
-      const ticketsFound = await Ticket.find({ status: "Resuelto" });
-      if (ticketsFound.length === 0)
-        return res.status(204).json({ message: "No tickets found" });
+    switch (roleFound.name) {
+      case "Administrador":
+      case "Gerente Administrador":
+        const ticketsForAdminsFound = await Ticket.find({
+          status: "Resuelto",
+        }).lean();
 
-      for (let ticket of ticketsFound) {
-        const departmentFound = await Department.findById(
-          ticket.assignedDepartment
+        const ticketsForAdmins = await Promise.all(
+          ticketsForAdminsFound.map(async (ticket) => {
+            let departmentFound = await Department.findById(
+              ticket.assignedDepartment
+            );
+            ticket.id = ticket._id;
+            delete ticket._id;
+            ticket.date = formatDate(ticket.date);
+            ticket.assignedDepartment = departmentFound.name;
+            delete ticket.imageURL;
+
+            if (ticket.assignedTo.length === 0) {
+              ticket.assignedTo = "Sin asignar";
+              ticket.ejecutionTime = "Sin asignar";
+              delete ticket.dateUpdated;
+            } else {
+              let lastEjecutionTime = new Date(
+                ticket.ejecutionTime[ticket.ejecutionTime.length - 1]
+              );
+              let lastDateUpdated = new Date(
+                ticket.dateUpdated[ticket.dateUpdated.length - 1]
+              );
+
+              let differenceInMilliseconds =
+                lastEjecutionTime - lastDateUpdated;
+              let differenceInMinutes = differenceInMilliseconds / (60 * 1000);
+              let differenceHours =
+                differenceInMinutes >= 60 ? differenceInMinutes / 60 : 0;
+
+              ticket.ejecutionTime =
+                differenceHours >= 1
+                  ? `${differenceHours}H`
+                  : `${differenceInMinutes}m`;
+
+              let lastAssigned =
+                ticket.assignedTo[ticket.assignedTo.length - 1];
+              let colaboratorAssigned = await User.findById(lastAssigned);
+              ticket.assignedTo = `${colaboratorAssigned.name} ${colaboratorAssigned.lastname}`;
+              delete ticket.dateUpdated;
+            }
+
+            return ticket;
+          })
         );
-        ticket = {
-          id: ticket.id,
-          name: ticket.name,
-          date: formatDate(ticket.date),
-          title: ticket.title,
-          priority: ticket.priority,
-          status: ticket.status,
-          assignedDepartment: departmentFound.name,
-          assignedTo: ticket.assignedTo,
-        };
-        ticketsArray.push(ticket);
-      }
 
-      return res.status(200).json(ticketsArray.reverse());
-    }
+        return res.status(200).json(ticketsForAdmins.reverse());
+      case "Gerente Área":
+        const ticketsForAreaManagerFound = await Ticket.find({
+          assignedDepartment: req.user.department,
+          status: "Resuelto",
+        }).lean();
 
-    if (roleFound.name === "Gerente Administrador") {
-      const ticketsArray = [];
-      const ticketsFound = await Ticket.find({ status: "Resuelto" });
-      if (ticketsFound.length === 0)
-        return res.status(204).json({ message: "No tickets found" });
+        const tickerForAreaManager = await Promise.all(
+          ticketsForAreaManagerFound.map(async (ticket) => {
+            let departmentFound = await Department.findById(
+              ticket.assignedDepartment
+            );
+            ticket.id = ticket._id;
+            delete ticket._id;
+            ticket.date = formatDate(ticket.date);
+            ticket.assignedDepartment = departmentFound.name;
+            delete ticket.imageURL;
 
-      for (let ticket of ticketsFound) {
-        const departmentFound = await Department.findById(
-          ticket.assignedDepartment
+            let lastEjecutionTime = new Date(
+              ticket.ejecutionTime[ticket.ejecutionTime.length - 1]
+            );
+            let lastDateUpdated = new Date(
+              ticket.dateUpdated[ticket.dateUpdated.length - 1]
+            );
+
+            let differenceInMilliseconds = lastEjecutionTime - lastDateUpdated;
+            let differenceInMinutes = differenceInMilliseconds / (60 * 1000);
+            let differenceHours =
+              differenceInMinutes >= 60 ? differenceInMinutes / 60 : 0;
+
+            ticket.ejecutionTime =
+              differenceHours >= 1
+                ? `${differenceHours}H`
+                : `${differenceInMinutes}m`;
+
+            let lastAssigned = ticket.assignedTo[ticket.assignedTo.length - 1];
+            let colaboratorAssigned = await User.findById(lastAssigned);
+            ticket.assignedTo = `${colaboratorAssigned.name} ${colaboratorAssigned.lastname}`;
+            delete ticket.dateUpdated;
+
+            return ticket;
+          })
         );
-        ticket = {
-          id: ticket.id,
-          name: ticket.name,
-          date: formatDate(ticket.date),
-          title: ticket.title,
-          priority: ticket.priority,
-          status: ticket.status,
-          assignedDepartment: departmentFound.name,
-          assignedTo: ticket.assignedTo,
-        };
-        ticketsArray.push(ticket);
-      }
 
-      return res.status(200).json(ticketsArray.reverse());
-    }
+        return res.status(200).json(tickerForAreaManager);
+      case "Operador":
+        const userFound = await User.findById(req.user.id);
+        const assignedTickets = userFound.tickets;
 
-    if (roleFound.name === "Gerente Área") {
-      const ticketsArray = [];
-      const newTickets = await Ticket.find({
-        assignedDepartment: req.user.department,
-        status: "Resuelto",
-      });
+        const operatorTickets = await Promise.all(
+          assignedTickets.map(async (idTicket) => {
+            let ticket = await Ticket.findById(idTicket).lean();
+            let departmentFound = await Department.findById(
+              ticket.assignedDepartment
+            );
+            ticket.id = ticket._id;
+            delete ticket._id;
+            ticket.date = formatDate(ticket.date);
+            ticket.assignedDepartment = departmentFound.name;
+            delete ticket.imageURL;
+            let lastEjecutionTime = new Date(
+              ticket.ejecutionTime[ticket.ejecutionTime.length - 1]
+            );
+            let lastDateUpdated = new Date(
+              ticket.dateUpdated[ticket.dateUpdated.length - 1]
+            );
 
-      for (let ticket of newTickets) {
-        const departmentFound = await Department.findById(
-          ticket.assignedDepartment
+            let differenceInMilliseconds = lastEjecutionTime - lastDateUpdated;
+            let differenceInMinutes = differenceInMilliseconds / (60 * 1000);
+            let differenceHours =
+              differenceInMinutes >= 60 ? differenceInMinutes / 60 : 0;
+
+            ticket.ejecutionTime =
+              differenceHours >= 1
+                ? `${differenceHours}H`
+                : `${differenceInMinutes}m`;
+
+            let lastAssigned = ticket.assignedTo[ticket.assignedTo.length - 1];
+            let colaboratorAssigned = await User.findById(lastAssigned);
+            ticket.assignedTo = `${colaboratorAssigned.name} ${colaboratorAssigned.lastname}`;
+            delete ticket.dateUpdated;
+
+            return ticket;
+          })
         );
-        ticket = {
-          id: ticket.id,
-          name: ticket.name,
-          date: formatDate(ticket.date),
-          title: ticket.title,
-          priority: ticket.priority,
-          status: ticket.status,
-          assignedDepartment: departmentFound.name,
-          assignedTo: ticket.assignedTo,
-        };
-        ticketsArray.push(ticket);
-      }
 
-      return res.status(200).json(ticketsArray.reverse());
-    }
-
-    if (roleFound.name === "Operador") {
+        return res.status(200).json(operatorTickets);
     }
   } catch (error) {
     return res.status(500).json({ message: error.message });
@@ -503,86 +584,134 @@ export const getAllTicketsOnPauseOrReview = async (req, res) => {
   try {
     const roleFound = await Roles.findById(req.user.role);
 
-    if (roleFound.name === "Administrador") {
-      const ticketsArray = [];
-      const ticketsFound = await Ticket.find({ status: "En pausa/revisión" });
-      if (ticketsFound.length === 0)
-        return res.status(204).json({ message: "No tickets found" });
+    switch (roleFound.name) {
+      case "Administrador":
+      case "Gerente Administrador":
+        const ticketsForAdminsFound = await Ticket.find({
+          status: "En pausa/revisión",
+        }).lean();
 
-      for (let ticket of ticketsFound) {
-        const departmentFound = await Department.findById(
-          ticket.assignedDepartment
+        const ticketsForAdmins = await Promise.all(
+          ticketsForAdminsFound.map(async (ticket) => {
+            let departmentFound = await Department.findById(
+              ticket.assignedDepartment
+            );
+            ticket.id = ticket._id;
+            delete ticket._id;
+            ticket.date = formatDate(ticket.date);
+            // ticket.assignedDepartment = departmentFound.name;
+            delete ticket.imageURL;
+
+            let lastEjecutionTime = new Date(
+              ticket.ejecutionTime[ticket.ejecutionTime.length - 1]
+            );
+            let lastDateUpdated = new Date(
+              ticket.dateUpdated[ticket.dateUpdated.length - 1]
+            );
+
+            let differenceInMilliseconds = lastEjecutionTime - lastDateUpdated;
+            let differenceInMinutes = differenceInMilliseconds / (60 * 1000);
+            let differenceHours =
+              differenceInMinutes >= 60 ? differenceInMinutes / 60 : 0;
+
+            ticket.ejecutionTime = "En pausa/revision";
+            // differenceHours >= 1
+            //   ? `${differenceHours}H`
+            //   : `${differenceInMinutes}m`;
+
+            let lastAssigned = ticket.assignedTo[ticket.assignedTo.length - 1];
+            let colaboratorAssigned = await User.findById(lastAssigned);
+            ticket.assignedTo = `${colaboratorAssigned.name} ${colaboratorAssigned.lastname}`;
+            delete ticket.dateUpdated;
+
+            return ticket;
+          })
         );
-        ticket = {
-          id: ticket.id,
-          name: ticket.name,
-          date: formatDate(ticket.date),
-          title: ticket.title,
-          priority: ticket.priority,
-          status: ticket.status,
-          assignedDepartment: departmentFound.name,
-          assignedTo: ticket.assignedTo,
-        };
-        ticketsArray.push(ticket);
-      }
 
-      return res.status(200).json(ticketsArray.reverse());
-    }
+        return res.status(200).json(ticketsForAdmins);
+      case "Gerente Área":
+        const ticketsForAreaManagerFound = await Ticket.find({
+          status: "En pausa/revisión",
+          assignedDepartment: req.user.department,
+        }).lean();
 
-    if (roleFound.name === "Gerente Administrador") {
-      const ticketsArray = [];
-      const ticketsFound = await Ticket.find({ status: "En pausa/revisión" });
-      if (ticketsFound.length === 0)
-        return res.status(204).json({ message: "No tickets found" });
+        const ticketsForAreaManager = await Promise.all(
+          ticketsForAreaManagerFound.map(async (ticket) => {
+            let departmentFound = await Department.findById(
+              ticket.assignedDepartment
+            );
+            ticket.id = ticket._id;
+            delete ticket._id;
+            ticket.date = formatDate(ticket.date);
+            ticket.assignedDepartment = departmentFound.name;
+            delete ticket.imageURL;
 
-      for (let ticket of ticketsFound) {
-        const departmentFound = await Department.findById(
-          ticket.assignedDepartment
+            let lastEjecutionTime = new Date(
+              ticket.ejecutionTime[ticket.ejecutionTime.length - 1]
+            );
+            let lastDateUpdated = new Date(
+              ticket.dateUpdated[ticket.dateUpdated.length - 1]
+            );
+
+            let differenceInMilliseconds = lastEjecutionTime - lastDateUpdated;
+            let differenceInMinutes = differenceInMilliseconds / (60 * 1000);
+            let differenceHours =
+              differenceInMinutes >= 60 ? differenceInMinutes / 60 : 0;
+
+            ticket.ejecutionTime = "En pausa/revision";
+
+            let lastAssigned = ticket.assignedTo[ticket.assignedTo.length - 1];
+            let colaboratorAssigned = await User.findById(lastAssigned);
+            ticket.assignedTo = `${colaboratorAssigned.name} ${colaboratorAssigned.lastname}`;
+            delete ticket.dateUpdated;
+
+            return ticket;
+          })
         );
-        ticket = {
-          id: ticket.id,
-          name: ticket.name,
-          date: formatDate(ticket.date),
-          title: ticket.title,
-          priority: ticket.priority,
-          status: ticket.status,
-          assignedDepartment: departmentFound.name,
-          assignedTo: ticket.assignedTo,
-        };
-        ticketsArray.push(ticket);
-      }
 
-      return res.status(200).json(ticketsArray.reverse());
-    }
+        return res.status(200).json(ticketsForAreaManager);
+      case "Operador":
+        const userFound = await User.findById(req.user.id);
+        const assignedTickets = userFound.tickets;
 
-    if (roleFound.name === "Gerente Área") {
-      const ticketsArray = [];
-      const newTickets = await Ticket.find({
-        assignedDepartment: req.user.department,
-        status: "En pausa/revisión",
-      });
+        const operatorTickets = await Promise.all(
+          assignedTickets.map(async (idTicket) => {
+            let ticket = await Ticket.findById(idTicket).lean();
+            let departmentFound = await Department.findById(
+              ticket.assignedDepartment
+            );
+            ticket.id = ticket._id;
+            delete ticket._id;
+            ticket.date = formatDate(ticket.date);
+            ticket.assignedDepartment = departmentFound.name;
+            delete ticket.imageURL;
+            let lastEjecutionTime = new Date(
+              ticket.ejecutionTime[ticket.ejecutionTime.length - 1]
+            );
+            let lastDateUpdated = new Date(
+              ticket.dateUpdated[ticket.dateUpdated.length - 1]
+            );
 
-      for (let ticket of newTickets) {
-        const departmentFound = await Department.findById(
-          ticket.assignedDepartment
+            let differenceInMilliseconds = lastEjecutionTime - lastDateUpdated;
+            let differenceInMinutes = differenceInMilliseconds / (60 * 1000);
+            let differenceHours =
+              differenceInMinutes >= 60 ? differenceInMinutes / 60 : 0;
+
+            ticket.ejecutionTime = "En pausa/revision";
+            // differenceHours >= 1
+            //   ? `${differenceHours}H`
+            //   : `${differenceInMinutes}m`;
+
+            let lastAssigned = ticket.assignedTo[ticket.assignedTo.length - 1];
+            let colaboratorAssigned = await User.findById(lastAssigned);
+            ticket.assignedTo = `${colaboratorAssigned.name} ${colaboratorAssigned.lastname}`;
+            delete ticket.dateUpdated;
+
+            return ticket;
+          })
         );
-        ticket = {
-          id: ticket.id,
-          name: ticket.name,
-          date: formatDate(ticket.date),
-          title: ticket.title,
-          priority: ticket.priority,
-          status: ticket.status,
-          assignedDepartment: departmentFound.name,
-          assignedTo: ticket.assignedTo,
-        };
-        ticketsArray.push(ticket);
-      }
 
-      return res.status(200).json(ticketsArray.reverse());
-    }
-
-    if (roleFound.name === "Operador") {
+        return res.status(200).json(operatorTickets);
     }
   } catch (error) {
     return res.status(500).json({ message: error.message });
@@ -641,26 +770,91 @@ export const reassignTicketPut = async (req, res) => {
     if (ticketToUpdate === null)
       return res.status(404).json({ message: "Ticket not found" });
 
-    const colaboratorUpdated = await User.findByIdAndUpdate(assignedTo, {
-      $push: { tickets: ticketToUpdate._id },
-    });
+    if(status === "En pausa/revision") {
+      const ticketUpdate = await Ticket.findByIdAndUpdate(ticketToUpdate, {
+        status: status,
+        $push: { ejecutionTime: 0, dateUpdated: Date.now() }
+      })
+      
+      return res.status(200).json({ message: "Ticket reassigned successfully" });
+    }
 
-    if (!colaboratorUpdated)
-      return res.status(404).json({ message: "User to reassing not found" });
+    if (ticketToUpdate.assignedTo.length == 0) {
+      const colaboratorUpdated = await User.findByIdAndUpdate(assignedTo, {
+        $push: { tickets: ticketToUpdate._id },
+      });
 
-    const ejecutionDate = Date.now() + ejecutionTime * 60 * 1000;
+      if (!colaboratorUpdated)
+        return res.status(404).json({ message: "User to reassing not found" });
 
-    const ticketUpdate = await Ticket.findByIdAndUpdate(ticketToUpdate.id, {
-      $push: {
-        assignedTo: assignedTo,
-        ejecutionTime: ejecutionDate,
-        dateUpdated: Date.now(),
-      },
-      status: status,
-      priority: priority,
-    });
+      const ejecutionDate = Date.now() + ejecutionTime * 60 * 1000;
 
-    res.status(200).json({ message: "Ticket reassigned successfully" });
+      const ticketUpdate = await Ticket.findByIdAndUpdate(ticketToUpdate.id, {
+        $push: {
+          assignedTo: assignedTo,
+          ejecutionTime: ejecutionDate,
+          dateUpdated: Date.now(),
+        },
+        status: status,
+        priority: priority,
+      });
+
+      res.status(200).json({ message: "Ticket reassigned successfully" });
+    } else {
+      const user =
+        ticketToUpdate.assignedTo[ticketToUpdate.assignedTo.length - 1];      
+
+        if (user == assignedTo) {
+          const ejecutionDate = Date.now() + ejecutionTime * 60 * 1000;
+
+          const ticketUpdate = await Ticket.findByIdAndUpdate(ticketToUpdate.id, {
+            $push: {
+              assignedTo: assignedTo,
+              ejecutionTime: ejecutionDate,
+              dateUpdated: Date.now(),
+            },
+            status: status,
+            priority: priority,
+          });
+
+          return res
+            .status(200)
+            .json({ message: "Ticket reassigned successfully" });
+        } else {
+          const colaboratorUpdated = await User.findByIdAndUpdate(assignedTo, {
+            $push: { tickets: ticketToUpdate._id },
+          });
+
+          if (!colaboratorUpdated)
+            return res
+              .status(404)
+              .json({ message: "User to reassing not found" });
+
+          const ejecutionDate = Date.now() + ejecutionTime * 60 * 1000;
+
+          const ticketUpdate = await Ticket.findByIdAndUpdate(ticketToUpdate.id, {
+            $push: {
+              assignedTo: assignedTo,
+              ejecutionTime: ejecutionDate,
+              dateUpdated: Date.now(),
+            },
+            status: status,
+            priority: priority,
+          });
+
+          const ticketFound = await Ticket.findById(req.params.id);
+          const removedUser =
+            ticketFound.assignedTo[ticketFound.assignedTo.length - 2];
+
+          const removedTicket = await User.findByIdAndUpdate(removedUser, {
+            $pull: { tickets: ticketFound._id },
+          });
+        }
+
+      return res
+        .status(200)
+        .json({ message: "Ticket reassigned successfully" });
+    }
   } catch (error) {
     return res.status(404).json({ message: error.message });
   }

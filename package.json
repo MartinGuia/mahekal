@@ -5,7 +5,6 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "build": "babel src --out-dir build",
     "dev": "nodemon src/index.js",
     "start": "node index.js"
   },
@@ -29,10 +28,6 @@
     "morgan": "^1.10.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.23.9",
-    "@babel/core": "^7.23.9",
-    "@babel/node": "^7.23.9",
-    "@babel/preset-env": "^7.23.9",
     "nodemon": "^3.0.3"
   }
 }

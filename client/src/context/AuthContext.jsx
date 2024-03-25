@@ -1,6 +1,7 @@
 import { createContext, useState, useContext, useEffect} from "react";
 import { registerRequest, loginRequest, verifyTokenRequest, logoutToken, getRoleRequest } from "../api/auth";
 import Cookies from 'js-cookie'
+import {jwtDecode} from 'jwt-decode'
 
 // se crea una constante en la cual se guarda la ejecucion de createContext
 export const AuthContext = createContext()
@@ -37,6 +38,8 @@ export const AuthProvider = ({children})=>{
       console.log(user);
       setUser(res.data);
     } catch (error) {
+      setErrors(error.response.data);
+      console.log(error.response);
       setErrors(error.response.data);
       console.log(error.response);
     }

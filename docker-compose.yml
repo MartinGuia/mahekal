@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+ frontend:
+    build: ./client
+    ports:
+      - "3000:3000"
+    networks:
+      - api-network
+
+ backend:
+    build: ./src
+    environment:
+      - DB=mongodb://mongo:27017/mahekal
+    ports:
+      - "4000:4000"
+    networks:
+      - api-network
+
+ mongo:
+    image: mongo:latest
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - api-network
+
+networks:
+ api-network:
+    driver: bridge
+
+volumes:
+ mongodb_data:

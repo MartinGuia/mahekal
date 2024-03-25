@@ -8,7 +8,6 @@ import { useDepartment } from '../context/DepartmentContext'
 import ReturnButton from '../components/ui/ReturnButton'
 import { useAuth } from '../context/AuthContext'
 
-
 function ListOfDeptCollabs() {
   const { getAllCollabsOfDepartments } = useDepartment();
   const { role, getRole} = useAuth();

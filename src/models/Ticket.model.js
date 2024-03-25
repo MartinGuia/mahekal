@@ -47,7 +47,11 @@ const ticketSchema = new Schema({
     },
     dateUpdated:[{
         type: Number
-    }]
+    }],
+    ticketNumber:{
+        type: Number,
+        required: true
+    }
 },{
     timestamps: false,
     versionKey: false,
