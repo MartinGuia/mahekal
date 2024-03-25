@@ -7,14 +7,14 @@ WORKDIR /app
 # Copiar el package.json y package-lock.json
 COPY package*.json ./
 
-
-# Copiar el resto de los archivos del proyecto
-COPY ./build .
-
 # Instalar las dependencias
 RUN npm install
-# Exponer el puerto 3000
-EXPOSE 3000
+
+# Copiar el resto de los archivos del proyecto
+COPY . .
+
+# Exponer el puerto 4000
+EXPOSE 4000
 
 # Comando para iniciar la aplicación
 CMD ["npm", "start"]

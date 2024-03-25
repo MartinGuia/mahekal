@@ -47,7 +47,15 @@ const ticketSchema = new Schema({
     },
     dateUpdated:[{
         type: Number
+<<<<<<< HEAD
     }]
+=======
+    }],
+    ticketNumber:{
+        type: Number,
+        required: true
+    }
+>>>>>>> pruebas
 },{
     timestamps: false,
     versionKey: false,

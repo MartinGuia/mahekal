@@ -1,4 +1,3 @@
-import React from 'react'
 import Nav from '../components/Nav'
 import Filter from '../components/ui/Filter'
 import { Title } from '../components/Headers/Title'
@@ -9,16 +8,17 @@ import { useDepartment } from '../context/DepartmentContext'
 import ReturnButton from '../components/ui/ReturnButton'
 import { useAuth } from '../context/AuthContext'
 
-
 function ListOfDeptCollabs() {
   const { getAllCollabsOfDepartments } = useDepartment();
-  const { role } = useAuth();
+  const { role, getRole} = useAuth();
   const [offline, setOfline] = useState([]);
   const [online, setOnline] = useState([]);
   const params = useParams();
   const [openOn, setOpenOn] = useState(false);
   const [countOn, setCountOn] = useState([]);
   const [countOff, setCountOff] = useState([]);
+  const [roleAdmin, setRoleAdmin] = useState([])
+const [roleManager, setRoleManager] = useState()
 
   const token = role; // Aquí debes proporcionar el token JWT
   const decodedToken = JSON.parse(atob(token.split(".")[1])); // Decodificar la carga útil
@@ -28,7 +28,7 @@ function ListOfDeptCollabs() {
     setOpenOn(!openOn);
   };
   let returnButton;
-  if (userRole === "65d0e2ca3ba6e268905bad79") {
+  if (userRole === roleAdmin && roleManager) {
     returnButton = (
       <Link to="/departamentos">
         <ReturnButton />
@@ -55,6 +55,18 @@ function ListOfDeptCollabs() {
     };
 
     fetchData(); // Llamar a la función para obtener las opciones al montar el componente
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await getRole();
+      if (res) {
+        setRoleAdmin(res[0]._id)
+        setRoleManager(res[3]._id)
+      }
+    };
+
+    fetchData();
   }, []);
 
   return (
@@ -188,14 +200,6 @@ function ListOfDeptCollabs() {
                   </td>
                   <td className="whitespace-nowrap text-sm text-gray-500">
                     {person.lastLogout}
-                  </td>
-                  <td className="whitespace-nowrap text-sm font-medium">
-                    <button
-                      // onClick={() => handleDelete(person.id)}
-                      className="text-red-600 hover:text-red-900"
-                    >
-                      Eliminar
-                    </button>
                   </td>
                 </tr>
               ))}

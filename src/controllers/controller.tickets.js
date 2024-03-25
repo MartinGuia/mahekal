@@ -3,6 +3,7 @@ import User from "../models/User.model.js";
 import Department from "../models/Department.model.js";
 import Roles from "../models/Roles.model.js";
 import { formatDate } from "../libs/formatDate.js";
+import { generateTicketNumber } from "../libs/generateTicketNumber.js";
 
 export const addNewTicketGet = async (req, res) => {
   try {
@@ -38,7 +39,7 @@ export const addNewTicketPost = async (req, res) => {
     assignedDepartment,
     roomOrArea,
     description,
-    imageURL,
+    // imageURL,
   } = req.body;
 
   try {
@@ -58,7 +59,8 @@ export const addNewTicketPost = async (req, res) => {
       assignedDepartment: departmentFound._id,
       roomOrArea: roomOrArea,
       description: description,
-      imageURL: imageURL,
+      ticketNumber: generateTicketNumber()
+      // imageURL: imageURL,
     });
 
     const departmentUpdated = await Department.findByIdAndUpdate(
@@ -597,7 +599,11 @@ export const getAllTicketsOnPauseOrReview = async (req, res) => {
             ticket.id = ticket._id;
             delete ticket._id;
             ticket.date = formatDate(ticket.date);
+<<<<<<< HEAD
             ticket.assignedDepartment = departmentFound.name;
+=======
+            // ticket.assignedDepartment = departmentFound.name;
+>>>>>>> pruebas
             delete ticket.imageURL;
 
             let lastEjecutionTime = new Date(
@@ -768,6 +774,7 @@ export const reassignTicketPut = async (req, res) => {
     if (ticketToUpdate === null)
       return res.status(404).json({ message: "Ticket not found" });
 
+<<<<<<< HEAD
     if (ticketToUpdate.assignedTo.length == 0) {
       const colaboratorUpdated = await User.findByIdAndUpdate(assignedTo, {
         $push: { tickets: ticketToUpdate._id },
@@ -776,6 +783,25 @@ export const reassignTicketPut = async (req, res) => {
       if (!colaboratorUpdated)
         return res.status(404).json({ message: "User to reassing not found" });
 
+=======
+    if(status === "En pausa/revision") {
+      const ticketUpdate = await Ticket.findByIdAndUpdate(ticketToUpdate, {
+        status: status,
+        $push: { ejecutionTime: 0, dateUpdated: Date.now() }
+      })
+      
+      return res.status(200).json({ message: "Ticket reassigned successfully" });
+    }
+
+    if (ticketToUpdate.assignedTo.length == 0) {
+      const colaboratorUpdated = await User.findByIdAndUpdate(assignedTo, {
+        $push: { tickets: ticketToUpdate._id },
+      });
+
+      if (!colaboratorUpdated)
+        return res.status(404).json({ message: "User to reassing not found" });
+
+>>>>>>> pruebas
       const ejecutionDate = Date.now() + ejecutionTime * 60 * 1000;
 
       const ticketUpdate = await Ticket.findByIdAndUpdate(ticketToUpdate.id, {
@@ -791,6 +817,7 @@ export const reassignTicketPut = async (req, res) => {
       res.status(200).json({ message: "Ticket reassigned successfully" });
     } else {
       const user =
+<<<<<<< HEAD
         ticketToUpdate.assignedTo[ticketToUpdate.assignedTo.length - 1];
 
       if (user == assignedTo) {
@@ -839,6 +866,56 @@ export const reassignTicketPut = async (req, res) => {
           $pull: { tickets: ticketFound._id },
         });
       }
+=======
+        ticketToUpdate.assignedTo[ticketToUpdate.assignedTo.length - 1];      
+
+        if (user == assignedTo) {
+          const ejecutionDate = Date.now() + ejecutionTime * 60 * 1000;
+
+          const ticketUpdate = await Ticket.findByIdAndUpdate(ticketToUpdate.id, {
+            $push: {
+              assignedTo: assignedTo,
+              ejecutionTime: ejecutionDate,
+              dateUpdated: Date.now(),
+            },
+            status: status,
+            priority: priority,
+          });
+
+          return res
+            .status(200)
+            .json({ message: "Ticket reassigned successfully" });
+        } else {
+          const colaboratorUpdated = await User.findByIdAndUpdate(assignedTo, {
+            $push: { tickets: ticketToUpdate._id },
+          });
+
+          if (!colaboratorUpdated)
+            return res
+              .status(404)
+              .json({ message: "User to reassing not found" });
+
+          const ejecutionDate = Date.now() + ejecutionTime * 60 * 1000;
+
+          const ticketUpdate = await Ticket.findByIdAndUpdate(ticketToUpdate.id, {
+            $push: {
+              assignedTo: assignedTo,
+              ejecutionTime: ejecutionDate,
+              dateUpdated: Date.now(),
+            },
+            status: status,
+            priority: priority,
+          });
+
+          const ticketFound = await Ticket.findById(req.params.id);
+          const removedUser =
+            ticketFound.assignedTo[ticketFound.assignedTo.length - 2];
+
+          const removedTicket = await User.findByIdAndUpdate(removedUser, {
+            $pull: { tickets: ticketFound._id },
+          });
+        }
+>>>>>>> pruebas
 
       return res
         .status(200)

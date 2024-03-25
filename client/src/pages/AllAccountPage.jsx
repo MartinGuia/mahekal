@@ -6,12 +6,15 @@ import Modal from '../components/ui/Modal';
 import { useAuth } from "../context/AuthContext";
 import {useForm} from 'react-hook-form'
 import logo from '../img/LogoMahekal.png'
-import { useParams } from 'react-router-dom';
-
+import { Link } from 'react-router-dom';
 
 function AllAccountPage() {
-  const params = useParams()
-  const { getAllUsers, collabs } = useCollab();
+  const {
+    getAllUsers,
+    collabs,
+    options,
+    getDatos,
+  } = useCollab();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalEditPassOpen, setIsModalEditPassOpen] = useState(false);
   const {
@@ -19,40 +22,32 @@ function AllAccountPage() {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const { options, getDatos, getUserByIdToModify } = useCollab();
   const { signupUser, errors: registerErrors } = useAuth();
-  const [isModalEditDataOpen, setIsModalEditDataOpen] = useState(false);
-  const [usuarioSeleccionado, setUsuarioSeleccionado] = useState(null);
 
+  function recargarPagina() {
+    window.location.reload(); // Recarga la página
+  }
   const handleOpenModal = () => {
     setIsModalOpen(true);
   };
-  
+
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
   const handleOpenModalEditPass = () => {
     setIsModalEditPassOpen(true);
   };
-  
+
   const handleCloseModalEditPass = () => {
     setIsModalEditPassOpen(false);
+    recargarPagina();
   };
-  const handleOpenModalEditData = (userId) => {
-    // setUserIdToEdit(userId)
-    setUsuarioSeleccionado(userId)
-    setIsModalEditDataOpen(true);
-  };
-  
-  const handleCloseModalEditData = () => {
-    setIsModalEditDataOpen(false);
-  };
-  
-  const onSubmit = handleSubmit(async (values) => {
+
+  const onSubmit = handleSubmit((values) => {
     signupUser(values);
-    handleCloseModal()
+      handleCloseModal();
   });
-  
+
   useEffect(() => {
     //Mapear los datos recibidos para crear un nuevo array con el formato adecuados
     getDatos(
@@ -60,52 +55,25 @@ function AllAccountPage() {
         value: option.value,
         label: option.name, // Utilizar el valor 'name' como label en las opciones
       }))
-      );
-    }, []);
-    
-    useEffect(() => {
-      getAllUsers();
-    }, []);
+    );
+  }, []);
 
-    useEffect(() => {
-      async function loadCollab() {
-        try {
-          if (params.id) {
-            const collab = await getUserByIdToModify(params.id);
-            if(collab){
-              // setName(ticket.ticketById.name)
-              // setTitle(ticket.ticketById.title)
-              // setStatus(ticket.ticketById.status)
-              // setArea(ticket.ticketById.roomOrArea)
-              // setPriority(ticket.ticketById.priority)
-              // setDpto(ticket.ticketById.assignedDepartment)
-              // setDescription(ticket.ticketById.description)
-              // setUsersOnline(ticket.onlineColaborators)
-              // usersOnline.map((option)=>({
-              //   value: option.id,
-              //   label: option.name
-              // }))
-            }
-          }
-        } catch (error) {
-          console.error(error)
-        }
-      }
-      loadCollab()
-    }, []);
+  useEffect(() => {
+    getAllUsers();
+  }, []);
 
-    return (
-      <Nav>
+  return (
+    <Nav>
       <Title>Cuentas</Title>
 
       <section className="w-[100%] h-[8%] flex max-[541px]:mt-4">
         <div className="w-[100%]">
-        <button
-          onClick={handleOpenModal}
-          className="bg-water-blue hover:bg-water-blue-hover px-4 py-3 rounded-lg shadow-lg ml-8"
+          <button
+            onClick={handleOpenModal}
+            className="bg-water-blue hover:bg-water-blue-hover px-4 py-3 rounded-lg shadow-lg ml-8"
           >
-          Agregar colabolador
-        </button>
+            Agregar colabolador
+          </button>
         </div>
       </section>
 
@@ -120,14 +88,16 @@ function AllAccountPage() {
             </tr>
           </thead>
           <tbody className="text-gray-600 text-sm">
-            {collabs.map((item, index) => (
+            {collabs.map((item) => (
               <tr
-                key={index}
+                key={item.id}
                 className="border-b border-gray-200 hover:bg-gray-100 hover:-translate-y-1"
               >
-                <td className="py-3 px-6 text-left whitespace-nowrap">
-                  {item.name}
-                </td>
+                <Link className="flex" to={`/profile/${item.id}`}>
+                  <td className="py-3 px-6 text-left whitespace-nowrap">
+                    {item.name}
+                  </td>
+                </Link>
                 <td className="py-3 px-6 text-left whitespace-nowrap">
                   {item.role}
                 </td>
@@ -135,25 +105,26 @@ function AllAccountPage() {
                   {item.department}
                 </td>
                 <td className="py-3 px-6 text-center flex justify-evenly max-[541px]:block">
-                  <button
-                    className="text-red-500 hover:text-red-700 mr-2 hover:-translate-y-1"
-                  >
+                  <button className="text-red-500 hover:text-red-700 mr-2 hover:-translate-y-1">
                     Eliminar
                   </button>
-                  <button
-                    key={item.id}
-                    onClick={() => handleOpenModalEditData(item.id)}
-                    className="text-blue-500 hover:text-blue-700 hover:-translate-y-1"
-                  >
-                    Editar
-                  </button>
-                  <button
-                    // onClick={() => handleEdit(index)}
-                    onClick={handleOpenModalEditPass}
-                    className="text-green-500 hover:text-green-700 hover:-translate-y-1"
-                  >
-                    Editar contraseña
-                  </button>
+                  <Link to={`/edit-collab/${item.id}`}>
+                    <button
+                      // onClick={() => handleOpenModalEditData(item.id)}
+                      className="text-blue-500 hover:text-blue-700 hover:-translate-y-1"
+                    >
+                      Editar
+                    </button>
+                  </Link>
+                  <Link to={`/edit-password-collab/${item.id}`}>
+                    <button
+                      // onClick={() => handleEdit(index)}
+                      // onClick={handleOpenModalEditPass}
+                      className="text-green-500 hover:text-green-700 hover:-translate-y-1"
+                    >
+                      Editar contraseña
+                    </button>
+                  </Link>
                 </td>
               </tr>
             ))}
@@ -275,7 +246,7 @@ function AllAccountPage() {
                   {error}
                 </div>
               ))}
-             
+
               <input
                 className="w-full bg-mahekal-input p-2 rounded m-2"
                 type="password"
@@ -285,91 +256,6 @@ function AllAccountPage() {
               {errors.userName && (
                 <p className="text-red-500">La contraseña es requerida*</p>
               )}
-              <button
-                className="p-2 m-2 w-1/2 rounded-lg bg-water-blue hover:bg-water-blue-hover"
-                type="submit"
-              >
-                Registrar
-              </button>
-            </form>
-          </div>
-        </Modal>
-      </div>
-
-      <div>
-        {/* ventana modal de editar datos de usuario */}
-        <Modal isOpen={isModalEditDataOpen} onClose={handleCloseModalEditData}>
-          <div className="relative bg-white rounded-lg">
-            <Title>MAHEKAL</Title>
-
-            <form
-              className="flex flex-col items-center"
-              onSubmit={onSubmit}
-              // onSubmit={handleSubmit}
-            >
-              <img className="w-20 p-1" src={logo} alt="Mahekal Logo" />
-              {registerErrors.map((error, i) => (
-                <div
-                  key={i}
-                  className="bg-red-500 text-white w-[100%] rounded-md py-1"
-                >
-                  {error}
-                </div>
-              ))}
-              <input
-                className="w-full bg-mahekal-input p-2 rounded m-2"
-                type="text"
-                {...register("name", { required: true })}
-                placeholder="Nombre"
-                autoFocus
-              />
-              {errors.name && (
-                <p className="text-red-500">El nombre es requerido*</p>
-              )}
-              <input
-                className="w-full bg-mahekal-input p-2 rounded m-2"
-                type="text"
-                {...register("lastname", { required: true })}
-                placeholder="Apellido"
-              />
-              {errors.lastname && (
-                <p className="text-red-500">El Apellido es requerido*</p>
-              )}
-              <input
-                className="w-full bg-mahekal-input p-2 rounded m-2"
-                type="text"
-                {...register("userName", { required: true })}
-                placeholder="Username"
-              />
-              {errors.userName && (
-                <p className="text-red-500">El Usuario es requerido*</p>
-              )}
-              <label htmlFor="">Rol:</label>
-              <select
-                className="w-[100%] text-base rounded-lg block p-2 bg-white border-gray-400 border-2 placeholder-gray-400 text-black focus:ring-blue-500 focus:border-blue-500"
-                {...register("role", { required: true })}
-              >
-                <option>Selecciona una opccion . . .</option>
-                <option value="Administrador">Administrador</option>
-                <option value="Gerente Administrador">
-                  Gerente Administrador
-                </option>
-                <option value="Gerente Área">Gerente Área</option>
-                <option value="Operador">Operador</option>
-              </select>
-
-              <label htmlFor="">Departamento:</label>
-              <select
-                className="w-[100%] text-base rounded-lg block p-2 bg-white border-gray-400 border-2 placeholder-gray-400 text-black focus:ring-blue-500 focus:border-blue-500"
-                {...register("department", { required: true })}
-              >
-                <option>Selecciona una opccion . . .</option>
-                {options.map((option, i) => (
-                  <option key={i} value={option.value}>
-                    {option.name}
-                  </option>
-                ))}
-              </select>
               <button
                 className="p-2 m-2 w-1/2 rounded-lg bg-water-blue hover:bg-water-blue-hover"
                 type="submit"

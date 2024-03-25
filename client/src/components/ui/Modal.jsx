@@ -1,7 +1,18 @@
+<<<<<<< HEAD
 const Modal = ({ isOpen, onClose, children }) => {
 
   if (!isOpen) return null;
 
+=======
+import { useEffect } from 'react';
+
+const Modal = ({ isOpen, onClose, children, idUsuario }) => {
+  // useEffect(() => {
+  //   console.log("ID del usuario seleccionado:", idUsuario);
+  // }, [idUsuario]);
+  if (!isOpen) return null;
+  
+>>>>>>> pruebas
   return (
     <div className="fixed z-10 inset-0 overflow-y-auto">
       <div className="flex items-center justify-center min-h-screen">
