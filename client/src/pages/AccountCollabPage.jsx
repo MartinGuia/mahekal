@@ -34,9 +34,9 @@ function AccountCollabPage() {
           // setGetUserName(userById.userName);
           // setGetRole(userById.role.name);
           // setGetDpto(userById.department.name);
-          setGetName(userById.userFound.name)
+          setGetName(userById.name)
           setAssignedTickets(userById)
-          console.log(userById.userFound.name);
+          console.log(userById);
         }
       }
     } catch (error) {
