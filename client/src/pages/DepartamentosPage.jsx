@@ -68,7 +68,7 @@ function recargarPagina() {
                 <div className="w-[60%] flex justify-center items-center max-[541px]:w-[100%] max-[541px]:mt-2 max-[281px]:flex-col">
                   <div className="w-[100%] flex justify-center items-center mx-1">
                     <ButtonAction
-                      rutaDestino="/"
+                      rutaDestino={`/ticketsbydepartment/${option.id}`}
                       className="bg-water-blue hover:bg-water-blue-hover max-[541px]:w-auto flex-col items-center w-56"
                     >
                       <p className="text-xl text-center max-[769px]:text-base max-[431px]:text-sm max-[376px]:text-xs text-white">
