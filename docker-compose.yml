@@ -1,32 +1,36 @@
-version: '3.8'
+version: '3'
 
 services:
- frontend:
-    build: ./client
-    ports:
-      - "3000:3000"
-    networks:
-      - api-network
+#  frontend:
+#     build: ./client
+#     ports:
+#       - "3000:3000"
+#     networks:
+#       - api-network
 
  backend:
-    build: ./src
+    build: ./
+    container_name: backend
+    image: backend:1.0
     environment:
       - DB=mongodb://mongo:27017/mahekal
     ports:
       - "4000:4000"
+    depends_on:
+      - mongo
     networks:
       - api-network
+    restart: always
 
  mongo:
     image: mongo:latest
+    container_name: mongo
     volumes:
-      - mongodb_data:/data/db
+      - \Users\Emanuel\Desktop\data:data/db
     networks:
       - api-network
+    restart: always
 
 networks:
  api-network:
     driver: bridge
-
-volumes:
- mongodb_data:
