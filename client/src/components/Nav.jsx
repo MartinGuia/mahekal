@@ -14,6 +14,7 @@ import { useTicket } from '../context/TicketsContext'
 import Modal from '../components/ui/Modal';
 import { Title } from '../components/Headers/Title'
 import cerrar from '../img/cerrar.png'
+import swal from 'sweetalert'    
 
 export default function Nav({children}) {
   const [open, setOpen] = useState(false);
@@ -44,6 +45,10 @@ const [roleAdmin, setRoleAdmin] = useState([])
 const [roleManager, setRoleManager] = useState()
 const [roleChiefArea, setRoleChiefArea] = useState()
 const [roleOperator, setRoleOperator] = useState()
+
+function recargarPagina() {
+  window.location.reload(); // Recarga la página
+}
 
 useEffect(() => {
     const fetchData = async () => {
@@ -158,10 +163,28 @@ useEffect(() => {
     setIsModalOpen(false);
   };
 
+  // const viewAlert=()=>{
+  //   swal({
+  //     title: "Ticket agregado",
+  //     // text: "You clicked the button!",
+  //     icon: "success",
+  //   });
+  // }
+
+  function viewAlert() {
+    swal({
+      title: "Ticket agregado",
+      // text: "You clicked the button!",
+      icon: "success",
+      timer: 3000
+    });
+  }
+
   const onSubmit = handleSubmit((data) => {
     console.log(data);
     signupTicket(data);
     handleCloseModal();
+    viewAlert(recargarPagina())
   });
 
   useEffect(() => {
@@ -257,6 +280,8 @@ useEffect(() => {
     ));
   }
 
+  
+  
   // useEffect(() => {
   //   console.log(userRole1);
   // }, []);
@@ -522,6 +547,7 @@ useEffect(() => {
             <button
               className="p-2 m-2 w-1/2 rounded-lg bg-water-blue hover:bg-water-blue-hover"
               type="submit"
+              // onClick={()=>viewAlert()}
             >
               Enviar
             </button>

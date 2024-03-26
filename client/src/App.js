@@ -15,6 +15,7 @@ import ViewTicket from './pages/ViewTicket';
 import { DepartmentProvider } from './context/DepartmentContext';
 import EditCollabPage from './pages/EditCollabPage';
 import EditPasswordPage from './pages/EditPasswordPage';
+import TicketsOfDepartmentsPage from './pages/TicketsOfDepartmentsPage';
 
 function App() {
   return (
@@ -43,6 +44,10 @@ function App() {
                 <Route
                   path="/edit-password-collab/:id"
                   element={<EditPasswordPage/>}
+                />
+                <Route
+                  path="/ticketsbydepartment/:id"
+                  element={<TicketsOfDepartmentsPage/>}
                 />
                 <Route path="/accounts" element={<AllAccountPage />} />
                 {/* <Route path="/register" element={<RegisterPage />} /> */}
