@@ -14,7 +14,6 @@ import { useTicket } from '../context/TicketsContext'
 import Modal from '../components/ui/Modal';
 import { Title } from '../components/Headers/Title'
 import cerrar from '../img/cerrar.png'
-  
 
 export default function Nav({children}) {
   const [open, setOpen] = useState(false);
