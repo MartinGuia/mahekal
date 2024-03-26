@@ -14,10 +14,6 @@ import { useTicket } from '../context/TicketsContext'
 import Modal from '../components/ui/Modal';
 import { Title } from '../components/Headers/Title'
 import cerrar from '../img/cerrar.png'
-<<<<<<< HEAD
-=======
-  
->>>>>>> pruebas
 
 export default function Nav({children}) {
   const [open, setOpen] = useState(false);
@@ -36,17 +32,6 @@ export default function Nav({children}) {
   const [nombreUsuario, setNombreUsuario] = useState("");
   const [lastnameUsuario, setLastnameUsuario] = useState("");
   const [departamentos, setDepartamentos] = useState([]);
-<<<<<<< HEAD
-  const { logout, role } = useAuth();
-  const toggleAside = () => {
-    setOpen(!open);
-  };
-  
-  const token = role; // Aquí debes proporcionar el token JWT
-  const decodedToken = JSON.parse(atob(token.split(".")[1])); // Decodificar la carga útil
-  const userRole = decodedToken.role; // Obtener el valor del rol
-  const userDpto = decodedToken.department;
-=======
   const { logout, role,  getRole} =
     useAuth();
   const toggleAside = () => {
@@ -89,7 +74,6 @@ useEffect(() => {
     }
   }, []);
   
->>>>>>> pruebas
   const Menus = [
     {
       id: 1,
@@ -114,15 +98,6 @@ useEffect(() => {
       title: "Foro",
       image: mensaje,
       to: "/",
-<<<<<<< HEAD
-    },
-    {
-      id: 5,
-      title: "Cuenta",
-      image: cuenta,
-      to: "/profile",
-=======
->>>>>>> pruebas
     },
   ];
 
@@ -145,15 +120,6 @@ useEffect(() => {
       image: mensaje,
       to: "/",
     },
-<<<<<<< HEAD
-    {
-      id: 4,
-      title: "Cuenta",
-      image: cuenta,
-      to: "/profile",
-    },
-=======
->>>>>>> pruebas
   ];
   const Menus3 = [
     {
@@ -166,11 +132,7 @@ useEffect(() => {
       id: 2,
       title: "Dptos.",
       image: dptos,
-<<<<<<< HEAD
-      to: `/listadptocollabs/${userDpto}`,
-=======
       to: `/listadptocollabs/${userDpto1}`,
->>>>>>> pruebas
     },
     {
       id: 3,
@@ -178,15 +140,6 @@ useEffect(() => {
       image: mensaje,
       to: "/",
     },
-<<<<<<< HEAD
-    {
-      id: 4,
-      title: "Cuenta",
-      image: cuenta,
-      to: "/profile",
-    },
-=======
->>>>>>> pruebas
   ];
   const Menus4 = [
     {
@@ -227,16 +180,10 @@ useEffect(() => {
 
     fetchData();
   }, []);
-<<<<<<< HEAD
-
-  let navegador1;
-  if (userRole === "65d0e2ca3ba6e268905bad79") {
-=======
   
 
   let navegador1;
   if (userRole1 === roleAdmin) {
->>>>>>> pruebas
     navegador1 = Menus.map((menu) => (
       <li key={menu.id}>
         <Link
@@ -254,11 +201,7 @@ useEffect(() => {
         </Link>
       </li>
     ));
-<<<<<<< HEAD
-  } else if (userRole === "65d0e2ca3ba6e268905bad7a") {
-=======
   } else if (userRole1 === roleManager) {
->>>>>>> pruebas
     navegador1 = Menus2.map((menu) => (
       <li key={menu.id}>
         <Link
@@ -276,11 +219,7 @@ useEffect(() => {
         </Link>
       </li>
     ));
-<<<<<<< HEAD
-  } else if (userRole === "65d0e2ca3ba6e268905bad7b") {
-=======
   } else if (userRole1 === roleChiefArea) {
->>>>>>> pruebas
     navegador1 = Menus3.map((menu) => (
       <li key={menu.id}>
         <Link
@@ -298,11 +237,7 @@ useEffect(() => {
         </Link>
       </li>
     ));
-<<<<<<< HEAD
-  } else if (userRole === "65d0e2ca3ba6e268905bad7c") {
-=======
   } else if (userRole1 === roleOperator) {
->>>>>>> pruebas
     navegador1 = Menus4.map((menu) => (
       <li key={menu.id}>
         <Link
@@ -323,11 +258,7 @@ useEffect(() => {
   }
 
   // useEffect(() => {
-<<<<<<< HEAD
-  //   getRole();
-=======
   //   console.log(userRole1);
->>>>>>> pruebas
   // }, []);
 
   return (
@@ -463,10 +394,7 @@ useEffect(() => {
             open && "blur-sm max-[542px]:hidden"
           }`}
         >
-<<<<<<< HEAD
-=======
           
->>>>>>> pruebas
           {children}
         </section>
       </div>
@@ -529,10 +457,6 @@ useEffect(() => {
             {errors.userName && (
               <p className="text-red-500">La prioridad es requerida*</p>
             )}
-<<<<<<< HEAD
-            <label htmlFor="">Rol:</label>
-=======
->>>>>>> pruebas
             <label htmlFor="">Departamento:</label>
             <select
               className="w-[100%] text-base rounded-lg block p-2 bg-white border-gray-400 border-2 placeholder-gray-400 text-black focus:ring-blue-500 focus:border-blue-500"

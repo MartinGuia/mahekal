@@ -74,12 +74,8 @@ export const updateUser = async (req, res) => {
   
   try {
     const userFound = await User.findById(req.params.id).lean();
-    console.log(userFound)
+    // console.log(userFound)
 
-    if (userName !== userFound.userName)
-      await User.findByIdAndUpdate(userFound._id, { userName: userName });
-
-    if (role !== userFound.role)
       await User.findByIdAndUpdate(userFound._id, { role: role });
 
     if (department !== userFound.department) {
