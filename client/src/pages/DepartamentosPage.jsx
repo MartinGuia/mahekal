@@ -7,27 +7,12 @@ import { useEffect, useState } from 'react';
 import logo from '../img/LogoMahekal.png'
 import Modal from '../components/ui/Modal';
 import {useForm} from 'react-hook-form';
-import swal from 'sweetalert'   
 
 function DepartamentosPage() {
 const {department, getAllDepartments} = useDepartment()
-const {
-  register,
-  handleSubmit,
-  formState: { errors },
-} = useForm();
-const {createDepartment, errors:signinErrors} = useDepartment()
 
 function recargarPagina() {
   window.location.reload(); // Recarga la página
-}
-
-function viewAlert() {
-  swal({
-    title: "Ticket agregado",
-    // text: "You clicked the button!",
-    icon: "success",
-  });
 }
 
   useEffect(()=>{
@@ -44,11 +29,17 @@ function viewAlert() {
     setIsModalOpen(false);
   };
 
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+  const {createDepartment, errors:signinErrors} = useDepartment()
+
   const onSubmit = handleSubmit(async (values) => {
     createDepartment(values)
     handleCloseModal()
     recargarPagina()
-    viewAlert()
   })
   return (
     <>
@@ -77,7 +68,7 @@ function viewAlert() {
                 <div className="w-[60%] flex justify-center items-center max-[541px]:w-[100%] max-[541px]:mt-2 max-[281px]:flex-col">
                   <div className="w-[100%] flex justify-center items-center mx-1">
                     <ButtonAction
-                      rutaDestino={`/ticketsbydepartment/${option.id}`}
+                      rutaDestino="/"
                       className="bg-water-blue hover:bg-water-blue-hover max-[541px]:w-auto flex-col items-center w-56"
                     >
                       <p className="text-xl text-center max-[769px]:text-base max-[431px]:text-sm max-[376px]:text-xs text-white">

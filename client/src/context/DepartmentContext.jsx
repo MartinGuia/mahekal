@@ -1,5 +1,5 @@
 import { createContext, useState, useContext, useEffect} from "react";
-import {createDepartmentRequest,getAllDepartmentsRequest, getAllCollabsOfDepartmentsRequest, getAllTicketsByDepartmentRequest} from '../api/departments'
+import {createDepartmentRequest,getAllDepartmentsRequest, getAllCollabsOfDepartmentsRequest} from '../api/departments'
 
 
 export const DepartmentContext = createContext()
@@ -31,16 +31,6 @@ export const DepartmentProvider = ({children})=>{
     }
   };
 
-  const getAllTicketsByDepartment = async (id) => {
-    try {
-      const res = await getAllTicketsByDepartmentRequest(id);
-      return res.data;
-    } catch (error) {
-      console.error("error when obtaining department data", error);
-      return null;
-    }
-  };
-
   const getAllCollabsOfDepartments = async (id) => {
     try {
       const res = await getAllCollabsOfDepartmentsRequest(id);
@@ -66,7 +56,6 @@ export const DepartmentProvider = ({children})=>{
         createDepartment,
         getAllDepartments,
         getAllCollabsOfDepartments,
-        getAllTicketsByDepartment,
         errors,
         department,
       }}

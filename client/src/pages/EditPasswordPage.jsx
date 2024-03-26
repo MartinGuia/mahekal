@@ -18,6 +18,7 @@ function EditPasswordPage() {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm();
 
@@ -55,7 +56,7 @@ function EditPasswordPage() {
             ))}
             <input
               className="w-full bg-mahekal-input p-2 rounded m-2"
-              type="password"
+              type="text"
               {...register("password", { required: true })}
               placeholder='Contraseña'
               // defaultValue={getLastnameUser}
