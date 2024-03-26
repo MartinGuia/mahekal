@@ -41,6 +41,6 @@ export const createRoles = async () => {
     ]);
 
   } catch (error) {
-    console.log(error);
+    return res.status8(400).json(error)
   }
 };

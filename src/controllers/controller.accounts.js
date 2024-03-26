@@ -119,8 +119,50 @@ export const updatePassword = async (req, res) => {
 // FALTAN ALGUNAS OPCIONES AQUI
 export const getUserById = async (req, res) => {
   try {
-    const userFound = await User.findById(req.params.id);
-    res.status(200).json(userFound);
+    let userFound = await User.findById(req.params.id);
+    if (userFound === null)
+      return res.status(404).json({ message: "User not found " });
+
+    
+    let tickets = userFound.tickets;
+    let ticketsForUser = await Promise.all(
+      tickets.map(async (idTicket) => {
+        let ticket = await Ticket.findById(idTicket).lean();
+        let ticketDepartment = await Department.findById(
+          ticket.assignedDepartment
+          );
+          ticket.assignedDepartment = ticketDepartment.name;
+          ticket.assignedTo = userFound.name + " " + userFound.lastname;
+          ticket.date = formatDate(ticket.date);
+          ticket.id = ticket._id;
+          
+          let lastEjecutionTime = new Date(
+            ticket.ejecutionTime[ticket.ejecutionTime.length - 1]
+            );
+            let lastDateUpdated = new Date(
+              ticket.dateUpdated[ticket.dateUpdated.length - 1]
+              );
+              
+              let differenceInMilliseconds = lastEjecutionTime - lastDateUpdated;
+              let differenceInMinutes = differenceInMilliseconds / (60 * 1000);
+              let differenceHours =
+              differenceInMinutes >= 60 ? differenceInMinutes / 60 : 0;
+              
+              ticket.ejecutionTime =
+              differenceHours >= 1
+            ? `${differenceHours}h`
+            : `${differenceInMinutes}m`;
+            
+        delete ticket.dateUpdated;
+        delete ticket.description;
+        delete ticket.imageURL;
+        delete ticket._id;
+        return ticket;
+      })
+    );
+    userFound = {name: `${userFound.name} ${userFound.lastname}`};
+    
+    res.status(200).json({ticketsForUser, userFound});
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }

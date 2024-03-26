@@ -14,7 +14,6 @@ import { useTicket } from '../context/TicketsContext'
 import Modal from '../components/ui/Modal';
 import { Title } from '../components/Headers/Title'
 import cerrar from '../img/cerrar.png'
-  
 
 export default function Nav({children}) {
   const [open, setOpen] = useState(false);
@@ -47,19 +46,25 @@ const [roleChiefArea, setRoleChiefArea] = useState()
 const [roleOperator, setRoleOperator] = useState()
 
 useEffect(() => {
-    const fetchData = async () => {
-      const res = await getRole();
-      if (res) {
-        setRoleAdmin(res[0]._id)
-        // console.log(res[2]._id);
-        setRoleManager(res[1]._id)
-        setRoleChiefArea(res[2]._id)
-        setRoleOperator(res[3]._id)
+  const fetchData = async () => {
+    const res = await getRole();
+    
+    if (res) {
+      for (const role of res) {
+        if (role.name === "Administrador") {
+          setRoleAdmin(role._id);
+        } else if (role.name === "Gerente Administrador") {
+          setRoleManager(role._id);
+        } else if (role.name === "Gerente Área") {
+          setRoleChiefArea(role._id);
+        } else if (role.name === "Operador") {
+          setRoleOperator(role._id);
+        }
       }
-    };
-
-    fetchData();
-  }, []);
+    }
+  };
+  fetchData();
+}, []);
 
 
   useEffect(() => {

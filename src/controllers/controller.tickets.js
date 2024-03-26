@@ -103,6 +103,7 @@ export const getAllTickets = async (req, res) => {
               let lastEjecutionTime = new Date(
                 ticket.ejecutionTime[ticket.ejecutionTime.length - 1]
               );
+
               let lastDateUpdated = new Date(
                 ticket.dateUpdated[ticket.dateUpdated.length - 1]
               );
@@ -113,10 +114,14 @@ export const getAllTickets = async (req, res) => {
               let differenceHours =
                 differenceInMinutes >= 60 ? differenceInMinutes / 60 : 0;
 
-              ticket.ejecutionTime =
-                differenceHours >= 1
-                  ? `${differenceHours}H`
-                  : `${differenceInMinutes}m`;
+              if (ticket.ejecutionTime[ticket.ejecutionTime.length - 1] == 0) {
+                ticket.ejecutionTime = "En pausa/revisión";
+              } else {
+                ticket.ejecutionTime =
+                  differenceHours >= 1
+                    ? `${differenceHours}H`
+                    : `${differenceInMinutes}m`;
+              }
 
               let lastAssigned =
                 ticket.assignedTo[ticket.assignedTo.length - 1];
@@ -162,10 +167,14 @@ export const getAllTickets = async (req, res) => {
               let differenceHours =
                 differenceInMinutes >= 60 ? differenceInMinutes / 60 : 0;
 
-              ticket.ejecutionTime =
-                differenceHours >= 1
-                  ? `${differenceHours}H`
-                  : `${differenceInMinutes}m`;
+              if (ticket.ejecutionTime[ticket.ejecutionTime.length - 1] == 0) {
+                ticket.ejecutionTime = "En pausa/revisión";
+              } else {
+                ticket.ejecutionTime =
+                  differenceHours >= 1
+                    ? `${differenceHours}H`
+                    : `${differenceInMinutes}m`;
+              }
 
               let lastAssigned =
                 ticket.assignedTo[ticket.assignedTo.length - 1];
@@ -203,10 +212,14 @@ export const getAllTickets = async (req, res) => {
             let differenceHours =
               differenceInMinutes >= 60 ? differenceInMinutes / 60 : 0;
 
-            ticket.ejecutionTime =
-              differenceHours >= 1
-                ? `${differenceHours}h`
-                : `${differenceInMinutes}m`;
+            if (ticket.ejecutionTime[ticket.ejecutionTime.length - 1] == 0) {
+              ticket.ejecutionTime = "En pausa/revisión";
+            } else {
+              ticket.ejecutionTime =
+                differenceHours >= 1
+                  ? `${differenceHours}H`
+                  : `${differenceInMinutes}m`;
+            }
 
             delete ticket.dateUpdated;
             delete ticket.description;
@@ -214,8 +227,8 @@ export const getAllTickets = async (req, res) => {
             return ticket;
           })
         );
+        return res.status(200).json(ticketsForOperador);
     }
-    return res.status(200).json(ticketsForOperador);
   } catch (error) {
     return res.status(400).json({ message: error.message });
   }
