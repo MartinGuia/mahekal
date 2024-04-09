@@ -5,7 +5,8 @@ import { Link } from "react-router-dom";
 import { Tarjeta } from "../components/ui/Tarjeta";
 import { useCollab } from "../context/UsersContext";
 import ReturnButton from "../components/ui/ReturnButton";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, } from "react-router-dom";
+import * as images from '../img/index.js'
 
  
 
@@ -19,6 +20,7 @@ function AccountCollabPage() {
   // const [getUserName, setGetUserName] = useState();
   const [assignedTickets, setAssignedTickets] = useState([])
   const [getName, setGetName] = useState()
+  const [getLastName, setGetLastName] = useState()
  // Estado para controlar qué vista se muestra
  const [vista, setVista] = useState('tickets'); // Inicia con la vista de tickets
 
@@ -35,8 +37,8 @@ function AccountCollabPage() {
           // setGetRole(userById.role.name);
           // setGetDpto(userById.department.name);
           setGetName(userById.userFound.name)
-          setAssignedTickets(userById)
-          console.log(userById.userFound.name);
+          setAssignedTickets(userById.ticketsForUser)
+          // console.log(assignedTickets)
         }
       }
     } catch (error) {
@@ -46,19 +48,50 @@ function AccountCollabPage() {
   loadUser();
 }, []);
 
+const getColorClass = (priority) => {
+  switch (priority) {
+    case 'Bajo':
+      return 'bg-green-400';
+    case 'Medio':
+      return 'bg-yellow-400';
+    case 'Alto':
+      return 'bg-orange-400';
+    case 'Critico':
+      return 'bg-red-500';
+    default:
+      return 'bg-gray-200'; // Color por defecto si la prioridad no coincide
+  }
+};
+
+const getColorText = (status) => {
+  switch (status) {
+    case 'Nuevo':
+      return 'text-green-600';
+    case 'En curso':
+      return 'text-yellow-600';
+    case 'En pausa/revision':
+      return 'text-orange-600';
+    case 'Resuelto':
+      return 'text-blue-600';
+    default:
+      return 'bg-gray-600'; // Color por defecto si la prioridad no coincide
+  }
+};
+
  // Componentes para cada vista
  const Tickets = () => (
    <div className="h-[100%] w-[100%] flex items-center flex-col">
      {assignedTickets && assignedTickets.length > 0 ? (
        <>
          {assignedTickets.map((ticket, i) => (
-           <Tarjeta key={i}>
+           <Tarjeta key={i} to={`/ticket/${ticket.id || ticket._id}`}>
             {/* Caja dentro del ticket que contiene los componentes del lado izquierdo */}
             <div className="w-[60%] max-[541px]:w-auto">
                           {/* Caja que contiene el estado del ticket */}
                           <div className="flex w-[100%] items-center">
                             <p>Estado:</p>
-                            <span className="ml-1 h-5 w-auto flex justify-center items-center border-yellow-500 border-2 bg-yellow-200">
+                            <span className={`font-semibold ml-1 h-5 w-auto flex justify-center items-center ${getColorText(ticket.status)}`}>
+                            {/* <span className="ml-1 h-5 w-auto flex justify-center items-center border-yellow-500 border-2 bg-yellow-200"> */}
                               {ticket.status}
                             </span>
                           </div>
@@ -80,7 +113,7 @@ function AccountCollabPage() {
                           <div className="w-[100%] mt-2 flex items-center max-[541px]:flex-col">
                             <div className="flex items-center">
                               <img
-                                src="user-solid.png"
+                                src={images.userIcon}
                                 className="size-5 mr-2"
                                 alt=""
                               />
@@ -98,18 +131,18 @@ function AccountCollabPage() {
                             <p className="font-medium text-black">Prioridad:</p>
                             <div className="flex max-[1025px]:flex">
                               <img
-                                src="alerta.png"
+                                src={images.priority}
                                 className="size-5 ml-2 mr-1"
                                 alt=""
                               />
-                              <span>{ticket.priority}</span>
+                              <span className={`font-semibold text-black rounded-md mx-1 px-1 ${getColorClass(ticket.priority)}`}>{ticket.priority}</span>
                             </div>
                           </div>
                           <div className="items-center min-[1337px]:flex justify-center max-[913px]:justify-start max-[913px]:flex max-[769px]:flex-col max-[541px]:flex-row max-[281px]:flex-col">
                             <p className="font-medium text-black">Dpto:</p>
                             <div className="flex">
                               <img
-                                src="departamento.png"
+                                src={images.department}
                                 className="size-5 ml-2 mr-1"
                                 alt=""
                               />
@@ -120,7 +153,7 @@ function AccountCollabPage() {
                             <p className="font-medium text-black">Asignado a:</p>
                             <div className="flex">
                               <img
-                                src="asignar.png"
+                                src={images.assign}
                                 className="size-5 ml-2 mr-1"
                                 alt=""
                               />
@@ -172,7 +205,7 @@ function AccountCollabPage() {
               <div className="w-[90%] flex">
                 <div className="">
                   <Title className="">
-                    {getName}
+                    {getName}{" "}{getLastName}
                   </Title>
                 </div>
               </div>

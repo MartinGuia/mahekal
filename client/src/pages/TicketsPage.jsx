@@ -28,7 +28,38 @@ function TicketsPage() {
     getAllTicketsResolve()
     getAllTicketsInRevision()
     getAllTicketsInProgress()
+    console.log(ticket)
   }, []);
+
+  const getColorClass = (priority) => {
+    switch (priority) {
+      case 'Bajo':
+        return 'bg-green-400';
+      case 'Medio':
+        return 'bg-yellow-400';
+      case 'Alto':
+        return 'bg-orange-400';
+      case 'Critico':
+        return 'bg-red-500';
+      default:
+        return 'bg-gray-200'; // Color por defecto si la prioridad no coincide
+    }
+  };
+
+  const getColorText = (status) => {
+    switch (status) {
+      case 'Nuevo':
+        return 'text-green-600';
+      case 'En curso':
+        return 'text-yellow-600';
+      case 'En pausa/revision':
+        return 'text-orange-600';
+      case 'Resuelto':
+        return 'text-blue-600';
+      default:
+        return 'bg-gray-600'; // Color por defecto si la prioridad no coincide
+    }
+  };
 
  // Componentes para cada vista
  const AllTickets = () => (
@@ -46,7 +77,7 @@ function TicketsPage() {
                         <div className="flex w-[100%] items-center">
                           <p>Estado:</p>
                           <span
-                            className={`ml-1 h-5 w-auto flex justify-center items-center`}
+                            className={`font-semibold ml-1 h-5 w-auto flex justify-center items-center ${getColorText(ticket.status)}`}
                           >
                             {ticket.status}
                           </span>
@@ -91,7 +122,7 @@ function TicketsPage() {
                               className="size-5 ml-2 mr-1"
                               alt=""
                             />
-                            <span>{ticket.priority}</span>
+                            <span className={`font-semibold text-black rounded-md mx-1 px-1 ${getColorClass(ticket.priority)}`}>{ticket.priority}</span>
                           </div>
                         </div>
                         <div className="items-center min-[1337px]:flex justify-center max-[913px]:justify-start max-[913px]:flex max-[769px]:flex-col max-[541px]:flex-row max-[281px]:flex-col">

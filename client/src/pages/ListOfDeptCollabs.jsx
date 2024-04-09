@@ -27,16 +27,7 @@ const [roleManager, setRoleManager] = useState()
   const toggleOnline = () => {
     setOpenOn(!openOn);
   };
-  let returnButton;
-  if (userRole === roleAdmin && roleManager) {
-    returnButton = (
-      <Link to="/departamentos">
-        <ReturnButton />
-      </Link>
-    );
-  } else {
-    <></>;
-  }
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -60,14 +51,36 @@ const [roleManager, setRoleManager] = useState()
   useEffect(() => {
     const fetchData = async () => {
       const res = await getRole();
+      
       if (res) {
-        setRoleAdmin(res[0]._id)
-        setRoleManager(res[3]._id)
+        for (const role of res) {
+          if (role.name === "Administrador") {
+            setRoleAdmin(role._id);
+          } else if (role.name === "Gerente Administrador") {
+            setRoleManager(role._id);
+          }
+        }
       }
     };
-
     fetchData();
   }, []);
+
+  let returnButton;
+  if (userRole === roleAdmin) {
+    returnButton = (
+      <Link to="/departamentos">
+        <ReturnButton />
+      </Link>
+    );
+  } else if(roleManager === userRole){
+    returnButton = (
+      <Link to="/departamentos">
+        <ReturnButton />
+      </Link>
+    );
+  }else{
+    <></>
+  }
 
   return (
     <>

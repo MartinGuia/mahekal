@@ -26,6 +26,17 @@ export const addNewTicketGet = async (req, res) => {
         name: department.name,
       };
     });
+
+      // let ticket = await Ticket.findById(req.params.id);
+      // if (!ticket) return res.status(404).json({ message: "Not Found" });
+  
+      // ticket = {
+      //   imageURL: ticket.imageURL,
+      // };
+
+    
+
+    
     return res.status(200).json({ departments, userFound });
   } catch (error) {
     return res.status(400).json({ message: error.message });
@@ -39,7 +50,7 @@ export const addNewTicketPost = async (req, res) => {
     assignedDepartment,
     roomOrArea,
     description,
-    // imageURL,
+    imageURL,
   } = req.body;
 
   try {
@@ -59,8 +70,8 @@ export const addNewTicketPost = async (req, res) => {
       assignedDepartment: departmentFound._id,
       roomOrArea: roomOrArea,
       description: description,
-      ticketNumber: generateTicketNumber()
-      // imageURL: imageURL,
+      ticketNumber: generateTicketNumber(),
+      imageURL: imageURL,
     });
 
     const departmentUpdated = await Department.findByIdAndUpdate(
