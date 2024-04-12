@@ -15,5 +15,3 @@ export function Tarjeta(props) {
     <CustomLink {...props}></CustomLink>
   )
 }
-
-
