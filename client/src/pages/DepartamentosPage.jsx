@@ -7,8 +7,11 @@ import { useEffect, useState } from 'react';
 import logo from '../img/LogoMahekal.png'
 import Modal from '../components/ui/Modal';
 import {useForm} from 'react-hook-form';
+import swal from 'sweetalert';
+import { useNavigate } from 'react-router-dom';
 
 function DepartamentosPage() {
+  const navigate = useNavigate();
 const {department, getAllDepartments} = useDepartment()
 
 function recargarPagina() {
@@ -38,8 +41,10 @@ function recargarPagina() {
 
   const onSubmit = handleSubmit(async (values) => {
     createDepartment(values)
+    navigate('/departamentos')
+    swal("Departamento agregado correctamente", "","success");
     handleCloseModal()
-    recargarPagina()
+    // recargarPagina()
   })
   return (
     <>
@@ -68,7 +73,7 @@ function recargarPagina() {
                 <div className="w-[60%] flex justify-center items-center max-[541px]:w-[100%] max-[541px]:mt-2 max-[281px]:flex-col">
                   <div className="w-[100%] flex justify-center items-center mx-1">
                     <ButtonAction
-                      rutaDestino="/"
+                      rutaDestino={`/ticketsbydepartment/${option.id}`}
                       className="bg-water-blue hover:bg-water-blue-hover max-[541px]:w-auto flex-col items-center w-56"
                     >
                       <p className="text-xl text-center max-[769px]:text-base max-[431px]:text-sm max-[376px]:text-xs text-white">
@@ -100,6 +105,7 @@ function recargarPagina() {
               <input
                 className="w-full bg-mahekal-input p-2 rounded m-2"
                 type="text"
+                autoFocus
                 {...register("name", { required: true })}
                 placeholder="Nombre del dpto"
               />

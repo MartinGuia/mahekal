@@ -14,6 +14,8 @@ import { useTicket } from '../context/TicketsContext'
 import Modal from '../components/ui/Modal';
 import { Title } from '../components/Headers/Title'
 import cerrar from '../img/cerrar.png'
+import swal from 'sweetalert';
+import * as images from '../img/index.js'
 
 export default function Nav({children}) {
   const [open, setOpen] = useState(false);
@@ -164,10 +166,26 @@ useEffect(() => {
     setIsModalOpen(false);
   };
 
+  
+
   const onSubmit = handleSubmit((data) => {
-    console.log(data);
-    signupTicket(data);
-    handleCloseModal();
+    if (data.imageURL.length > 0) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = reader.result
+          .replace("data:", "")
+          .replace(/^.+,/, "");
+
+        data.imageURL = base64String;
+        signupTicket(data);
+        swal("Ticket Agregado correctamente", "","success");
+        handleCloseModal();
+      };
+      reader.readAsDataURL(data.imageURL[0]);
+    } else {
+      signupTicket(data);
+      handleCloseModal();
+    }
   });
 
   useEffect(() => {
@@ -311,7 +329,7 @@ useEffect(() => {
           {/* Componente del png de la campanita de notificaciones */}
           <div className=" flex mr-3">
             <button className="">
-              <img src="bell.png" alt="" />
+              <img src={images.bell} alt="" />
             </button>
           </div>
         </div>
@@ -343,23 +361,6 @@ useEffect(() => {
           {/* Componente que contiene los iconos y nombres del menu */}
           <ul className={`pt-2`}>
             {navegador1}
-            {/* {Menus.map((menu) => (
-              <li key={menu.id}>
-                <Link
-                  className="flex rounded-md p-3 mt-2 cursor-pointer hover:bg-water-blue items-center gap-x-3"
-                  to={menu.to}
-                >
-                  <img src={menu.image} className="size-8" />
-                  <span
-                    className={`flex-1 text-mahekal-brown text-lg font-normal ${
-                      !open && "invisible"
-                    }`}
-                  >
-                    {menu.title}
-                  </span>
-                </Link>
-              </li>
-            ))} */}
           </ul>
 
           {/* Caja que contiene el Logo mahekal */}
@@ -407,11 +408,11 @@ useEffect(() => {
 
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
         <div className="relative bg-white rounded-lg">
-          <div className="w-[100%] flex justify-end">
+          {/* <div className="w-[100%] flex justify-end">
             <button>
               <img src={cerrar} alt="" className="size-8" />
             </button>
-          </div>
+          </div> */}
           <Title>Nuevo Ticket</Title>
 
           <form
@@ -497,33 +498,15 @@ useEffect(() => {
               ></textarea>
             </div>
             {/* Caja que contiene la insercion de imagenes */}
-            <div className="flex justify-center mt-3">
-              {/* <input  type="file" {...register("imageURL")}/> */}
-              {/* <div
-                {...getRootProps()}
-                className="text-gray-400 border-2 py-[4%] px-[4%] border-dashed border-mahekal-brown cursor-pointer shadow-lg"
-              >
-                <input
-                  {...getInputProps()}
-                  {...register("imageURL", { required: false })}
-                />
-                {isDragActive ? (
-                  <p>Drop the files here ...</p>
-                ) : (
-                  <p>Arrastra o selecciona los archivos</p>
-                )}
-              </div>
-              {/* <input type="file"
-              onChange={e => setFile(e.target.files[0])}
-            /> */}
-              {/*Toma el objeto file y lo convierte a una url para mostrarlo como previsualizacion de la img escogida */}
-              {/* {acceptedFiles[0] && (
-                // <img
-                //   src={URL.createObjectURL(acceptedFiles[0])}
-                //   className="size-40"
-                //   alt=""
-                // />
-              )} */}
+            <div className="flex-col flex items-center mt-3">
+            <label htmlFor="">Insertar imagen</label>
+              <input type="file"
+               label="Image"
+               {...register("imageURL", { required: true })}
+               accept='.jpeg, .png, .jpg'
+               name="imageURL"
+              //  onChange={(e)=> handleFileChange(e)}
+               />
             </div>
             <button
               className="p-2 m-2 w-1/2 rounded-lg bg-water-blue hover:bg-water-blue-hover"

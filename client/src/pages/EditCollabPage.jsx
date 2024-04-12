@@ -7,6 +7,7 @@ import { Title } from '../components/Headers/Title';
 import Nav from '../components/Nav'
 import { Link } from 'react-router-dom'
 import ReturnButton from '../components/ui/ReturnButton'
+import swal from 'sweetalert';
 
 function EditCollabPage() {
   const navigate = useNavigate();
@@ -58,6 +59,7 @@ function EditCollabPage() {
 
   const onSubmit = handleSubmit((values) => {
     updateUser(params.id, values);
+    swal("Usuario editado", "","success");
     navigate('/accounts')
     console.log(values);
   });
