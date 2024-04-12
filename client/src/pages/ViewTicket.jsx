@@ -1,14 +1,15 @@
 import Nav from '../components/Nav'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Title } from '../components/Headers/Title'
 import { useForm } from "react-hook-form";
 import { useTicket } from '../context/TicketsContext'
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import ReturnButton from '../components/ui/ReturnButton';
+import swal from 'sweetalert';
 
 function ViewTicket() {
-
+  const navigate = useNavigate();
   const {getTicketById, updateTicket,errors:updateErrors} = useTicket()
   const {register, handleSubmit,formState:{
     errors,
@@ -31,6 +32,8 @@ function ViewTicket() {
   
   const onSubmit = handleSubmit((values) => {
     updateTicket(params.id, values);
+    swal("Ticket actualizado correctamente", "","success");
+    navigate('/tickets')
     console.log(values);
   });
 
@@ -141,7 +144,7 @@ function ViewTicket() {
                     {...register("priority", { required: true })}
                     disabled={inputDisabled}
                   >
-                    <option>{priority}</option>
+                    <option value={priority}>{priority}</option>
                     <option value="Bajo">Bajo</option>
                     <option value="Medio">Medio</option>
                     <option value="Alto">Alto</option>
@@ -155,9 +158,9 @@ function ViewTicket() {
                     {...register("status", { required: true })}
                     disabled={inputDisabled}
                   >
-                    <option>{status}</option>
+                    <option value={status}>{status}</option>
                     <option value="En curso">En curso</option>
-                    <option value="En pausa/revision">En pausa/revision</option>
+                    <option value="En pausa/revision">En pausa/revisión</option>
                     <option value="Resuelto">Resuelto</option>
                   </select>
                 </div>

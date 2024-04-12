@@ -17,7 +17,7 @@ function ListOfDeptCollabs() {
   const [openOn, setOpenOn] = useState(false);
   const [countOn, setCountOn] = useState([]);
   const [countOff, setCountOff] = useState([]);
-  const [roleAdmin, setRoleAdmin] = useState([])
+  const [roleAdmin, setRoleAdmin] = useState()
 const [roleManager, setRoleManager] = useState()
 
   const token = role; // Aquí debes proporcionar el token JWT

@@ -14,7 +14,8 @@ import { useTicket } from '../context/TicketsContext'
 import Modal from '../components/ui/Modal';
 import { Title } from '../components/Headers/Title'
 import cerrar from '../img/cerrar.png'
-import notify from '../img/bell.png'
+import swal from 'sweetalert';
+import * as images from '../img/index.js'
 
 export default function Nav({children}) {
   const [open, setOpen] = useState(false);
@@ -177,6 +178,7 @@ useEffect(() => {
 
         data.imageURL = base64String;
         signupTicket(data);
+        swal("Ticket Agregado correctamente", "","success");
         handleCloseModal();
       };
       reader.readAsDataURL(data.imageURL[0]);
@@ -327,7 +329,7 @@ useEffect(() => {
           {/* Componente del png de la campanita de notificaciones */}
           <div className=" flex mr-3">
             <button className="">
-              <img src={notify} alt="" />
+              <img src={images.bell} alt="" />
             </button>
           </div>
         </div>
@@ -406,11 +408,11 @@ useEffect(() => {
 
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
         <div className="relative bg-white rounded-lg">
-          <div className="w-[100%] flex justify-end">
+          {/* <div className="w-[100%] flex justify-end">
             <button>
               <img src={cerrar} alt="" className="size-8" />
             </button>
-          </div>
+          </div> */}
           <Title>Nuevo Ticket</Title>
 
           <form

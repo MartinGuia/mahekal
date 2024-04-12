@@ -7,6 +7,7 @@ import { useAuth } from "../context/AuthContext";
 import {useForm} from 'react-hook-form'
 import logo from '../img/LogoMahekal.png'
 import { Link } from 'react-router-dom';
+import swal from 'sweetalert';
 
 function AllAccountPage() {
   const {
@@ -34,18 +35,11 @@ function AllAccountPage() {
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
-  const handleOpenModalEditPass = () => {
-    setIsModalEditPassOpen(true);
-  };
-
-  const handleCloseModalEditPass = () => {
-    setIsModalEditPassOpen(false);
-    recargarPagina();
-  };
 
   const onSubmit = handleSubmit((values) => {
     signupUser(values);
-      handleCloseModal();
+    swal("Usuario Agregado", "","success");
+    handleCloseModal();
   });
 
   useEffect(() => {
@@ -215,47 +209,6 @@ function AllAccountPage() {
                   </option>
                 ))}
               </select>
-              <button
-                className="p-2 m-2 w-1/2 rounded-lg bg-water-blue hover:bg-water-blue-hover"
-                type="submit"
-              >
-                Registrar
-              </button>
-            </form>
-          </div>
-        </Modal>
-      </div>
-
-      <div>
-        {/* ventana modal de editar contraseña */}
-        <Modal isOpen={isModalEditPassOpen} onClose={handleCloseModalEditPass}>
-          <div className="relative bg-white rounded-lg">
-            <Title>MAHEKAL</Title>
-
-            <form
-              className="flex flex-col items-center"
-              onSubmit={onSubmit}
-              // onSubmit={handleSubmit}
-            >
-              <img className="w-20 p-1" src={logo} alt="Mahekal Logo" />
-              {registerErrors.map((error, i) => (
-                <div
-                  key={i}
-                  className="bg-red-500 text-white w-[100%] rounded-md py-1"
-                >
-                  {error}
-                </div>
-              ))}
-
-              <input
-                className="w-full bg-mahekal-input p-2 rounded m-2"
-                type="password"
-                {...register("password", { required: true })}
-                placeholder="Contraseña"
-              />
-              {errors.userName && (
-                <p className="text-red-500">La contraseña es requerida*</p>
-              )}
               <button
                 className="p-2 m-2 w-1/2 rounded-lg bg-water-blue hover:bg-water-blue-hover"
                 type="submit"

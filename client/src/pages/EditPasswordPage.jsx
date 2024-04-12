@@ -7,6 +7,7 @@ import { Title } from '../components/Headers/Title';
 import Nav from '../components/Nav'
 import { Link } from 'react-router-dom'
 import ReturnButton from '../components/ui/ReturnButton'
+import swal from 'sweetalert';
 
 function EditPasswordPage() {
   const navigate = useNavigate();
@@ -24,6 +25,7 @@ function EditPasswordPage() {
 
   const onSubmit = handleSubmit((values) => {
     updatePasswordUser(params.id, values);
+    swal("Contraseña actualizada", "","success");
     navigate('/accounts')
     console.log(values);
   });
@@ -56,7 +58,7 @@ function EditPasswordPage() {
             ))}
             <input
               className="w-full bg-mahekal-input p-2 rounded m-2"
-              type="text"
+              type="password"
               {...register("password", { required: true })}
               placeholder='Contraseña'
               // defaultValue={getLastnameUser}

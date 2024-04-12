@@ -79,7 +79,7 @@ export const getDepartmentTicketsById = async (req, res) => {
         priority: ticketFound.priority,
         status: ticketFound.status,
         assignedDepartment: departmentFound.name,
-        assignedTo: ticketFound.assignedTo,
+        assignedTo: ticketFound.assignedTo.name,
         roomOrArea: ticketFound.roomOrArea
       };
       ticketsArray.push(ticketFound);

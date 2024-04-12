@@ -7,8 +7,11 @@ import { useEffect, useState } from 'react';
 import logo from '../img/LogoMahekal.png'
 import Modal from '../components/ui/Modal';
 import {useForm} from 'react-hook-form';
+import swal from 'sweetalert';
+import { useNavigate } from 'react-router-dom';
 
 function DepartamentosPage() {
+  const navigate = useNavigate();
 const {department, getAllDepartments} = useDepartment()
 
 function recargarPagina() {
@@ -38,8 +41,10 @@ function recargarPagina() {
 
   const onSubmit = handleSubmit(async (values) => {
     createDepartment(values)
+    navigate('/departamentos')
+    swal("Departamento agregado correctamente", "","success");
     handleCloseModal()
-    recargarPagina()
+    // recargarPagina()
   })
   return (
     <>
@@ -100,6 +105,7 @@ function recargarPagina() {
               <input
                 className="w-full bg-mahekal-input p-2 rounded m-2"
                 type="text"
+                autoFocus
                 {...register("name", { required: true })}
                 placeholder="Nombre del dpto"
               />

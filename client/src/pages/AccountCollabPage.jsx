@@ -13,14 +13,8 @@ import * as images from '../img/index.js'
 function AccountCollabPage() {
   const params = useParams();
   const { getUserById } = useCollab();
-  // const [getRole, setGetRole] = useState();
-  // const [getDpto, setGetDpto] = useState();
-  // const [getNameUser, setGetNameUser] = useState();
-  // const [getLastnameUser, setGetLastnameUser] = useState();
-  // const [getUserName, setGetUserName] = useState();
   const [assignedTickets, setAssignedTickets] = useState([])
   const [getName, setGetName] = useState()
-  const [getLastName, setGetLastName] = useState()
  // Estado para controlar qué vista se muestra
  const [vista, setVista] = useState('tickets'); // Inicia con la vista de tickets
 
@@ -31,11 +25,6 @@ function AccountCollabPage() {
         const userById = await getUserById(params.id);
         // console.log(userById);
         if (userById) {
-          // setGetNameUser(userById);
-          // setGetLastnameUser(userById.lastname);
-          // setGetUserName(userById.userName);
-          // setGetRole(userById.role.name);
-          // setGetDpto(userById.department.name);
           setGetName(userById.userFound.name)
           setAssignedTickets(userById.ticketsForUser)
           // console.log(assignedTickets)
@@ -205,7 +194,7 @@ const getColorText = (status) => {
               <div className="w-[90%] flex">
                 <div className="">
                   <Title className="">
-                    {getName}{" "}{getLastName}
+                    {getName}
                   </Title>
                 </div>
               </div>

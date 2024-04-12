@@ -225,8 +225,8 @@ export const getAllTickets = async (req, res) => {
             return ticket;
           })
         );
+        return res.status(200).json(ticketsForOperador);
     }
-    return res.status(200).json(ticketsForOperador);
   } catch (error) {
     return res.status(400).json({ message: error.message });
   }
@@ -599,7 +599,7 @@ export const getAllTicketsOnPauseOrReview = async (req, res) => {
       case "Administrador":
       case "Gerente Administrador":
         const ticketsForAdminsFound = await Ticket.find({
-          status: "En pausa/revisión",
+          status: "En pausa/revision",
         }).lean();
 
         const ticketsForAdmins = await Promise.all(
@@ -607,6 +607,7 @@ export const getAllTicketsOnPauseOrReview = async (req, res) => {
             let departmentFound = await Department.findById(
               ticket.assignedDepartment
             );
+            ticket.assignedDepartment = departmentFound.name
             ticket.id = ticket._id;
             delete ticket._id;
             ticket.date = formatDate(ticket.date);
