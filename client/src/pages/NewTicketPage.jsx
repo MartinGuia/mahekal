@@ -1,6 +1,4 @@
 import Nav from '../components/Nav'
-import { useCallback } from 'react'
-import {useDropzone} from 'react-dropzone'
 import { Link } from 'react-router-dom';
 import { Title } from '../components/Headers/Title'
 import { useForm } from "react-hook-form";

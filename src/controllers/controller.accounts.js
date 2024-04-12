@@ -116,7 +116,6 @@ export const updatePassword = async (req, res) => {
   }
 };
 
-// FALTAN ALGUNAS OPCIONES AQUI
 export const getUserById = async (req, res) => {
   try {
     let userFound = await User.findById(req.params.id);
