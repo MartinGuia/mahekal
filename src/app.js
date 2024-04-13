@@ -9,11 +9,12 @@ import cookieParser from "cookie-parser";
 import cors from 'cors'
 import { checkTicketExpired } from "./middlewares/checkTicketExpired.js";
 import rolesRoutes from "./routes/roles.routes.js";
+import 'dotenv/config'
 
 const app = express();
 createRoles();
 app.use(cors({
-    origin: 'http://localhost:3000',
+    origin: process.env.FRONTEND_URL,
     //*Es para establecer las credenciales
     credentials:true
 }))

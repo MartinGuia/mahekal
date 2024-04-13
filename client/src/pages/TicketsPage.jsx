@@ -33,7 +33,6 @@ function TicketsPage() {
     getAllTicketsResolve()
     getAllTicketsInRevision()
     getAllTicketsInProgress()
-    console.log(ticket)
   }, []);
 
   const getColorClass = (priority) => {

@@ -31,7 +31,6 @@ export const TicketProvider = ({children})=>{
 
   const signupTicket = async (ticket) => {
     const res = await registerTicket(ticket);
-    console.log(res);
   };
 
   const updateTicket = async(id, ticket)=>{
@@ -66,7 +65,6 @@ export const TicketProvider = ({children})=>{
     try {
       const res = await getTicketByIdRequest(id);
       return res.data;
-      // console.log(res);
     } catch (error) {
       console.error(error);
     }

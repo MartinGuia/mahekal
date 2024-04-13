@@ -23,11 +23,9 @@ function AccountCollabPage() {
     try {
       if (params.id) {
         const userById = await getUserById(params.id);
-        // console.log(userById);
         if (userById) {
           setGetName(userById.userFound.name)
           setAssignedTickets(userById.ticketsForUser)
-          // console.log(assignedTickets)
         }
       }
     } catch (error) {

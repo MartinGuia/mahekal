@@ -27,8 +27,7 @@ useEffect(() => {
         if (params.id) {
           const ticketsByDepartment = await getAllTicketsByDepartment(params.id);
           if (ticketsByDepartment) {
-            setTicketsByDepartments(ticketsByDepartment)
-            console.log(ticketsByDepartment);
+            setTicketsByDepartments(ticketsByDepartment);
           }
         }
       } catch (error) {

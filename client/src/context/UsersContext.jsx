@@ -55,7 +55,6 @@ export const CollabsProvider = ({children})=>{
   const getUserById = async (id) => {
     try {
       const res = await getUserByIdRequest(id);
-      // console.log(res.data);
       return res.data;
     } catch (error) {
       console.error(error);

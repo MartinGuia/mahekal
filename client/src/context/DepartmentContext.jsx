@@ -19,7 +19,6 @@ export const DepartmentProvider = ({children})=>{
 
   const createDepartment = async (department) => {
     const res = await createDepartmentRequest(department);
-    console.log(res);
   };
 
   const getAllDepartments = async () => {

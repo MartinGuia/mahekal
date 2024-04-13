@@ -35,20 +35,12 @@ function NewTicketPage() {
     fetchData();
   }, []);
 
-  // const handlechange = e =>{
-  //   e.preventDefault();
-
-  //   console.log(e.target);
-  // }
-
   const onSubmit = handleSubmit((data) => {
-    console.log(data);
     signupTicket(data)
     navigate('/tickets')
   })
   
   
-
   return (
     <>
       <Nav>

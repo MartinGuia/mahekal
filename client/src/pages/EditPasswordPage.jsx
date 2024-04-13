@@ -27,7 +27,6 @@ function EditPasswordPage() {
     updatePasswordUser(params.id, values);
     swal("Contraseña actualizada", "","success");
     navigate('/accounts')
-    console.log(values);
   });
   return (
     <>

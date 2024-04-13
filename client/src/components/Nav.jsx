@@ -17,6 +17,7 @@ import cerrar from '../img/cerrar.png'
 import swal from 'sweetalert';
 import * as images from '../img/index.js'
 
+
 export default function Nav({children}) {
   const [open, setOpen] = useState(false);
   const isSmallScreen = window.innerWidth < 541;
@@ -281,9 +282,6 @@ useEffect(() => {
     ));
   }
 
-  // useEffect(() => {
-  //   console.log(userRole1);
-  // }, []);
 
   return (
     <>

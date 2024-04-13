@@ -11,4 +11,6 @@ router.get("/getUser/:id", accountsController.getUserById);
 router.put("/update-user/:id", accountsController.updateUser);
 router.put("/update-password/:id", accountsController.updatePassword);
 
+router.delete("/deleteUser/:id", accountsController.deleteUser);
+
 export default router;

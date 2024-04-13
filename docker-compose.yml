@@ -1,32 +1,32 @@
-version: '3.8'
-
-services:
- frontend:
-    build: ./client
+services: 
+  frontend:
+    image: frontend:1.0 
     ports:
-      - "3000:3000"
-    networks:
-      - api-network
-
- backend:
-    build: ./src
+      - "3000:3000" 
+    depends_on:
+      - backend 
+    
+  backend:
+    image: backend:1.0 
+    ports: 
+      - "4000:4000" 
     environment:
+      - PORT=4000
       - DB=mongodb://mongo:27017/mahekal
-    ports:
-      - "4000:4000"
-    networks:
-      - api-network
+    depends_on:
+      - mongo 
 
- mongo:
-    image: mongo:latest
+  mongo:
+    image: mongo:latest 
+    ports: 
+      - "27017:27017"
     volumes:
-      - mongodb_data:/data/db
-    networks:
-      - api-network
-
-networks:
- api-network:
-    driver: bridge
+     - volume_mahekal:/data/db
 
 volumes:
- mongodb_data:
+  volume_mahekal:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/mahekal/Escritorio/volume_mahekal
+      o: bind

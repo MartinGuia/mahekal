@@ -74,7 +74,6 @@ export const updateUser = async (req, res) => {
   
   try {
     const userFound = await User.findById(req.params.id).lean();
-    console.log(userFound)
 
     if (userName !== userFound.userName)
       await User.findByIdAndUpdate(userFound._id, { userName: userName });
@@ -162,6 +161,35 @@ export const getUserById = async (req, res) => {
     userFound = {name: `${userFound.name} ${userFound.lastname}`};
     
     res.status(200).json({ticketsForUser, userFound});
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+
+export const deleteUser = async (req, res) => {
+  try {
+    let userToDelete = await User.findById(req.params.id).lean();
+
+    if (!userToDelete)
+      return res.status(404).json({ message: "User not found" });
+
+    const userDepartment = await Department.findByIdAndUpdate(
+      userToDelete.department,
+      { $pull: { colaborators: userToDelete._id } }
+    );
+
+    const userTicket = userToDelete.tickets;
+
+    userTicket.forEach(async (ticket) => {
+      const removeUser = await Ticket.findByIdAndUpdate(ticket, {
+        $pull: { assignedTo: userToDelete._id },
+      });
+    });
+
+    const removeUser = await User.deleteOne(userToDelete._id);
+
+    return res.status(200).json({ message: "Ticket removed success" });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }

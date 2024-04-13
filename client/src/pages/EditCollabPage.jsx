@@ -39,7 +39,6 @@ function EditCollabPage() {
           setGetLastnameUser(userById.userFound.lastname);
           setGetUserName(userById.userFound.userName);
           setGetRole(userById.userFound.role);
-          console.log(userById.userFound.role);
           setGetDpto(userById.userFound.department);
           setGetRoles(userById.rolesList);
           getRoles.map((option) => ({
@@ -61,7 +60,6 @@ function EditCollabPage() {
     updateUser(params.id, values);
     swal("Usuario editado", "","success");
     navigate('/accounts')
-    console.log(values);
   });
 
   return (

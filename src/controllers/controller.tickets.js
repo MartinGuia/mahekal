@@ -57,10 +57,10 @@ export const addNewTicketPost = async (req, res) => {
     const userFound = await User.findById(req.user.id);
     const departmentFound = await Department.findById(assignedDepartment);
     if (!departmentFound)
-      return res.status(404).json({ message: "Departament not found" });
-
-    let dateInMiliseconds = Date.now();
-
+    return res.status(404).json({ message: "Departament not found" });
+  
+  let dateInMiliseconds = Date.now();
+  
     const newTicket = new Ticket({
       name: userFound.name + " " + userFound.lastname,
       date: dateInMiliseconds,
@@ -607,7 +607,7 @@ export const getAllTicketsResolve = async (req, res) => {
 export const getAllTicketsOnPauseOrReview = async (req, res) => {
   try {
     const roleFound = await Roles.findById(req.user.role);
-
+    
     switch (roleFound.name) {
       case "Administrador":
       case "Gerente Administrador":

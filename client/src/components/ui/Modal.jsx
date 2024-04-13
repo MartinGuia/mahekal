@@ -1,9 +1,6 @@
 import { useEffect } from 'react';
 
 const Modal = ({ isOpen, onClose, children, idUsuario }) => {
-  // useEffect(() => {
-  //   console.log("ID del usuario seleccionado:", idUsuario);
-  // }, [idUsuario]);
   if (!isOpen) return null;
   
   return (

@@ -51,6 +51,9 @@ const ticketSchema = new Schema({
     ticketNumber:{
         type: Number,
         required: true
+    },
+    imageURL:{
+        type: String
     }
 },{
     timestamps: false,

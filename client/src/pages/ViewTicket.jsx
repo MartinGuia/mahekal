@@ -34,7 +34,6 @@ function ViewTicket() {
     updateTicket(params.id, values);
     swal("Ticket actualizado correctamente", "","success");
     navigate('/tickets')
-    console.log(values);
   });
 
   useEffect(() => {
@@ -42,7 +41,6 @@ function ViewTicket() {
       try {
         if (params.id) {
           const ticket = await getTicketById(params.id);
-          console.log(ticket);
           if(ticket){
             setName(ticket.ticket.name)
             setTitle(ticket.ticket.title)

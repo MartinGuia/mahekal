@@ -34,14 +34,10 @@ export const AuthProvider = ({children})=>{
   const signupUser = async (user) => {
     try {
       const res = await registerRequest(user);
-      console.log(res.data);
-      console.log(user);
       setUser(res.data);
     } catch (error) {
       setErrors(error.response.data);
-      console.log(error.response);
       setErrors(error.response.data);
-      console.log(error.response);
     }
   };
   function recargarPagina() {
@@ -53,10 +49,8 @@ export const AuthProvider = ({children})=>{
       setIsAuthenticated(true);
       setUser(res.data);
       recargarPagina()
-      console.log(res);
     } catch (error) {
       if (Array.isArray(error.response.data)) {
-        // console.log(error.response.data);
         return setErrors(error.response.data);
       }
       setErrors([error.response.data.message]);
@@ -66,34 +60,11 @@ export const AuthProvider = ({children})=>{
   const getRole = async () => {
     try {
       const res = await getRoleRequest();
-      // console.log(res.data);
       return res.data; 
     } catch (error) {
       console.error(error);
     }
   };
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const res = await getRoleRequest();
-  //     if (res) {
-  //       setRoleAdmin(res.data[0]._id)
-  //       setRoleManager(res.data[3]._id)
-  //       setRoleChiefArea(res.data[2]._id)
-  //       setRoleOperator(res.data[1]._id)
-  //       console.log(res.data[1]);
-  //       // setNombreUsuario(datosTicket.userFound.name);
-  //       // setLastnameUsuario(datosTicket.userFound.lastname);
-  //       // setDepartamentos(datosTicket.departments);
-  //       // departamentos.map((option) => ({
-  //       //   value: option.id,
-  //       //   label: option.name, // Utilizar el valor 'name' como label en las opciones
-  //       // }));
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, []);
 
   const logout = async () => {
     await logoutToken();
