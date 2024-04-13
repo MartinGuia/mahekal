@@ -1,18 +1,65 @@
 import React from 'react'
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import TicketsPage from './pages/TicketsPage';
+import NewTicketPage from './pages/NewTicketPage';
+import Login from "./pages/Login";
+import DepartamentosPage from './pages/DepartamentosPage';
+import ListOfDeptCollabs from './pages/ListOfDeptCollabs';
+import AllAccountPage from './pages/AllAccountPage';
+import AccountCollabPage from './pages/AccountCollabPage';
+import { AuthProvider } from './context/AuthContext';
+import ProtectedRoute from './ProtectedRoute';
+import { CollabsProvider } from './context/UsersContext';
+import { TicketProvider } from './context/TicketsContext';
+import ViewTicket from './pages/ViewTicket';
+import { DepartmentProvider } from './context/DepartmentContext';
+import EditCollabPage from './pages/EditCollabPage';
+import EditPasswordPage from './pages/EditPasswordPage';
+import TicketsOfDepartmentsPage from './pages/TicketsOfDepartmentsPage';
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path='/' element={<h1>DASHBOARD</h1>}/>
-        <Route path='/login' element={<h1>LOGIN</h1>}/>
-        <Route path='/register' element={<h1>REGISTER</h1>}/>
-        <Route path='/ticket/:id' element={<h1>TICKET</h1>}/>
-        <Route path='/profile' element={<h1>PROFILE</h1>}/>
-      </Routes>
-    </BrowserRouter>
-  )
+    <AuthProvider>
+      <CollabsProvider>
+        <TicketProvider>
+          <DepartmentProvider>
+          <BrowserRouter>
+            <Routes>
+              {/* <Route path='/' element={<TicketsPage/>}/> */}
+              <Route path="/" element={<Login />} />
+
+              <Route element={<ProtectedRoute />}>
+                <Route path="/tickets" element={<TicketsPage />} />
+                <Route path="/newticket" element={<NewTicketPage />} />
+                <Route path="/ticket/:id" element={<ViewTicket/>} />
+                <Route path="/departamentos" element={<DepartamentosPage />} />
+                <Route
+                  path="/listadptocollabs/:id"
+                  element={<ListOfDeptCollabs />}
+                />
+                <Route
+                  path="/edit-collab/:id"
+                  element={<EditCollabPage/>}
+                />
+                <Route
+                  path="/edit-password-collab/:id"
+                  element={<EditPasswordPage/>}
+                />
+                <Route
+                  path="/ticketsbydepartment/:id"
+                  element={<TicketsOfDepartmentsPage/>}
+                />
+                <Route path="/accounts" element={<AllAccountPage />} />
+                {/* <Route path="/register" element={<RegisterPage />} /> */}
+                <Route path="/profile/:id" element={<AccountCollabPage />} />
+              </Route>
+            </Routes>
+          </BrowserRouter>
+          </DepartmentProvider>
+        </TicketProvider>
+      </CollabsProvider>
+    </AuthProvider>
+  );
 }
 
 export default App

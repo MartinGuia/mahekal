@@ -1,0 +1,205 @@
+import Nav from '../components/Nav'
+import { Tarjeta } from '../components/ui/Tarjeta';
+import { Title } from '../components/Headers/Title';
+import { useEffect, useState } from 'react';
+import { useAuth } from '../context/AuthContext';
+import { useDepartment } from "../context/DepartmentContext";
+import { useParams, Link } from 'react-router-dom'
+import ReturnButton from '../components/ui/ReturnButton'
+import * as images from '../img/index.js'
+
+function TicketsOfDepartmentsPage() {
+
+    const params = useParams();
+    const {getAllTicketsByDepartment} = useDepartment()
+      const { user, role, getRole } = useAuth();
+      const [ticketsByDepartments, setTicketsByDepartments] = useState()
+      const [roleAdmin, setRoleAdmin] = useState()
+      const [roleManager, setRoleManager] = useState()
+
+      const token = role; // Aquí debes proporcionar el token JWT
+      const decodedToken = JSON.parse(atob(token.split(".")[1])); // Decodificar la carga útil
+      const userRole = decodedToken.role; // Obtener el valor del rol
+
+useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (params.id) {
+          const ticketsByDepartment = await getAllTicketsByDepartment(params.id);
+          if (ticketsByDepartment) {
+            setTicketsByDepartments(ticketsByDepartment);
+          }
+        }
+      } catch (error) {
+        console.error("Error al obtener opciones:", error);
+      }
+    };
+
+    fetchData(); // Llamar a la función para obtener las opciones al montar el componente
+  }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await getRole();
+      
+      if (res) {
+        for (const role of res) {
+          if (role.name === "Administrador") {
+            setRoleAdmin(role._id);
+          } else if (role.name === "Gerente Administrador") {
+            setRoleManager(role._id);
+          }
+        }
+      }
+    };
+    fetchData();
+  }, []);
+  let returnButton;
+  if (userRole === roleAdmin) {
+    returnButton = (
+      <Link to="/departamentos">
+        <ReturnButton />
+      </Link>
+    );
+  } else if(roleManager === userRole){
+    returnButton = (
+      <Link to="/departamentos">
+        <ReturnButton />
+      </Link>
+    );
+  }else{
+    <></>
+  }
+
+  const getColorClass = (priority) => {
+    switch (priority) {
+      case "Bajo":
+        return "bg-green-400";
+      case "Medio":
+        return "bg-yellow-400";
+      case "Alto":
+        return "bg-orange-400";
+      case "Critico":
+        return "bg-red-500";
+      default:
+        return "bg-gray-200"; // Color por defecto si la prioridad no coincide
+    }
+  };
+
+  const getColorText = (status) => {
+    switch (status) {
+      case 'Nuevo':
+        return 'text-green-600';
+      case 'En curso':
+        return 'text-yellow-600';
+      case 'En pausa/revision':
+        return 'text-orange-600';
+      case 'Resuelto':
+        return 'text-blue-600';
+      default:
+        return 'bg-gray-600'; // Color por defecto si la prioridad no coincide
+    }
+  };
+    
+      return (
+        <>
+          <Nav>
+            <Title>Tickets</Title>
+             {/* Caja que contiene el boton para regresar una pagina atras */}
+        <div className="w-[9%] bottom-9 left-6 relative">
+          <button className="rounded-full shadow-md">{returnButton}</button>
+        </div>
+            {/* Caja que contiene los sections */}
+            <div className="flex h-screen flex-col select-none">
+              <section className="h-screen mt-8 flex items-center flex-col">
+                <div className="h-auto w-[100%] flex items-center flex-col">
+                {ticketsByDepartments && ticketsByDepartments.length > 0 ? (
+                    <>
+                      {/* Contenido renderizado según la vista */}
+    
+                      {ticketsByDepartments.map((ticket, i) => (
+                        // to={`${`/ticket`}/${ticket.id}`}
+                        <Tarjeta to={`/ticket/${ticket.id || ticket._id}`} key={i}>
+                        {/* Caja dentro del ticket que contiene los componentes del lado izquierdo */}
+                        <div className="w-[60%] max-[541px]:w-auto">
+                          {/* Caja que contiene el estado del ticket */}
+                          <div className="flex w-[100%] items-center">
+                            <p>Estado:</p>
+                            <span
+                              className={`font-semibold ml-1 h-5 w-auto flex justify-center items-center ${getColorText(
+                                ticket.status
+                              )}`}
+                            >
+                              {ticket.status}
+                            </span>
+                          </div>
+                          {/* Caja que contiene el tiempo de ejecución */}
+                          <div className="flex text-sm text-gray-400 mt-2">
+                            <p>Tiempo de ejecución:</p>
+                            <span className="ml-2">{ticket.ejecutionTime}</span>
+                          </div>
+                          {/* Caja que contiene el titulo de ticket y el numero */}
+                          <div className="w-[100%] mt-1">
+                            <span className="font-semibold text-black">{ticket.title}</span>
+                            <span className=" text-sm text-gray-400 ml-2">#No. ticket</span>
+                          </div>
+                          {/* Caja que contiene los componentes de quien creo el ticket y cuando se creo */}
+                          <div className="w-[100%] mt-2 flex items-center max-[541px]:flex-col">
+                            <div className="flex items-center">
+                              <img src={images.userIcon} className="size-5 mr-2" alt="" />
+                              <span>{ticket.name}</span>
+                            </div>
+                            <span className="text-xs text-gray-400 ml-2">
+                              - Creado: {ticket.date}
+                            </span>
+                          </div>
+                        </div>
+                        {/* Caja que contiene los componentes del lado derecho */}
+                        <hr className="max-[541px]:visible border-2 my-2" />
+                        <div className="w-[40%] flex flex-col text-sm justify-evenly max-[913px]:w-[50%] max-[769px]:w-[40%] max-[541px]:w-auto max-[541px]:items-center">
+                          <div className="items-center min-[1337px]:flex justify-center max-[913px]:justify-start max-[913px]:flex max-[769px]:flex-col max-[541px]:flex-row max-[281px]:flex-col">
+                            <p className="font-medium text-black">Prioridad:</p>
+                            <div className="flex max-[1025px]:flex">
+                              <img src={images.priority} className="size-5 ml-2 mr-1" alt="" />
+                              <span
+                                className={`font-semibold text-black rounded-md mx-1 px-1 ${getColorClass(
+                                  ticket.priority
+                                )}`}
+                              >
+                                {ticket.priority}
+                              </span>
+                            </div>
+                          </div>
+                          <div className="items-center min-[1337px]:flex justify-center max-[913px]:justify-start max-[913px]:flex max-[769px]:flex-col max-[541px]:flex-row max-[281px]:flex-col">
+                            <p className="font-medium text-black">Dpto:</p>
+                            <div className="flex">
+                              <img
+                                src={images.department}
+                                className="size-5 ml-2 mr-1"
+                                alt=""
+                              />
+                              <span>{ticket.assignedDepartment}</span>
+                            </div>
+                          </div>
+                          <div className="items-center min-[1337px]:flex justify-center max-[913px]:justify-start max-[913px]:flex max-[769px]:flex-col max-[541px]:flex-row max-[281px]:flex-col">
+                            <p className="font-medium text-black">Asignado a:</p>
+                            <div className="flex">
+                              <img src={images.assign} className="size-5 ml-2 mr-1" alt="" />
+                              <span>{ticket.assignedTo}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </Tarjeta>
+                      ))}
+                    </>
+                  ) : (
+                    <p>Bienvenido/a {user.userName} no hay tickets disponibles.</p>
+                  )}
+                </div>
+              </section>
+            </div>
+          </Nav>
+        </>
+      );
+}
+
+export default TicketsOfDepartmentsPage

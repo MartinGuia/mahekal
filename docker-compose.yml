@@ -1,0 +1,32 @@
+services: 
+  frontend:
+    image: frontend:1.0 
+    ports:
+      - "3000:3000" 
+    depends_on:
+      - backend 
+    
+  backend:
+    image: backend:1.0 
+    ports: 
+      - "4000:4000" 
+    environment:
+      - PORT=4000
+      - DB=mongodb://mongo:27017/mahekal
+    depends_on:
+      - mongo 
+
+  mongo:
+    image: mongo:latest 
+    ports: 
+      - "27017:27017"
+    volumes:
+     - volume_mahekal:/data/db
+
+volumes:
+  volume_mahekal:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/mahekal/Escritorio/volume_mahekal
+      o: bind
